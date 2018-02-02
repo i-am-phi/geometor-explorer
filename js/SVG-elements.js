@@ -200,46 +200,89 @@ function Line(pt1, pt2) {
   this.points[1] = pt2;
 
   console.group("point: " + pt1.id)
-  log(`x: ${pt1.x}`);
-  log(`y: ${pt1.y}`);
+  log(`pt1.x = ${pt1.x}`);
+  log(`pt1.y = ${pt1.y}`);
   console.groupEnd();
   console.group("point: " + pt2.id)
-  log(`x: ${pt2.x}`);
-  log(`y: ${pt2.y}`);
+  log(`pt2.x = ${pt2.x}`);
+  log(`pt2.y = ${pt2.y}`);
   console.groupEnd();
-
+  log(`---`)
 
   //calculate equation 1 coefficients
   // ax + by + c form
-  var cmd = `clearall
-  a = (${pt1.y}) - (${pt2.y})
-  a
-  b = (${pt2.x}) - (${pt1.x})
-  b
-  c = ((${pt1.x}) * (${pt2.y})) - ((${pt2.x}) * (${pt1.y}))
-  c
-  eq = (a) * x + (b) * y + (c)
-  eq
-  `;
+  var cmd
 
-  // run script and parse result
-  // returns a, b, c, eq
-  var result = alg(cmd).split("\n");
+  alg(`clearall`)
 
-  this.a = result[0];
-  this.b = result[1];
-  this.c = result[2];
-  this.eq = result[3];
+  // coefficent a
+  log(  `    a = (pt1.y) - (pt2.y)`)
+  cmd = `    a = (${pt1.y}) - (${pt2.y})`
+  alglog(cmd)
+  this.a = alg(`a`)
+  log(  `      = ${this.a}`)
 
-  log(`   a: ${this.a}`)
-  log(`   b: ${this.b}`)
-  log(`   c: ${this.c}`)
-  log(`  eq: ${this.eq}`)
+  // coefficent b
+  log(  `    b = (pt2.x) - (pt1.x)`)
+  cmd = `    b = (${pt2.x}) - (${pt1.x})`
+  alglog(cmd)
+  this.b = alg(`b`)
+  log(  `      = ${this.b}`)
 
-  //calculate equation 1 coefficients
-  // y = mx + n form
-  // var bVal = getNumber(this.b);
-  if (this.b != "0") {
+  log(  `    c = ((pt1.x) * (pt2.y)) - ((pt2.x) * (pt1.y))`)
+  cmd = `    c = ((${pt1.x}) * (${pt2.y})) - ((${pt2.x}) * (${pt1.y}))`
+  alglog(cmd)
+  this.c = alg(`c`)
+  log(  `      = ${this.c}`)
+
+  cmd = `   eq = (a) x + (b) y + (c)`
+  alglog(cmd)
+  this.eq = alg(`eq`)
+  log(  `   eq = (${this.a}) x + (${this.b}) y + (${this.c})`)
+  log(  `      = ${this.eq}`)
+
+  cmd = ` degX = deg(eq, x)`
+  alglog(cmd)
+  this.degX = alg(`degX`)
+  log(  `      = ${this.degX}`)
+  if (this.degX != 0) {
+    // set eq equal to x
+    cmd = `  eqX = roots(eq, x)`
+    alglog(cmd)
+    // this.eqX = alg(`eqX`)
+    this.eqX = parseRoots( alg(`eqX`) )
+    if (this.eqX) {
+      this.eqX.forEach( root => {
+        log(  `      = ${root}`)
+      })
+    } else {
+      log(  `      = ${this.eqX}`)
+    }
+  }
+
+  cmd = ` degY = deg(eq, y)`
+  alglog(cmd)
+  this.degY = alg(`degY`)
+  log(  `      = ${this.degY}`)
+  if (this.degY != 0) {
+    // set eq equal to y
+    cmd = `  eqY = roots(eq, y)`
+    alglog(cmd)
+    // this.eqY = alg(`eqY`)
+    this.eqY = parseRoots( alg(`eqY`) )
+    if (this.eqY) {
+      this.eqY.forEach( root => {
+        log(  `      = ${root}`)
+      })
+    } else {
+      log(  `      = ${this.eqY}`)
+    }
+
+    this.dim = this.degX > this.degY ? this.degX : this.degY
+
+    //calculate equation 1 coefficients
+    // y = mx + n form
+    // var bVal = getNumber(this.b);
 
     var cmd = `
     # i think a should be negative
@@ -264,6 +307,9 @@ function Line(pt1, pt2) {
     log(` eq2: ${this.eq2}`)
 
   }
+
+
+  log(`---`)
 
   // set xRoot if not horizontal
   if (this.a != 0) {
@@ -335,7 +381,9 @@ function Line(pt1, pt2) {
   //check for intersections with existing elements
   // this.intersect = lineIntersect;
   elements.forEach(function(element) {
-    lineIntersect (this, element) ;
+    console.group(`> ${element.id} : ${element.type} `)
+    intersect(this, element) ;
+    console.groupEnd();
   }, this);
 
 
@@ -490,56 +538,145 @@ function intersect(element1, element2){
   //TODO: return R as set of solutions
   let result = {}
 
-  var cmd = `
-  E1 = ${element1.eq}
-  E2 = ${element2.eq}
-  # subtract equations to define the System
-  S = E1 - E2
-  `;
-  alg(cmd)
 
-  log("E1: " + alg("E1"))
-  log("E2: " + alg("E2"))
-  log(" S: " + alg("S"))
+  cmd = `   E1 = ${element1.eq}`
+  alglog(cmd)
+  log(  `      = ${ alg(`E1`) }`)
+  log(  `        E1.dim: ${ element1.dim }`)
+
+  cmd = `   E2 = ${element2.eq}`
+  alglog(cmd)
+  log(  `      = ${ alg(`E2`) }`)
+  log(  `        E2.dim: ${ element2.dim }`)
+
+  cmd = `    S = E1 - E2`
+  alglog(cmd)
+  log(  `      = ${ alg(`S`) }`)
+
+
+  if (element2.dim == 1) {
+    // pass E2 root set to E1 to eliminate variable
+    if (element2.eqX) {
+      log(`* subst E2x for x in E1`)
+      element2.eqX.forEach( E2x => {
+        // subst element2.eqX for x in E1
+
+        cmd = `  E2x = ${ E2x }`
+        alglog(cmd)
+        log(  `      = ${ alg(`E2x`) }`)
+
+        cmd = `  E1y = subst(E2x, x, E1)`
+        alglog(cmd)
+        log(  `      = ${ alg(`E1y`) }`)
+
+        cmd = `  R1y = roots(E1y, y)`
+        alglog(cmd)
+        log(  `      = ${ alg(`R1y`) }`)
+
+      })
+    } else {
+      if (element2.eqY) {
+        log(`* subst E2y for y in E1`)
+        element2.eqY.forEach( E2y => {
+          // subst element2.eqY for y in E2
+          cmd = `  E2y = ${ E2y }`
+          alglog(cmd)
+          log(  `      = ${ alg(`E2y`) }`)
+
+          cmd = `  E1x = subst(E2y, y, E1)`
+          alglog(cmd)
+          log(  `      = ${ alg(`E1x`) }`)
+
+          cmd = `  R1x = roots(E1x, x)`
+          alglog(cmd)
+          log(  `      = ${ alg(`R1x`) }`)
+
+
+        })
+      }
+    }
+  }
+
+
+
+
 
   // check if there is an x term
   var degX = alg("deg(S, x)")
-  log(" deg(S, x): " + degX)
+  log(" degX = deg(S, x)")
+  log("      = " + degX)
 
-  if (degX != "0") {
+  if (degX !== "0") { // more than 1 but not zero
 
-    log("roots(S, x): " + alg("roots(S, x)"))
+    // log("* roots(S, x): " + alg("roots(S, x)"))
+    // log("* deg(roots(S, x), y): " + alg("deg(roots(S, x), y)"))
 
-    for (let i = 1; i <= degX; i++) {
-      console.group("root x: " + i)
+    var rootsSx = alg("roots(S, x)").replace("[", "").replace("]", "").split(",")
+    log(" rootsSx = roots(S, x)")
+    rootsSx.forEach( root => {
+      log("         = " + root )
+    })
 
-        log(" Sx: " + alg(`Sx = roots(S, x)[${i}] \n Sx`) )
+    // console.dir(rootsSx)
+
+    for (let i = 0; i < rootsSx.length; i++) {
+      console.group(`rootsSx[${i}]`)
+
+        // log(`  Sx = roots(S, x)[${i}]`)
+        log("   Sx = " + alg( `Sx = ${ rootsSx[i] } \n Sx` ) )
+        log(" deg(Sx) = " + alg( `deg(Sx)` ) )
 
         // check both equations
-        y1 = alg( "y1 = roots( subst( Sx, x, E1 ), y ) \n y1" )
-        log("  y1 = " + y1 )
 
-        y2 = alg( "y2 = roots( subst( Sx, x, E2 ), y ) \n y2" )
-        log("  y2 = " + y2 )
+        E1Sx = alg( "E1Sx = subst( Sx, x, E1 ) \n E1Sx" )
+        log(" E1Sx = subst( Sx, x, E1 )"  )
+        log("      = " + E1Sx )
 
+        y1 = alg( "y1 = roots( E1Sx, y ) \n y1" )
+        log("   y1 = roots( E1Sx, y )"  )
+        log("      = " + y1 )
+
+        E2Sx = alg( "E2Sx = subst( Sx, x, E1 ) \n E2Sx" )
+        log(" E2Sx = subst( Sx, x, E2 )"  )
+        log("      = " + E2Sx )
+
+        y2 = alg( "y2 = roots( E2Sx, y ) \n y2" )
+        log("   y2 = roots( E2Sx, y )" )
+        log("      = " + y2 )
+
+        // if both equations show same result
         if (y1 == y2) {
 
-          log(" E1x: " + alg(`E1x = subst( y1, y, E1 ) \n E1x`) )
+          var rootsY = alg( "roots( E1Sx, y )" ).replace("[", "").replace("]", "").split(",")
+          log("rootsY = roots( E1Sx, y )" )
+          rootsY.forEach( root => {
+            log("       = " + root )
+          })
 
-          var degE1x = alg("deg(E1x, x)")
-          log("  degE1x = " + degE1x )
+          for (let j = 0; j < rootsY.length; j++) {
 
-          for (let j = 1; j <= degE1x; j++) {
+            console.group(`rootsY[${j}]`)
+            log(`    rY = ` + alg( `rY = ${ rootsY[j] } \n rY` ) )
 
-            x = alg( `roots( E1x, x )[${j}]` )
-            log("  x = " + x )
+            E1x = alg( "E1x = subst( rY, y, E1 ) \n E1x" )
+            log(`   E1x = subst( rY, y, E1 ) ` )
+            log("       = " + E1x )
 
-            addPoint(x, y1, element1, element2);
+            var rootsX = alg( `roots( E1x, x )` ).replace("[", "").replace("]", "").split(",")
+            log("rootsX = roots( E1x, x )" )
+            rootsX.forEach( root => {
+              log("       = " + root )
+            })
 
+            for (let k = 0; k < rootsX.length; k++) {
+              console.group("  x = " + rootsX[k] )
+
+              addPoint(rootsX[k], rootsY[j], element1, element2);
+              console.groupEnd();
+            }
+            console.groupEnd();
           }
 
-        } else {
-          console.warn("y1 != y2")
         }
 
       console.groupEnd()
@@ -547,7 +684,7 @@ function intersect(element1, element2){
     }
 
 
-  } else {
+  } else { // degX == 0 or something bad
 
     log(`* no x term`)
     var degY = alg("deg(S, y)")
@@ -761,10 +898,10 @@ function intersectLineCircle (line, circle) {
 
 
 /* ****************************************************************/
-function Circle(centerPoint, radiusPoint) {
+function Circle(cpt, rpt) {
 
   if (!(this instanceof Circle)) {
-    return new Circle(centerPoint, radiusPoint);
+    return new Circle(cpt, rpt);
   }
 
   this.id = elements.length;
@@ -773,47 +910,103 @@ function Circle(centerPoint, radiusPoint) {
   console.group( `+ ${this.type} : ${this.id} ` );
 
   //center point is not a point on the circle
-  this.points = [radiusPoint];
+  this.points = [rpt];
   this.addPoint = addPointToList;
 
 
-  this.center = centerPoint;
+  this.center = cpt;
 
-  console.group("center pt: " + centerPoint.id)
-  log(`x: ${centerPoint.x}`);
-  log(`y: ${centerPoint.y}`);
+  console.group("center pt: " + cpt.id)
+  log(`cpt.x = ${cpt.x}`);
+  log(`cpt.y = ${cpt.y}`);
   console.groupEnd();
-  console.group("radius pt: " + radiusPoint.id)
-  log(`x: ${radiusPoint.x}`);
-  log(`y: ${radiusPoint.y}`);
+  console.group("radius pt: " + rpt.id)
+  log(`rpt.x = ${rpt.x}`);
+  log(`rpt.y = ${rpt.y}`);
   console.groupEnd();
 
+  log(`---`)
+  //
+  // //calculate equation 1 coefficients
+  // // ax + by + c form
+  var cmd
 
-  // x offest
-  this.h = centerPoint.x;
-  log(`  h: ${this.h}`)
+  alg(`clearall`)
+
+  // h = x offest
+  log(  `    h = cpt.x`)
+  cmd = `    h = (${cpt.x})`
+  alglog(cmd)
+  this.h = alg(`h`)
+  log(  `      = ${this.h}`)
+
 
   // y offset
-  this.k = centerPoint.y;
-  log(`  k: ${this.k}`)
+  log(  `    k = cpt.y`)
+  cmd = `    k = (${cpt.y})`
+  alglog(cmd)
+  this.k = alg(`k`)
+  log(  `      = ${this.k}`)
 
   //get radius length
-  this.r = centerPoint.distanceTo(radiusPoint);
+  this.r = cpt.distanceTo(rpt);
   log(`  r: ${this.r}`)
 
   // generate equation for circle
   // (x - h)^2 + (y - k)^2 + r^2
-  this.eq = Algebrite.run( `clearall
-    (x - (${this.h}))^2 + (y - (${this.k}))^2 - (${this.r})^2` );
-  // log("   eq: " + this.eq);
-  log(` eq: ${this.eq}`)
 
+  log(  `   eq = (x - h)^2 + (y - k)^2 + r^2`)
+  cmd = `   eq = (x - (${this.h}))^2 + (y - (${this.k}))^2 - (${this.r})^2`
+  alglog(cmd)
+  this.eq = alg(`eq`)
+  log(  `      = ${this.eq}`)
+
+  cmd = ` degX = deg(eq, x)`
+  alglog(cmd)
+  this.degX = alg(`degX`)
+  log(  `      = ${this.degX}`)
+  if (this.degX != 0) {
+    // set eq equal to x
+    cmd = `  eqX = roots(eq, x)`
+    alglog(cmd)
+    this.eqX = parseRoots( alg(`eqX`) )
+    if (this.eqX) {
+      this.eqX.forEach( root => {
+        log(  `      = ${root}`)
+      })
+    } else {
+      log(  `      = ${this.eqX}`)
+    }
+  }
+
+  cmd = ` degY = deg(eq, y)`
+  alglog(cmd)
+  this.degY = alg(`degY`)
+  log(  `      = ${this.degY}`)
+  if (this.degY != 0) {
+    // set eq equal to y
+    cmd = `  eqY = roots(eq, y)`
+    alglog(cmd)
+    this.eqY = parseRoots( alg(`eqY`) )
+    if (this.eqY) {
+      this.eqY.forEach( root => {
+        log(  `      = ${root}`)
+      })
+    } else {
+      log(  `      = ${this.eqY}`)
+    }
+
+  }
+
+  this.dim = this.degX > this.degY ? this.degX : this.degY
+
+  log(`---`)
 
 
   ////////////////////////////////////////////////////////
   //TODO: whay does the radius need to be multiplied by 2??
-  var cx = getNumber( centerPoint.x );
-  var cy = getNumber( centerPoint.y );
+  var cx = getNumber( cpt.x );
+  var cy = getNumber( cpt.y );
   var r = getNumber( this.r );
 
   this.element = groupCircles.circle( r * 2 )
@@ -830,7 +1023,9 @@ function Circle(centerPoint, radiusPoint) {
   ////////////////////////////////////////////////////////
   // find all intersections with other elements
   elements.forEach(function(element) {
-    circleIntersect (this, element) ;
+    console.group(`> ${element.id} : ${element.type} `)
+    intersect(this, element) ;
+    console.groupEnd();
   }, this); //pass this context in
 
   // elements.forEach( function(element){

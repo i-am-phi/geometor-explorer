@@ -1,9 +1,32 @@
 
 
 // shortcut for Algebrite.run
+// check valid result
+// return nothing if error
 function alg( cmd ) {
-  //TODO: put in error checking
-  return Algebrite.run( cmd.toString() );
+  var result
+
+  result = Algebrite.run( cmd.toString() )
+  if ( checkValid(result) ) {
+    return result
+  } else {
+    console.error(`ALG: "${cmd}"
+    returns:
+    ${result}`)
+    //return nothing
+  }
+}
+
+function alglog(cmd) {
+  log(cmd)
+  return alg(cmd)
+}
+
+//return array of values
+function parseRoots(roots) {
+  if (roots) {
+    return roots.replace("[", "").replace("]", "").split(",")
+  }
 }
 
 // check if algebraic value can be converted to a decimal float number
@@ -32,15 +55,15 @@ function getNumber( val ) {
 function checkValid(str) {
   let valid = true;
   if ( str.indexOf("Stop:") !== -1  ) {
-    console.error(`value: (${str}) contains 'Stop'`);
+    console.warn(`value: (${str}) contains 'Stop'`);
     valid = false;
   }
   if ( str.indexOf("i") !== -1   ) {
-    console.error(`value: (${str}) contains 'i'`);
+    console.warn(`value: (${str}) contains 'i'`);
     valid = false;
   }
   if ( str.indexOf("nil") !== -1   ) {
-    console.error(`value: (${str}) contains 'nil'`);
+    console.warn(`value: (${str}) contains 'nil'`);
     valid = false;
   }
 
