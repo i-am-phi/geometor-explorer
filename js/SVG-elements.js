@@ -2,6 +2,9 @@ const PRECISION = 8;
 
 //constants
 
+// connect to SVG element
+var D = SVG("drawing").panZoom({zoomMin: 50, zoomMax: 300, zoomFactor: 1.5});
+
 // radius for point icon
 const PTRAD = .025;
 // for variable width stroke on segments in proportion to the line length
@@ -12,8 +15,6 @@ var elements = [];
 var segments = [];
 var golden = [];
 
-// connect to SVG element
-var D = SVG("drawing").panZoom({zoomMin: 50, zoomMax: 300, zoomFactor: 1.5});
 
 //use groups as layers to keep points on top and selectable
 var groupCircles = D.group().attr({ id: "Circles" });
@@ -229,24 +230,28 @@ function Line(pt1, pt2) {
   this.b = alg(`b`)
   log(  `      = ${this.b}`)
 
+  // coefficent c
   log(  `    c = ((pt1.x) * (pt2.y)) - ((pt2.x) * (pt1.y))`)
   cmd = `    c = ((${pt1.x}) * (${pt2.y})) - ((${pt2.x}) * (${pt1.y}))`
   alglog(cmd)
   this.c = alg(`c`)
   log(  `      = ${this.c}`)
 
+  // equation
   cmd = `   eq = (a) x + (b) y + (c)`
   alglog(cmd)
   this.eq = alg(`eq`)
   log(  `   eq = (${this.a}) x + (${this.b}) y + (${this.c})`)
   log(  `      = ${this.eq}`)
 
+  // degree of x term - should be 1 or 0 for vertical line
   cmd = ` degX = deg(eq, x)`
   alglog(cmd)
   this.degX = alg(`degX`)
   log(  `      = ${this.degX}`)
+
   if (this.degX != 0) {
-    // set eq equal to x
+    // solve eq for x
     cmd = `  eqX = roots(eq, x)`
     alglog(cmd)
     // this.eqX = alg(`eqX`)
@@ -260,12 +265,14 @@ function Line(pt1, pt2) {
     }
   }
 
+  // degree of y term - should be 1 or 0 for vertical line
   cmd = ` degY = deg(eq, y)`
   alglog(cmd)
   this.degY = alg(`degY`)
   log(  `      = ${this.degY}`)
+
   if (this.degY != 0) {
-    // set eq equal to y
+    // solve eq for y
     cmd = `  eqY = roots(eq, y)`
     alglog(cmd)
     // this.eqY = alg(`eqY`)
