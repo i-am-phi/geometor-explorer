@@ -4,7 +4,7 @@ var elements = [];
 
 
 
-//TODO: create a common class of Elelemnt for Line and Circle
+//TODO: create a common class of Eleemnt for Line and Circle
 
 //add a point to the parent element
 function addPointToList(point) {
@@ -19,163 +19,177 @@ function addPointToList(point) {
 
 
 
-
 // test two element equations for an intersection
 function intersect(element1, element2){
-
-  //TODO: return R as set of solutions
-  let result = {}
-
-  // get equation of element1
-  cmd = `   E1 = ${element1.eq}`
-  alglog(cmd)
-  log(  `      = ${ alg(`E1`) }`)
-  log(  `        E1.dim: ${ element1.dim }`)
-
-  // get equation of element2
-  cmd = `   E2 = ${element2.eq}`
-  alglog(cmd)
-  log(  `      = ${ alg(`E2`) }`)
-  log(  `        E2.dim: ${ element2.dim }`)
-
-  // TODO: move this to the 2x2 dimension
-  cmd = `    S = E1 - E2`
-  alglog(cmd)
-  log(  `      = ${ alg(`S`) }`)
 
   // if either equation is 1 dimension do subst
   // if both are 2 dimension - then subtract
 
-  let x, y
-
   if (element1.dim == 1) {
-    log(`* substitute element1 into element2`)
 
-    if (element1.degX == 1) {
-      log(`* use element1.eqX  `)
-
-      alglog(`   E2y = roots(subst((${ element1.eqX }), x, E2), y)`)
-      y = alg(`E2y`)
-      log(   `     y = ${ y }`)
-
-      alglog(`   E2x = roots(subst((E2y), y, E2), x)`)
-      x = alg(`E2x`)
-      log(   `     x = ${ x }`)
-
-    } else if (element1.degY == 1) {
-      // degX == 1
-      // eqX has a y term
-      log(`* use element1.eqY`)
-
-      alglog(`   E2x = roots(subst((${ element1.eqY }), y, E2), x)`)
-      x = alg(`E2x`)
-      log(   `     x = ${ x }`)
-
-      alglog(`   E2y = roots(subst((E2x), x, E2), y)`)
-      y = alg(`E2y`)
-      log(   `     y = ${ y }`)
-    }
+    substitute(element1, element2)
 
   } else if (element2.dim == 1) {
-    log(`* substitute element2 into element1`)
-    if (element2.degX == 1) {
-      log(`* use element2.eqX  `)
 
-      alglog(`   E2y = roots(subst((${ element2.eqX }), x, E2), y)`)
-      y = alg(`E2y`)
-      log(   `     y = ${ y }`)
+    //REVERSE ELEMENTS
+    substitute(element2, element1)
 
-      alglog(`   E2x = roots(subst((E2y), y, E2), x)`)
-      x = alg(`E2x`)
-      log(   `     x = ${ x }`)
-
-    } else if (element2.degY == 1) {
-      // degX == 1
-      // eqX has a y term
-      log(`* use element2.eqY`)
-
-      alglog(`   E2x = roots(subst((${ element2.eqY }), y, E2), x)`)
-      x = alg(`E2x`)
-      log(   `     x = ${ x }`)
-
-      alglog(`   E2y = roots(subst((E2x), x, E2), y)`)
-      y = alg(`E2y`)
-      log(   `     y = ${ y }`)
-    }
   } else {
-    //bpth are quadratic
+
+    // both equations are two dimensions
+    subtract(element1, element2)
+
   }
 
-  //   // pass E2 root set to E1 to eliminate variable
-  //   if (element2.eqX) {
-  //     log(`* subst E2x for x in E1`)
-  //     element2.eqX.forEach( E2x => {
-  //       // subst element2.eqX for x in E1
-  //
-  //       cmd = `  E2x = ${ E2x }`
-  //       alglog(cmd)
-  //       log(  `      = ${ alg(`E2x`) }`)
-  //
-  //       cmd = `  E1y = subst(E2x, x, E1)`
-  //       alglog(cmd)
-  //       log(  `      = ${ alg(`E1y`) }`)
-  //
-  //       cmd = `  R1y = roots(E1y, y)`
-  //       alglog(cmd)
-  //       log(  `      = ${ alg(`R1y`) }`)
-  //
-  //     })
-  //   } else {
-  //     if (element2.eqY) {
-  //       log(`* subst E2y for y in E1`)
-  //       element2.eqY.forEach( E2y => {
-  //         // subst element2.eqY for y in E2
-  //         cmd = `  E2y = ${ E2y }`
-  //         alglog(cmd)
-  //         log(  `      = ${ alg(`E2y`) }`)
-  //
-  //         cmd = `  E1x = subst(E2y, y, E1)`
-  //         alglog(cmd)
-  //         log(  `      = ${ alg(`E1x`) }`)
-  //
-  //         cmd = `  R1x = roots(E1x, x)`
-  //         alglog(cmd)
-  //         log(  `      = ${ alg(`R1x`) }`)
-  //
-  //
-  //       })
-  //     }
-  //   }
-  // }
+}
+
+function substitute(element1, element2) {
+  let x, y
+
+  setSystem(element1, element2)
+
+  console.group(`solution`)
+
+  log(`* substitute E1 into E2`)
+
+  if (element1.eqX) {
+    log(`* use element1.eqX  `)
+
+    element1.eqX.forEach( E1x => {
 
 
+      // else solve for scalar x after y
+
+      // does eqX contain a y term?
+      if (E1x.indexOf("y")) {
+        alglog(`   E1x = ${ E1x }`)
+        log(   `       = ${ alg(`E1x`) }`)
+
+        // TODO: check if
+        if (element2.degX != 0) {
+
+        }
+        
+        alglog(`   E2s = subst(E1x, x, E2)`)
+        log(   `       = ${ alg(`E2s`) }`)
+
+        alglog(`   E2ry = roots(E2s, y)`)
+        roots = parseRoots( alg(`E2ry`) )
+
+        roots.forEach( y => {
+          console.group("root")
+          log(   `     y = ${ y }`)
+
+          alglog(`   E2x = roots(subst(${ y }, y, E2), x)`)
+          x = alg(`E2x`)
+          log(   `     x = ${ x }`)
+          addPoint(x, y, element1, element2);
+          console.groupEnd("root")
+        })
+
+      } else {
+        //eqX is scalar value
+        x = E1x
+        if (element2.degX != 0) {
+
+        } else {
+          y = element2.eqY
+        }
+        //
+      }
 
 
+      alglog(`   E1x = ${ E1x }`)
+      log(   `       = ${ alg(`E1x`) }`)
 
-  // check if there is an x term
-  var degX = alg("deg(S, x)")
-  log(" degX = deg(S, x)")
-  log("      = " + degX)
+      // TODO: check if
+      alglog(`   E2s = subst(E1x, x, E2)`)
+      log(   `       = ${ alg(`E2s`) }`)
 
-  if (degX !== "0") { // more than 1 but not zero
+      alglog(`   E2ry = roots(E2s, y)`)
+      roots = parseRoots( alg(`E2ry`) )
 
-    // log("* roots(S, x): " + alg("roots(S, x)"))
-    // log("* deg(roots(S, x), y): " + alg("deg(roots(S, x), y)"))
+      roots.forEach( y => {
+        console.group("root")
+        log(   `     y = ${ y }`)
+
+        alglog(`   E2x = roots(subst(${ y }, y, E2), x)`)
+        x = alg(`E2x`)
+        log(   `     x = ${ x }`)
+        addPoint(x, y, element1, element2);
+        console.groupEnd("root")
+      })
+
+    })
+
+  } else if (element1.eqY) {
+    // degX == 1
+    // eqX has a y term
+    log(`* use element1.eqY`)
+
+    element1.eqY.forEach( E1y => {
+
+      alglog(`   E1y = ${ E1y }`)
+      log(   `       = ${ alg(`E1y`) }`)
+
+      alglog(`   E2s = subst((${ E1y }), y, E2)`)
+      log(   `       = ${ alg(`E2s`) }`)
+
+      alglog(`   E2rx = roots(E2s, x)`)
+      roots = parseRoots( alg(`E2rx`) )
+
+      roots.forEach( x => {
+        console.group("root")
+        log(   `     x = ${ x }`)
+
+        alglog(`   E2y = roots(subst(${ x }, x, E2), y)`)
+        y = alg(`E2y`)
+        log(   `     y = ${ y }`)
+        addPoint(x, y, element1, element2);
+        console.groupEnd("root")
+      })
+    })
+  }
+
+  console.groupEnd(`solution`)
+
+}
+
+function subtract(element1, element2) {
+  let x, y
+
+  setSystem(element1, element2)
+
+  console.group(`solution`)
+
+  log(`subtract E2 from E1`)
+  cmd = `    S = E1 - E2`
+  alglog(cmd)
+  log(  `      = ${ alg(`S`) }`)
+
+  // check if there is an x term in S
+  var degSx = alg("deg(S, x)")
+  log(" degSx = deg(S, x)")
+  log("       = " + degSx)
+
+  // check if there is an x term in S
+  var degSy = alg("deg(S, y)")
+  log(" degSy = deg(S, y)")
+  log("       = " + degSy)
+
+  if (degSx != 0) { // more than 1 but not zero
 
     var rootsSx = parseRoots( alg("roots(S, x)") )
     log(" rootsSx = roots(S, x)")
-    rootsSx.forEach( root => {
-      log("         = " + root )
-    })
 
-    // console.dir(rootsSx)
 
-    for (let i = 0; i < rootsSx.length; i++) {
-      console.group(`rootsSx[${i}]`)
+    rootsSx.forEach( rootSx => {
+
+      console.group(`rootSx`)
 
         // log(`  Sx = roots(S, x)[${i}]`)
-        log("   Sx = " + alg( `Sx = ${ rootsSx[i] } \n Sx` ) )
-        log(" deg(Sx) = " + alg( `deg(Sx)` ) )
+        log("   Sx = " + alg( `Sx = ${ rootSx } \n Sx` ) )
+        log("        deg(Sx) = " + alg( `deg(Sx)` ) )
 
         // check both equations
 
@@ -183,71 +197,76 @@ function intersect(element1, element2){
         log(" E1Sx = subst( Sx, x, E1 )"  )
         log("      = " + E1Sx )
 
-        y1 = alg( "y1 = roots( E1Sx, y ) \n y1" )
-        log("   y1 = roots( E1Sx, y )"  )
-        log("      = " + y1 )
-
         E2Sx = alg( "E2Sx = subst( Sx, x, E1 ) \n E2Sx" )
         log(" E2Sx = subst( Sx, x, E2 )"  )
         log("      = " + E2Sx )
 
-        y2 = alg( "y2 = roots( E2Sx, y ) \n y2" )
-        log("   y2 = roots( E2Sx, y )" )
-        log("      = " + y2 )
+        if (E1Sx != E2Sx) {
+          console.warn(`E1Sx != E2Sx`)
+        }
 
         // if both equations show same result
-        if (y1 == y2) {
 
-          var rootsY = parseRoots( alg( "roots( E1Sx, y )" ) )
-          log("rootsY = roots( E1Sx, y )" )
-          rootsY.forEach( root => {
-            log("       = " + root )
-          })
+        var rootsE1y = parseRoots( alg( "roots( E1Sx, y )" ) )
+        log("rootsE1y = roots( E1Sx, y )" )
+        rootsE1y.forEach( rY => {
+          // log("       = " + rY )
 
-          for (let j = 0; j < rootsY.length; j++) {
+          console.group(`rY`)
+          log(`    rY = ` + alg( `rY = ${ rY } \n rY` ) )
 
-            console.group(`rootsY[${j}]`)
-            log(`    rY = ` + alg( `rY = ${ rootsY[j] } \n rY` ) )
+          if (degSx == 1) {
+            // Sx = x
+            x = rootSx
+            y = rY
+            addPoint(x, y, element1, element2);
 
-            E1x = alg( "E1x = subst( rY, y, E1 ) \n E1x" )
-            log(`   E1x = subst( rY, y, E1 ) ` )
-            log("       = " + E1x )
+          } else {
 
             var rootsX = parseRoots( alg( `roots( E1x, x )` ) )
             log("rootsX = roots( E1x, x )" )
-            rootsX.forEach( root => {
-              log("       = " + root )
+            rootsX.forEach( rX => {
+
+              log("       = " + rX )
+              console.group("  x = " + rootsX[k] )
+              x = rX
+              y = rY
+
+              addPoint(rX, rY, element1, element2);
+              console.groupEnd();
+
             })
 
-            for (let k = 0; k < rootsX.length; k++) {
-              console.group("  x = " + rootsX[k] )
-
-              addPoint(rootsX[k], rootsY[j], element1, element2);
-              console.groupEnd();
-            }
-            console.groupEnd();
           }
 
-        }
+          console.groupEnd(`rY`);
 
-      console.groupEnd()
+        })
 
-    }
 
+
+      console.groupEnd(`rootSx`)
+
+    }) //forEach rootsSx
 
   } else { // degX == 0 or something bad
 
-    log(`* no x term`)
-    var degY = alg("deg(S, y)")
-    log(" deg(S, y): " + degY)
+    log(`* no x term in S`)
 
-    if (degY != "0") {
+    var degSy = alg("deg(S, y)")
+    log(" deg(S, y): " + degSy)
 
-      for (let i = 1; i <= degY; i++) {
+    if (degSy != "0") {
 
-        console.group("root y: " + i)
+      var rootsSy = parseRoots( alg("roots(S, y)") )
+      log(" rootsSy = roots(S, y)")
 
-          log(" Sy: " + alg(`Sy = roots(S, y)[${i}] \n Sy`) )
+      rootsSy.forEach( rootSy => {
+
+        console.group(`rootSy`)
+
+
+          log(" Sy: " + alg(`Sy = ${ rootSy }] \n Sy`) )
 
           // check both equations
 
@@ -278,11 +297,34 @@ function intersect(element1, element2){
             console.warn("x1 != x2")
           }
 
-        console.groupEnd()
+        console.groupEnd("rootSy")
 
-      }
-
+      }) //forEach rootSy
     }
   }
+
+  console.groupEnd(`solution`)
+
+}
+
+
+
+function setSystem(element1, element2) {
+
+  console.group(`system`)
+
+  // get equation of element1
+  cmd = `E1 = ${element1.eq}`
+  alglog(cmd)
+  log(  `   = ${ alg(`E1`) }`)
+  log(  `     E1.dim: ${ element1.dim }`)
+
+  // get equation of element2
+  cmd = `E2 = ${element2.eq}`
+  alglog(cmd)
+  log(  `   = ${ alg(`E2`) }`)
+  log(  `     E2.dim: ${ element2.dim }`)
+
+  console.groupEnd(`system`)
 
 }

@@ -10,7 +10,7 @@ function Line(pt1, pt2) {
   this.id = elements.length;
   this.type = "line";
 
-  console.group( `+ ${this.type} : ${this.id} ` );
+  console.group( `+ ${this.id} : ${this.type} ` );
 
   this.points = [];
 
@@ -25,7 +25,8 @@ function Line(pt1, pt2) {
   log(`pt2.x = ${pt2.x}`);
   log(`pt2.y = ${pt2.y}`);
   console.groupEnd();
-  log(`---`)
+
+  console.group(`eq`)
 
   //calculate equation 1 coefficients
   // ax + by + c form
@@ -61,10 +62,11 @@ function Line(pt1, pt2) {
   log(  `   eq = (${this.a}) x + (${this.b}) y + (${this.c})`)
   log(  `      = ${this.eq}`)
 
+
   // degree of x term - should be 1 or 0 for vertical line
   cmd = ` degX = deg(eq, x)`
   alglog(cmd)
-  this.degX = alg(`degX`)
+  this.degX = parseInt(alg(`degX`))
   log(  `      = ${this.degX}`)
 
   if (this.degX != 0) {
@@ -74,6 +76,7 @@ function Line(pt1, pt2) {
     // this.eqX = alg(`eqX`)
     this.eqX = parseRoots( alg(`eqX`) )
     if (this.eqX) {
+
       this.eqX.forEach( root => {
         log(  `      = ${root}`)
       })
@@ -85,16 +88,22 @@ function Line(pt1, pt2) {
   // degree of y term - should be 1 or 0 for vertical line
   cmd = ` degY = deg(eq, y)`
   alglog(cmd)
-  this.degY = alg(`degY`)
+  this.degY = parseInt(alg(`degY`))
   log(  `      = ${this.degY}`)
 
   if (this.degY != 0) {
+
     // solve eq for y
     cmd = `  eqY = roots(eq, y)`
     alglog(cmd)
     // this.eqY = alg(`eqY`)
     this.eqY = parseRoots( alg(`eqY`) )
     if (this.eqY) {
+
+      if (this.dim < this.degY) {
+        this.dim = this.degY
+      }
+
       this.eqY.forEach( root => {
         log(  `      = ${root}`)
       })
@@ -102,7 +111,6 @@ function Line(pt1, pt2) {
       log(  `      = ${this.eqY}`)
     }
 
-    this.dim = this.degX > this.degY ? this.degX : this.degY
 
     //calculate equation 1 coefficients
     // y = mx + n form
@@ -132,8 +140,15 @@ function Line(pt1, pt2) {
 
   }
 
+  this.dim = this.degX
+  if (this.dim < this.degY) {
+    this.dim = this.degY
+  }
 
-  log(`---`)
+
+  console.groupEnd(`eq`)
+
+  //TODO - not sure these are still used
 
   // set xRoot if not horizontal
   if (this.a != 0) {

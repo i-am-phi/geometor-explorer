@@ -11,7 +11,7 @@ function Circle(cpt, rpt) {
   this.id = elements.length;
   this.type = "circle";
 
-  console.group( `+ ${this.type} : ${this.id} ` );
+  console.group( `+ ${this.id} : ${this.type} ` );
 
   //center point is not a point on the circle
   this.points = [rpt];
@@ -29,7 +29,7 @@ function Circle(cpt, rpt) {
   log(`rpt.y = ${rpt.y}`);
   console.groupEnd();
 
-  log(`---`)
+  console.group(`eq`)
   //
   // //calculate equation 1 coefficients
   // // ax + by + c form
@@ -78,6 +78,10 @@ function Circle(cpt, rpt) {
     if (this.eqX) {
       this.eqX.forEach( root => {
         log(  `      = ${root}`)
+
+        if (checkComplex(root)) {
+          console.warn(`complex root`)
+        }
       })
     } else {
       log(  `      = ${this.eqX}`)
@@ -96,6 +100,10 @@ function Circle(cpt, rpt) {
     if (this.eqY) {
       this.eqY.forEach( root => {
         log(  `      = ${root}`)
+
+        if (checkComplex(root)) {
+          console.warn(`complex root`)
+        }
       })
     } else {
       log(  `      = ${this.eqY}`)
@@ -105,7 +113,7 @@ function Circle(cpt, rpt) {
 
   this.dim = this.degX > this.degY ? this.degX : this.degY
 
-  log(`---`)
+  console.groupEnd(`eq`)
 
 
   ////////////////////////////////////////////////////////
