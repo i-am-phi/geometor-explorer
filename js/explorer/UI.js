@@ -1,18 +1,12 @@
 //init panels
-var pointsPanel = document.getElementById('points');
-if ( !pointsPanel ) {
-  console.log('pointsPanel not found');
-}
+// var pointsPanel = document.getElementById('points');
+// if ( !pointsPanel ) {
+//   console.log('pointsPanel not found');
+// }
 
-var linesPanel = document.getElementById('lines');
-if ( !linesPanel ) {
-  console.log('linesPanel not found');
-}
+var pointList = document.getElementById("pointList");
+var elementList = document.getElementById("elementList");
 
-var circlesPanel = document.getElementById('circles');
-if ( !circlesPanel ) {
-  console.log('circlesPanel not found');
-}
 
 var segmentsPanel = document.getElementById('segments');
 if ( !segmentsPanel ) {
@@ -35,22 +29,56 @@ function log (msg) {
 }
 
 function logPoint (point) {
-  var item = point.id + `  ( ${point.x},\t${point.y} ) \n`;
-  pointsPanel.innerHTML += item;
-  // ÷=console.log(item);
+  // Create an empty <tr> element and add it to the 1st position of the table:
+  var row = pointList.insertRow(-1);
+  row.classList.add("point")
+
+
+  addCell(row, point.id)
+  addCell(row, kat(point.x), point.xVal)
+  addCell(row, kat(point.y), point.yVal)
+
 }
 
-function logLine (line) {
-  var item = line.id + `  [${line.points[0].id}, ${line.points[1].id}] ${line.eq} = 0 \n`;
-  linesPanel.innerHTML += item;
-  // console.log(item);
+function kat(str) {
+  let latex =  alg(`printlatex(${str})`);
+  return katex.renderToString(latex);
 }
 
-function logCircle (circle) {
-  var item = circle.id + `  ( ${circle.h}, ${circle.k} )\t${circle.r}\t${circle.eq} = 0 \n`;
-  circlesPanel.innerHTML += item;
-  // console.log(item);
+function addCell(row, html, title) {
+  let cell = row.insertCell(-1);
+  cell.innerHTML = html
+  if (title) cell.setAttribute('title', title);
 }
+
+function logElement (element) {
+  // var item = line.id + `  [${line.points[0].id}, ${line.points[1].id}] ${line.eq} = 0 \n`;
+  // linesPanel.innerHTML += item;
+  // console.log(item);
+
+  var row = elementList.insertRow(-1);
+  row.classList.add(element.type)
+
+  addCell(row, element.id)
+  if (element.type == "line") {addCell(row, "/", "line")}
+  if (element.type == "circle") {addCell(row, "⨀", "circle")}
+  addCellParam(row, element.eq.d, getNumber(element.eq.d))
+  addCellParam(row, element.eq.e, getNumber(element.eq.e))
+  addCellParam(row, element.eq.f, getNumber(element.eq.f))
+  addCellParam(row, element.eq.a, getNumber(element.eq.a))
+  addCellParam(row, element.eq.b, getNumber(element.eq.b))
+  addCellParam(row, element.eq.c, getNumber(element.eq.c))
+}
+
+function addCellParam(row, html, title) {
+  cell = row.insertCell(-1);
+  if (html != 0) {
+    cell.innerHTML = kat(html)
+  }
+  if (title) cell.setAttribute('title', title);
+
+}
+
 
 function logSegments (str) {
   //  var item = circle.id + `  ( ${circle.h}, ${circle.k} )\t${circle.r}\t${circle.eq} = 0 \n`;

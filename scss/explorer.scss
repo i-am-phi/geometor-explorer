@@ -97,6 +97,26 @@ body.explorer {
 
 }
 
+table {
+  text-align: center;
+
+}
+
+td, th {
+  padding: .5em 1em;
+
+}
+
+tr.circle {
+  color: $color-circle;
+}
+
+
+tr.line {
+  color: $color-line;
+}
+
+
 // SVG element
 #drawing {
   width: 100%;

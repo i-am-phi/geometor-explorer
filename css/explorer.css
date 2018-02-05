@@ -28,16 +28,9 @@ body.explorer {
     grid-gap: .5em;
     grid-template-columns: 1fr;
     grid-template-areas: "points" "lines" "circles" "segments" "info"; }
-    body.explorer aside #points {
-      color: #FFF; }
-    body.explorer aside #lines {
-      color: #C0F; }
-    body.explorer aside #circles {
-      color: #0C9; }
-    body.explorer aside #segments {
-      color: #C90; }
-    body.explorer aside #info {
-      color: #CCC; }
+
+
+
   body.explorer aside pre {
     overflow: auto;
     /* height: 20%; */
@@ -53,6 +46,56 @@ body.explorer {
     color: white; }
   body.explorer a:hover {
     color: #C90; }
+
+nav {
+  display: flex;
+  flex-direction: row;
+
+}
+
+nav a {
+  flex-grow: 1;
+  text-align: center;
+}
+
+/***************************/
+table {
+  text-align: center;
+  width: 100%;
+}
+
+table caption {
+  background-color: #333;
+  color: #CCC;
+  padding: .25em;
+  letter-spacing: .5em;
+  text-transform: uppercase;
+}
+
+td, th {
+  padding: .1em 1em;
+  background-color: black;
+  margin: .1em;
+}
+
+tr.point {
+  color: #CCC;
+}
+
+tr.circle {
+  color: #0C9;
+}
+
+tr.line {
+  color: #C0F;
+}
+
+tr.segment {
+  color: #C90;
+}
+
+
+/***************************/
 
 #drawing {
   width: 100%;

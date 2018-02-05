@@ -26,10 +26,14 @@ function Line(pt1, pt2) {
   log(`pt2.y = ${pt2.y}`);
   console.groupEnd();
 
+
+  //***************************************
   console.group(`eq`)
 
-  //calculate equation 1 coefficients
+
+  // calculate equation 1 coefficients
   // ax + by + c form
+
   var cmd
 
   alg(`clearall`)
@@ -38,112 +42,29 @@ function Line(pt1, pt2) {
   log(  `    a = (pt1.y) - (pt2.y)`)
   cmd = `    a = (${pt1.y}) - (${pt2.y})`
   alglog(cmd)
-  this.a = alg(`a`)
-  log(  `      = ${this.a}`)
+  let a = alg(`a`)
+  log(  `      = ${a}`)
 
   // coefficent b
   log(  `    b = (pt2.x) - (pt1.x)`)
   cmd = `    b = (${pt2.x}) - (${pt1.x})`
   alglog(cmd)
-  this.b = alg(`b`)
-  log(  `      = ${this.b}`)
+  let b = alg(`b`)
+  log(  `      = ${b}`)
 
   // coefficent c
   log(  `    c = ((pt1.x) * (pt2.y)) - ((pt2.x) * (pt1.y))`)
   cmd = `    c = ((${pt1.x}) * (${pt2.y})) - ((${pt2.x}) * (${pt1.y}))`
   alglog(cmd)
-  this.c = alg(`c`)
-  log(  `      = ${this.c}`)
+  let c = alg(`c`)
+  log(  `      = ${c}`)
 
-  // equation
-  cmd = `   eq = (a) x + (b) y + (c)`
-  alglog(cmd)
-  this.eq = alg(`eq`)
-  log(  `   eq = (${this.a}) x + (${this.b}) y + (${this.c})`)
-  log(  `      = ${this.eq}`)
+  // instantiate the equation object
+  this.eq = new Equation(0,0,0,a,b,c)
 
 
-  // degree of x term - should be 1 or 0 for vertical line
-  cmd = ` degX = deg(eq, x)`
-  alglog(cmd)
-  this.degX = parseInt(alg(`degX`))
-  log(  `      = ${this.degX}`)
-
-  if (this.degX != 0) {
-    // solve eq for x
-    cmd = `  eqX = roots(eq, x)`
-    alglog(cmd)
-    // this.eqX = alg(`eqX`)
-    this.eqX = parseRoots( alg(`eqX`) )
-    if (this.eqX) {
-
-      this.eqX.forEach( root => {
-        log(  `      = ${root}`)
-      })
-    } else {
-      log(  `      = ${this.eqX}`)
-    }
-  }
-
-  // degree of y term - should be 1 or 0 for vertical line
-  cmd = ` degY = deg(eq, y)`
-  alglog(cmd)
-  this.degY = parseInt(alg(`degY`))
-  log(  `      = ${this.degY}`)
-
-  if (this.degY != 0) {
-
-    // solve eq for y
-    cmd = `  eqY = roots(eq, y)`
-    alglog(cmd)
-    // this.eqY = alg(`eqY`)
-    this.eqY = parseRoots( alg(`eqY`) )
-    if (this.eqY) {
-
-      if (this.dim < this.degY) {
-        this.dim = this.degY
-      }
-
-      this.eqY.forEach( root => {
-        log(  `      = ${root}`)
-      })
-    } else {
-      log(  `      = ${this.eqY}`)
-    }
 
 
-    //calculate equation 1 coefficients
-    // y = mx + n form
-    // var bVal = getNumber(this.b);
-
-    var cmd = `
-    # i think a should be negative
-    m = -(a) / (b)
-    m
-    n = -(c) / (b)
-    n
-    eq2 = m * x + n
-    eq2
-    `;
-
-    // run script and parse result
-    // returns m, n, eq2
-    var result = alg(cmd).split("\n");
-
-    this.m = result[0];
-    this.n = result[1];
-    this.eq2 = result[2];
-
-    log(`   m: ${this.m}`)
-    log(`   n: ${this.n}`)
-    log(` eq2: ${this.eq2}`)
-
-  }
-
-  this.dim = this.degX
-  if (this.dim < this.degY) {
-    this.dim = this.degY
-  }
 
 
   console.groupEnd(`eq`)
@@ -151,14 +72,14 @@ function Line(pt1, pt2) {
   //TODO - not sure these are still used
 
   // set xRoot if not horizontal
-  if (this.a != 0) {
+  if (this.eq.a != 0) {
     this.xRoot = alg( `roots(eq, x)` );
   } else {
     // leave undefined
   }
 
   // set yRoot if not vertical
-  if (this.b != 0) {
+  if (this.eq.b != 0) {
     this.yRoot = alg( `roots(eq, y)` );
   } else {
     // leave undefined
@@ -237,9 +158,9 @@ function Line(pt1, pt2) {
   // summarize attributes for toString
   this.toString = function() {
     var str = `${this.type}: ${this.id}
-      a: ${this.a}
-      b: ${this.b}
-      c: ${this.c}
+      a: ${this.eq}
+      b: ${this.eq.b}
+      c: ${this.eq.c}
      eq: ${this.eq} [ = 0 ]
       m: ${this.m}
       n: ${this.n}
@@ -254,7 +175,7 @@ function Line(pt1, pt2) {
     return str;
   }
 
-  logLine(this);
+  logElement(this);
   // log(this);
   console.dir(this);
   console.groupEnd();

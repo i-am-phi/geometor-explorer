@@ -41,23 +41,66 @@
       preserveAspectRatio="xMidYMid slice"></svg>
   </main>
   <aside>
-    <div>
-      <a href="#" onclick="D.zoom(100, {0, 0});">center</a> •
-      <a href="#" onclick="DrawTL.restart();">draw</a> •
+    <nav>
+      <a href="#" onclick="D.zoom(100, {0, 0});">center</a>
+      <a href="#" onclick="DrawTL.restart();">draw</a>
       <a href="#" onclick="animateGoldenSegments();">golden sections</a>
+    </nav>
+    <!-- points -->
+    <div>
+      <table >
+        <caption>points</caption>
+        <thead>
+        <tr>
+          <th>id</th>
+          <th>x</th>
+          <th>y</th>
+        </tr>
+        </thead>
+        <tbody id="pointList">
+        </tbody>
+      </table>
     </div>
-    <pre id="points">POINTS
-------
-</pre>
-    <pre id="lines">LINES
-------
-</pre>
-    <pre id="circles">CIRCLES
-------
-</pre>
-    <pre id="segments">SEGMENTS
-------
-</pre>
+    <!-- elements -->
+    <div>
+      <table >
+        <caption>elements</caption>
+        <thead>
+        <tr>
+          <th>id</th>
+          <th>+</th>
+          <th>d</th>
+          <th>e</th>
+          <th>f</th>
+          <th>a</th>
+          <th>b</th>
+          <th>c</th>
+        </tr>
+        </thead>
+        <tbody id="elementList">
+        </tbody>
+      </table>
+    </div>
+    <!-- segments -->
+    <div>
+      <table >
+        <caption>golden sections</caption>
+        <thead>
+        <tr>
+          <th>id</th>
+          <th>p1</th>
+          <th>a</th>
+          <th>p2</th>
+          <th>b</th>
+          <th>p3</th>
+        </tr>
+        </thead>
+        <tbody id="segmentList">
+        </tbody>
+      </table>
+    </div>
+
+
     <pre id="info"></pre>
   </aside>
   <footer id="footer"></footer>
@@ -66,6 +109,8 @@
   <script src="js/explorer/UI.js"></script>
   <script src="js/explorer/SVG.js"></script>
   <script src="js/explorer/Algebra.js"></script>
+  <script src="js/explorer/Equation.js"></script>
+  <script src="js/explorer/System.js"></script>
 
   <script src="js/explorer/Point.js"></script>
   <script src="js/explorer/Element.js"></script>

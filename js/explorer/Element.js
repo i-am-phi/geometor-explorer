@@ -25,11 +25,11 @@ function intersect(element1, element2){
   // if either equation is 1 dimension do subst
   // if both are 2 dimension - then subtract
 
-  if (element1.dim == 1) {
+  if (element1.eq.dim == 1) {
 
     substitute(element1, element2)
 
-  } else if (element2.dim == 1) {
+  } else if (element2.eq.dim == 1) {
 
     //REVERSE ELEMENTS
     substitute(element2, element1)
@@ -52,24 +52,24 @@ function substitute(element1, element2) {
 
   log(`* substitute E1 into E2`)
 
-  if (element1.eqX) {
-    log(`* use element1.eqX  `)
+  if (element1.eq.forX) {
+    log(`* use element1.eq.forX  `)
 
-    element1.eqX.forEach( E1x => {
+    element1.eq.forX.forEach( E1x => {
 
 
       // else solve for scalar x after y
 
-      // does eqX contain a y term?
+      // does eq.forX contain a y term?
       if (E1x.indexOf("y")) {
         alglog(`   E1x = ${ E1x }`)
         log(   `       = ${ alg(`E1x`) }`)
 
         // TODO: check if
-        if (element2.degX != 0) {
+        if (element2.eq.degX != 0) {
 
         }
-        
+
         alglog(`   E2s = subst(E1x, x, E2)`)
         log(   `       = ${ alg(`E2s`) }`)
 
@@ -90,10 +90,10 @@ function substitute(element1, element2) {
       } else {
         //eqX is scalar value
         x = E1x
-        if (element2.degX != 0) {
+        if (element2.eq.degX != 0) {
 
         } else {
-          y = element2.eqY
+          y = element2.eq.forY
         }
         //
       }
@@ -122,12 +122,12 @@ function substitute(element1, element2) {
 
     })
 
-  } else if (element1.eqY) {
+  } else if (element1.eq.forY) {
     // degX == 1
     // eqX has a y term
-    log(`* use element1.eqY`)
+    log(`* use element1.eq.forY`)
 
-    element1.eqY.forEach( E1y => {
+    element1.eq.forY.forEach( E1y => {
 
       alglog(`   E1y = ${ E1y }`)
       log(   `       = ${ alg(`E1y`) }`)
@@ -317,13 +317,13 @@ function setSystem(element1, element2) {
   cmd = `E1 = ${element1.eq}`
   alglog(cmd)
   log(  `   = ${ alg(`E1`) }`)
-  log(  `     E1.dim: ${ element1.dim }`)
+  log(  `     E1.dim: ${ element1.eq.dim }`)
 
   // get equation of element2
   cmd = `E2 = ${element2.eq}`
   alglog(cmd)
   log(  `   = ${ alg(`E2`) }`)
-  log(  `     E2.dim: ${ element2.dim }`)
+  log(  `     E2.dim: ${ element2.eq.dim }`)
 
   console.groupEnd(`system`)
 

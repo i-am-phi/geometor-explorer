@@ -17,7 +17,6 @@ function Circle(cpt, rpt) {
   this.points = [rpt];
   this.addPoint = addPointToList;
 
-
   this.center = cpt;
 
   console.group("center pt: " + cpt.id)
@@ -29,13 +28,14 @@ function Circle(cpt, rpt) {
   log(`rpt.y = ${rpt.y}`);
   console.groupEnd();
 
+  //***************************************
   console.group(`eq`)
-  //
+
   // //calculate equation 1 coefficients
-  // // ax + by + c form
   var cmd
 
   alg(`clearall`)
+
 
   // h = x offest
   log(  `    h = cpt.x`)
@@ -44,74 +44,44 @@ function Circle(cpt, rpt) {
   this.h = alg(`h`)
   log(  `      = ${this.h}`)
 
+  // a coefficient
+  cmd = `    a = -2h`
+  alglog(cmd)
+  let a = alg(`a`)
+  log(  `      = ${a}`)
 
-  // y offset
+
+
+  // k = y offset
   log(  `    k = cpt.y`)
   cmd = `    k = (${cpt.y})`
   alglog(cmd)
   this.k = alg(`k`)
   log(  `      = ${this.k}`)
 
-  //get radius length
-  //TODO: show the work for radius length
-  this.r = cpt.distanceTo(rpt);
-  log(`  r: ${this.r}`)
-
-  // generate equation for circle
-  // (x - h)^2 + (y - k)^2 + r^2
-
-  log(  `   eq = (x - h)^2 + (y - k)^2 + r^2`)
-  cmd = `   eq = (x - (${this.h}))^2 + (y - (${this.k}))^2 - (${this.r})^2`
+  // b coefficient
+  cmd = `    b = -2k`
   alglog(cmd)
-  this.eq = alg(`eq`)
-  log(  `      = ${this.eq}`)
+  let b = alg(`b`)
+  log(  `      = ${b}`)
 
-  cmd = ` degX = deg(eq, x)`
+
+  // calculate radius
+  log(  `    r = ( (cpt.x - rpt.x)^2 + (rpt.y - cpt.y)^2 )^(1/2)`)
+  cmd = `    r = ( ((${cpt.x}) - (${rpt.x}))^2 + ((${rpt.y}) - (${cpt.y}))^2 )^(1/2)`
   alglog(cmd)
-  this.degX = alg(`degX`)
-  log(  `      = ${this.degX}`)
-  if (this.degX != 0) {
-    // set eq equal to x
-    cmd = `  eqX = roots(eq, x)`
-    alglog(cmd)
-    this.eqX = parseRoots( alg(`eqX`) )
-    if (this.eqX) {
-      this.eqX.forEach( root => {
-        log(  `      = ${root}`)
+  this.r = alg(`r`)
+  log(  `      = ${this.r}`)
 
-        if (checkComplex(root)) {
-          console.warn(`complex root`)
-        }
-      })
-    } else {
-      log(  `      = ${this.eqX}`)
-    }
-  }
-
-  cmd = ` degY = deg(eq, y)`
+  // c coefficient
+  cmd = `    c = h^2 + k^2 - r^2`
   alglog(cmd)
-  this.degY = alg(`degY`)
-  log(  `      = ${this.degY}`)
-  if (this.degY != 0) {
-    // set eq equal to y
-    cmd = `  eqY = roots(eq, y)`
-    alglog(cmd)
-    this.eqY = parseRoots( alg(`eqY`) )
-    if (this.eqY) {
-      this.eqY.forEach( root => {
-        log(  `      = ${root}`)
+  let c = alg(`c`)
+  log(  `      = ${c}`)
 
-        if (checkComplex(root)) {
-          console.warn(`complex root`)
-        }
-      })
-    } else {
-      log(  `      = ${this.eqY}`)
-    }
+  // instantiate the equation object
+  this.eq = new Equation(1,0,1,a,b,c)
 
-  }
-
-  this.dim = this.degX > this.degY ? this.degX : this.degY
 
   console.groupEnd(`eq`)
 
@@ -171,7 +141,7 @@ function Circle(cpt, rpt) {
     return str;
   }
 
-  logCircle(this);
+  logElement(this);
   // log(this);
 
   console.dir(this);
