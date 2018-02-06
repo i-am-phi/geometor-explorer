@@ -13,55 +13,61 @@ var groupLines = D.group().attr({ id: "Lines" });
 var groupSegments = D.group().attr({ id: "Segments" });
 var groupPoints = D.group().attr({ id: "Points"  });
 
+let boundaryLines = []
+
+function configureBoundaryLines(tlPt, brPt) {
+
+  let trPt = new Point(brPt.x, tlPt.y)
+  let blPt = new Point(tlPt.x, brPt.y)
+
+  let lineN = new Line(tlPt, trPt)
+  boundaryLines.push(lineN)
+
+  let lineS = new Line(blPt, brPt)
+  boundaryLines.push(lineS)
+
+  let lineW = new Line(tlPt, blPt)
+  boundaryLines.push(lineN)
+
+  let lineE = new Line(trPt, brPt)
+  boundaryLines.push(lineN)
+
+
+}
+
 
 //pass in line coefficients to find endpoints at viewbox
-function getViewboxIntersection(line) {
+function getLineEndPts(line) {
   //get bounds to margin for the line
-  var box = D.viewbox();
-  var bx1 = box.x;
-  var by1 = box.y;
-  var bx2 = box.x + box.width;
-  var by2 = box.y + box.height;
+  // var box = D.viewbox()
+  // var bx1 = box.x
+  // var by1 = box.y
+  // var bx2 = box.x + box.width
+  // var by2 = box.y + box.height
 
-  var x1, x2, y1, y2;
+  var endPts = []
 
-  //if vertical flip the calls around and override
-  if (line.xRoot) {
-    x1 = getNumber(line.getX(by1));
-    if (!isNaN(x1)) {
-      y1 = by1;
-    } else {
-      //vertical line
-      x1 = bx1;
-      y1 = getNumber(line.getY(bx1));
-    }
+  // check where line intersects they boundary lines
+  boundaryLines.forEach( bline => {
 
-    var x2 = getNumber(line.getX(by2));
-    if (!isNaN(x2)) {
-      y2 = by2;
-    } else {
-      //vertical line
-      x2 = bx2;
-      y2 = getNumber(line.getY(bx1));
-    }
-  } else {
-    y1 = getNumber(line.getY(bx1));
-    if (!isNaN(y1)) {
-      x1 = bx1;
-    } else {
-      //vertical line
-      y1 = by1;
-      x1 = getNumber(line.getX(by1));
-    }
+    let sys = new System(line, bline)
 
-    var y2 = getNumber(line.getY(bx2));
-    if (!isNaN(y2)) {
-      x2 = bx2;
-    } else {
-      //vertical line
-      y2 = by2;
-      x2 = getNumber(line.getX(by1));
+    // if intersect - ask bline if point is between defining points
+    if (sys.roots) {
+      sys.roots.forEach(point => {
+        var bl01 = bline.point[0].distanceTo(bline.point[1])
+        var bl0p = bline.point[0].distanceTo(point)
+        var bl1p = bline.point[1].distanceTo(point)
+
+        let result = alglog(`(bl01) = (bl0p) + (bl1p)`)
+        if (result == "1") {
+          endPts.push(point)
+        }
+      })
     }
-  }
-  return [x1, y1, x2, y2];
+  })
+
+  return endPts
+
+
 }

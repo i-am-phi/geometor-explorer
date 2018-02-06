@@ -87,7 +87,7 @@ function Point(x, y, parent1, parent2) {
     return str;
   }
 
-  logPoint(this);
+  addPointToPanel(this);
   // log(this);
   console.dir(this);
   console.groupEnd();

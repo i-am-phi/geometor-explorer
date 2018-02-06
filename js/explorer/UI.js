@@ -28,7 +28,7 @@ function log (msg) {
   console.log(msg + '\n');
 }
 
-function logPoint (point) {
+function addPointToPanel (point) {
   // Create an empty <tr> element and add it to the 1st position of the table:
   var row = pointList.insertRow(-1);
   row.classList.add("point")
@@ -62,12 +62,15 @@ function logElement (element) {
   addCell(row, element.id)
   if (element.type == "line") {addCell(row, "/", "line")}
   if (element.type == "circle") {addCell(row, "⨀", "circle")}
-  addCellParam(row, element.eq.d, getNumber(element.eq.d))
-  addCellParam(row, element.eq.e, getNumber(element.eq.e))
-  addCellParam(row, element.eq.f, getNumber(element.eq.f))
-  addCellParam(row, element.eq.a, getNumber(element.eq.a))
-  addCellParam(row, element.eq.b, getNumber(element.eq.b))
-  addCellParam(row, element.eq.c, getNumber(element.eq.c))
+
+  let p = element.eq.params
+
+  addCellParam(row, p['d'], getNumber(p['d']))
+  addCellParam(row, p['e'], getNumber(p['e']))
+  addCellParam(row, p['f'], getNumber(p['f']))
+  addCellParam(row, p['a'], getNumber(p['a']))
+  addCellParam(row, p['b'], getNumber(p['b']))
+  addCellParam(row, p['c'], getNumber(p['c']))
 }
 
 function addCellParam(row, html, title) {

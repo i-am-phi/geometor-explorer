@@ -7,7 +7,7 @@ function Line(pt1, pt2) {
     return new Line(pt1, pt2);
   }
 
-  this.id = elements.length;
+  this.id;
   this.type = "line";
 
   console.group( `+ ${this.id} : ${this.type} ` );
@@ -17,15 +17,8 @@ function Line(pt1, pt2) {
   this.points[0] = pt1;
   this.points[1] = pt2;
 
-  console.group("point: " + pt1.id)
-  log(`pt1.x = ${pt1.x}`);
-  log(`pt1.y = ${pt1.y}`);
-  console.groupEnd();
-  console.group("point: " + pt2.id)
-  log(`pt2.x = ${pt2.x}`);
-  log(`pt2.y = ${pt2.y}`);
-  console.groupEnd();
-
+  pt1.log()
+  pt2.log()
 
   //***************************************
   console.group(`eq`)
@@ -60,124 +53,80 @@ function Line(pt1, pt2) {
   log(  `      = ${c}`)
 
   // instantiate the equation object
-  this.eq = new Equation(0,0,0,a,b,c)
-
-
-
-
-
+  // c resides on other side of equal in equation
+  this.eq = new Equation(0,0,0,a,b,'-'+c)
+  this.eq.log();
 
   console.groupEnd(`eq`)
 
-  //TODO - not sure these are still used
-
-  // set xRoot if not horizontal
-  if (this.eq.a != 0) {
-    this.xRoot = alg( `roots(eq, x)` );
-  } else {
-    // leave undefined
-  }
-
-  // set yRoot if not vertical
-  if (this.eq.b != 0) {
-    this.yRoot = alg( `roots(eq, y)` );
-  } else {
-    // leave undefined
-  }
-
-  //////////////////////////////////////////////
-  //methods
-
   this.addPoint = addPointToList;
 
-  // get y value for corresponding x
-  this.getY = function(x) {
-    var y, deg;
-    if (this.yRoot) {
-      deg = alg( `deg(${this.yRoot})` );
-      if (deg == 1) {
-        y = alg( `subst((${x}), x, (${this.yRoot}))` );
-      } else {
-        y = this.yRoot;
-      }
-    } else {
-      // y is undefined
-    }
-    return y;
-  }
-
-  // get x value for corresponding y
-  this.getX = function(y) {
-    var x, deg;
-    if (this.xRoot) {
-      deg = alg( `deg(${this.xRoot})` );
-      if (deg == 1) {
-        x = alg( `subst((${y}), y, (${this.xRoot}))` );
-      } else {
-        x = this.xRoot;
-      }
-    } else {
-      // x is undefined
-    }
-    return x;
-  }
-
-  //////////////////////////////////////////////
-  // draw line to edge of the viewbox
-  var box = getViewboxIntersection(this);
-  // log(box);
-  //create SVG element
-  this.element = groupLines.line(box[0], box[1], box[2], box[3])
-    .addClass("Line")
-    .attr({
-      id: "i" + this.id,
-      'element-id': this.id
-    })
-    ;
-
-  setLine("#i" + this.id);
+  this.render = renderLine
 
   //////////////////////////////////////////////
   //check for intersections with existing elements
   // this.intersect = lineIntersect;
   elements.forEach(function(element) {
+
     console.group(`> ${element.id} : ${element.type} `)
     intersect(this, element) ;
     console.groupEnd();
+
   }, this);
 
+  this.toString = toStringLine
 
-  //add this element to array
-  elements.push(this);
-
-  // set UI hover and click
-  this.element.on('click', click);
-  this.element.on('mouseover', hover);
-  this.element.on('mouseout', hover);
-
-  // summarize attributes for toString
-  this.toString = function() {
-    var str = `${this.type}: ${this.id}
-      a: ${this.eq}
-      b: ${this.eq.b}
-      c: ${this.eq.c}
-     eq: ${this.eq} [ = 0 ]
-      m: ${this.m}
-      n: ${this.n}
-    eq2: [ y = ] ${this.eq2}
-  xRoot: ${this.xRoot}
-  yRoot: ${this.yRoot}
-  points: ${this.points.length}\n`;
-    // list related points
-    this.points.forEach( function(point){
-      str += "    " +  point.type + " :\t" + point.id + "\n";
-    });
-    return str;
-  }
-
-  logElement(this);
-  // log(this);
   console.dir(this);
   console.groupEnd();
 
+}
+
+function renderLine() {
+
+  //////////////////////////////////////////////
+  // draw line to edge of the viewbox
+  var endPts = getLineEndPts(this);
+
+  if (endPts) {
+    let x0 = getNumber( endPts[0].x )
+    let y0 = getNumber( endPts[0].y )
+    let x1 = getNumber( endPts[1].x )
+    let y1 = getNumber( endPts[1].y )
+
+    //create SVG element
+    this.element = groupLines.line( x0, y0, x1, y1 )
+      .addClass("Line")
+      .attr({
+        id: "i" + this.id,
+        'element-id': this.id
+      })
+      ;
+
+    setLine("#i" + this.id);
+
+    // set UI hover and click
+    this.element.on('click', click);
+    this.element.on('mouseover', hover);
+    this.element.on('mouseout', hover);
+  }
+
+}
+
+function toStringLine() {
+
+  var str = `${this.type}: ${this.id}
+    a: ${this.eq.a}
+    b: ${this.eq.b}
+    c: ${this.eq.c}
+   eq: ${this.eq} [ = 0 ]
+xRoot: ${this.xRoot}
+yRoot: ${this.yRoot}
+points: ${this.points.length}\n`;
+
+  // list related points
+  this.points.forEach( function(point){
+    str += "    " +  point.type + " :\t" + point.id + "\n";
+  })
+
+  return str;
 }

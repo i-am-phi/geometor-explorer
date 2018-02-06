@@ -37,7 +37,7 @@ function log (msg) {
   console.log(msg + '\n');
 }
 
-function logPoint (point) {
+function addPointToPanel (point) {
   var item = point.id + `  ( ${point.x},\t${point.y} ) \n`;
   pointsPanel.innerHTML += item;
   // ÷=console.log(item);

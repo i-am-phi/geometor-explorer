@@ -3,23 +3,41 @@
 function main() {
   log('---------------------')
 
+  let tlPt, brPt
+  tlPt = new Point("-4", "-4")
+  brPt = new Point("4", "4")
+  configureBoundaryLines(tlPt, brPt)
+
+
   //initial points set by X Y
-  Point( "-1/2", "0" );
-  Point( "1/2", "0" );
+  const P0 = new Point( "-1/2", "0" )
+  //sequence the animations here.
+  P0.render()
+  points.push( P0 )
+
+  const P1 = new Point( "1/2", "0" )
+  P1.render()
+  points.push( P1 )
 
   //baseline
-  Line( points[0], points[1] );
+  const BL = new Line( P0, P1 )
+  BL.render()
+  elements.push( BL )
 
   // vesica pisces
-  Circle( points[0], points[1] );
-  Circle( points[1], points[0] );
+  // const Uw = Circle( P0, P1 );
 
-  // //bisector
-  Line( points[4], points[5] );
+
+  // const Uw = Circle( P1, P0 );
+
+
+  //
+  // // //bisector
+  // Line( points[4], points[5] );
 
   // unit 2 circles from starting points
-  // Circle( points[0], points[3] );
-  // Circle( points[1], points[2] );
+  // Circle( P0, points[3] );
+  // Circle( P1, points[2] );
 
 
   logSummary();

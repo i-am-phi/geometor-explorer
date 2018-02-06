@@ -19,14 +19,8 @@ function Circle(cpt, rpt) {
 
   this.center = cpt;
 
-  console.group("center pt: " + cpt.id)
-  log(`cpt.x = ${cpt.x}`);
-  log(`cpt.y = ${cpt.y}`);
-  console.groupEnd();
-  console.group("radius pt: " + rpt.id)
-  log(`rpt.x = ${rpt.x}`);
-  log(`rpt.y = ${rpt.y}`);
-  console.groupEnd();
+  cpt.log("center point")
+  rpt.log("radius point")
 
   //***************************************
   console.group(`eq`)
@@ -80,49 +74,21 @@ function Circle(cpt, rpt) {
   log(  `      = ${c}`)
 
   // instantiate the equation object
-  this.eq = new Equation(1,0,1,a,b,c)
+  this.eq = new Equation(1,0,1,a,b,'-'+c)
 
 
   console.groupEnd(`eq`)
 
-
-  ////////////////////////////////////////////////////////
-  //TODO: whay does the radius need to be multiplied by 2??
-  var cx = getNumber( cpt.x );
-  var cy = getNumber( cpt.y );
-  var r = getNumber( this.r );
-
-  this.element = groupCircles.circle( r * 2 )
-    .cx(cx)
-    .cy(cy)
-    .addClass("Circle")
-    .attr({
-      'id': `c${this.id}`,
-      'element-id': this.id
-      });
-
-  setCircle("#c" + this.id);
+  this.render = renderCircle
 
   ////////////////////////////////////////////////////////
   // find all intersections with other elements
   elements.forEach(function(element) {
+
     console.group(`> ${element.id} : ${element.type} `)
     intersect(this, element) ;
     console.groupEnd();
   }, this); //pass this context in
-
-  // elements.forEach( function(element){
-  // });
-
-  // add this to elements array
-  elements.push(this);
-
-  //TODO: rotate circle to align start point with Radius
-
-  //UI interactvity
-  this.element.on('click', click);
-  this.element.on('mouseover', hover);
-  this.element.on('mouseout', hover);
 
 
   this.toString = function() {
@@ -146,4 +112,32 @@ function Circle(cpt, rpt) {
 
   console.dir(this);
   console.groupEnd();
+}
+
+function renderCircle() {
+  ////////////////////////////////////////////////////////
+  //TODO: whay does the radius need to be multiplied by 2??
+  var cx = getNumber( cpt.x );
+  var cy = getNumber( cpt.y );
+  var r = getNumber( this.r );
+
+  this.element = groupCircles.circle( r * 2 )
+    .cx(cx)
+    .cy(cy)
+    .addClass("Circle")
+    .attr({
+      'id': `c${this.id}`,
+      'element-id': this.id
+      });
+
+  setCircle("#c" + this.id);
+
+  //TODO: rotate circle to align start point with Radius
+
+  //UI interactvity
+  this.element.on('click', click);
+  this.element.on('mouseover', hover);
+  this.element.on('mouseout', hover);
+
+
 }

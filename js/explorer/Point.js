@@ -1,7 +1,7 @@
-
+// the array of points withing the geometric construction
 var points = [];
 
-
+//
 
 function Point(x, y, parent1, parent2) {
 
@@ -15,22 +15,72 @@ function Point(x, y, parent1, parent2) {
 
   console.group( `+ ${this.type} : ${this.id} ` );
 
-  // trust that the values are ok
+
   this.x = x;
   this.y = y;
-  // this.x =  alg( `simplify( ${x} )` )
-  // this.y =  alg( `simplify( ${y} )` )
+
   this.xVal = getNumber( this.x );
   this.yVal = getNumber( this.y );
 
+  this.isValid = true;
+
+  // all point values must be able to be parsed a real float value
+  if (isNaN( this.xVal )) {
+    this.isValid = false;
+    console.error(`x value (${this.x}) is not a number: ${this.xVal}`)
+    return
+  }
+  if (isNaN( this.yVal )) {
+    this.isValid = false;
+    console.error(`y value (${this.y}) is not a number: ${this.yVal}`)
+    return
+  }
+
   this.parents = [];
+  this.addParent = addParentToPoint
+
   //first points have no parents
   if (parent1 && parent2) {
-    this.parents = [parent1, parent2];
+    this.addParent(parent1)
+    this.addParent(parent2)
   }
 
   //TODO: make the point an SVG symbol
 
+  this.render = renderPoint
+
+  this.distanceTo = distanceTo
+
+
+  this.toString = toStringPoint
+
+  this.log = consolePoint
+
+  console.dir(this);
+  console.groupEnd();
+}
+
+////////////////
+
+function toStringPoint() {
+  var str =
+`${this.type}: ${this.id}
+   x =  ${this.x}
+xVal =  ${this.xVal}
+   y =  ${this.y}
+yVal =  ${this.yVal}
+* parents: ${this.parents.length}\n`
+
+  this.parents.forEach( function(parent){
+    str += "    " +  parent.id + " :\t" + parent.type + "\n";
+  });
+
+  return str;
+}
+
+function renderPoint() {
+
+  //draw into SVG panel
   this.element = groupPoints.circle(PTRAD * 2).cx(this.xVal).cy(this.yVal)
     .addClass("Point")
     .attr({
@@ -39,86 +89,51 @@ function Point(x, y, parent1, parent2) {
       title: `[${this.x}, ${this.y}]`,
     });
 
-  // add point to the array
-  points.push(this);
-
-  //add point to the animation
+  //add point to the animation timeline
   setPoint("#p" + this.id);
 
-  this.distanceTo = distanceTo;
-  this.addParent = addParentToList;
-
+  // set ui interactivity
   this.element.on('click', click);
   this.element.on('mouseover', hover);
   this.element.on('mouseout', hover);
 
-  this.toString = function() {
-
-    var str = `${this.type}: ${this.id}
-     x: ${this.x}
-  xVal: ${this.xVal}
-     y: ${this.y}
-  yVal: ${this.yVal}
-  * parents: ${this.parents.length}\n`;
-    this.parents.forEach( function(parent){
-      str += "    " +  parent.id + " :\t" + parent.type + "\n";
-    });
-
-    return str;
-  }
-
-  logPoint(this);
-  // log(this);
-  console.dir(this);
-  console.groupEnd();
 }
 
-// add a point but check if it exists first
-function addPoint(x, y, parent1, parent2) {
-  // log(`    + add point: ${x}, ${y} `);
-  var point;
-  console.group("+ point")
-  log(`x: ${x}`)
-  log(`y: ${y}`)
+////////////////
+// log point to console
+function consolePoint(title){
 
-  // TODO: determine if value check is necessary
-  var xVal = getNumber(x);
-  var yVal = getNumber(y);
+  let titleStr = title || "point"
 
-  if (!isNaN( xVal ) && !isNaN( yVal )) {
+  console.group(`${titleStr}: ` + this.id)
+  log(this.toString());
+  console.groupEnd();
 
-    // look for other points with same x, y
-    // if point exists, add unique "parents" to point
-    point = findPoint(x, y);
+}
 
-    if (point) {
-      log("point exists: " + point.id )
-      // add new parents to existing point
-      point.addParent(parent1);
-      point.addParent(parent2);
+////////////////
 
-    } else {
-      log("create new point")
-      point = new Point(x, y, parent1, parent2);
+// add a point to list but check if it exists first
+function addPointToList(point) {
 
-    }
+  // look for other points with same x, y
+  point = findPoint(point.x, point.y);
+
+  if (point) {
+    log("point exists: " + point.id )
+    return false
+
   } else {
-    log("      * not a valid point\n");
-    return;
+    log("add point to list: " + point.id )
+    points.push(point)
+    return true
   }
 
-  //add point to each parent point list
-  parent1.addPoint(point);
-  parent2.addPoint(point);
-
-  console.groupEnd();
-
-  return point;
-
 }
+
 
 //add a parent to the point
-function addParentToList(parent) {
+function addParentToPoint(parent) {
   // check if parent is already in list
   if (!this.parents.includes(parent)) {
     // add new parent to point
@@ -126,7 +141,7 @@ function addParentToList(parent) {
   }
 }
 
-// for sorting points
+// for sorting points along a line
 function comparePoints(p1, p2) {
   var p1x = p1.xVal;
   var p1y = p1.yVal;
@@ -164,14 +179,6 @@ function distanceTo(point) {
 function findPoint(x, y) {
   for (var i = 0; i < points.length; i++) {
     if ( points[i].x == x  &&  points[i].y == y ) {
-      return points[i];
-    }
-  }
-}
-
-function getPointById(id) {
-  for (i = 0; i < points.length; i++) {
-    if (points[i].id == id) {
       return points[i];
     }
   }
