@@ -1,17 +1,20 @@
-// store each systemsolution in an array
-var systems = [];
-
-
-//////////////////////////////////////////////
-// System - collection of equations
-// provides a roots solution set - an array of objects with x, y values
-
+/**
+ * System - collection of equations - starting with two elements
+ * provides a roots solution set - an array of objects with x, y values
+ * should show all the work
+ * @author 𝚽 <phi@geometor.com>
+ * @license MIT
+ *
+ * @constructor
+ * @param {Element} element1 - first element
+ * @param {Element} element2 - second element
+ */
 function System(element1, element2) {
 
   let eq1 = element1.eq
   let eq2 = element2.eq
 
-  let roots = [];
+  this.roots = [];
 
   console.group("* System *")
 

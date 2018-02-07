@@ -1,0 +1,15 @@
+toc:
+  - name: Geometry
+    description: |
+      Objects to hold parameters for geometric constructions.
+    children:
+      - Point
+      - Line
+      - Circle
+      - Segment
+  - name: Algebra
+    description: |
+      Objects for handling algebraic structures and their solutions
+    children:
+      - Equation
+      - System

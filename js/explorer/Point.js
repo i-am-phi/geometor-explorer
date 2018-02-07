@@ -1,8 +1,21 @@
-// the array of points withing the geometric construction
-var points = [];
+// @namespace Geometry */
 
-//
+/**
+ * represents a position within a two dimension cartesian plane - specified by two values
 
+ * other than the two starting points, points are derived through the intersection of elements
+
+ * TODO: points should be immutable after instantiation
+
+ * @author 𝚽 <phi@geometor.com>
+ * @license MIT
+ *
+ * @constructor
+ * @param {algValue} x - string with algebraic value
+ * @param {algValue} y - string with algebraic value
+ * @param {Element} parent1 - parent element - intersecting line or circle.
+ * @param {Element} parent2 - parent element - intersecting line or circle.
+ */
 function Point(x, y, parent1, parent2) {
 
   //if someone calls function without instantiating object - return new object
@@ -10,18 +23,48 @@ function Point(x, y, parent1, parent2) {
     return new Point(x, y, parent1, parent2);
   }
 
-  this.id = points.length;
-  this.type = "point";
+  /**
+  * id of the element - set by the context of the {@link Model}<br>
+  * usually the index in the elements array
+  * @returns {string}
+  */
+  this.id = ""
 
-  console.group( `+ ${this.type} : ${this.id} ` );
+  /**
+  * convenience type check for the element
+  * @returns {string} "point"
+  */
+  this.type = "point"
 
+  // TODO: use get method to prevent changing value
+  /**
+  * algebraic value - set by constructor
+  * @returns {algValue} algebraic value
+  */
+  this.x = x
 
-  this.x = x;
-  this.y = y;
+  /**
+  * algebraic value - set by constructor
+  * @returns {algValue} algebraic value
+  */
+  this.y = y
 
-  this.xVal = getNumber( this.x );
-  this.yVal = getNumber( this.y );
+  /**
+  * floating point value - set by constructor - converted from AlgValue
+  * @returns {float}
+  */
+  this.xVal = getNumber( this.x )
 
+  /**
+  * floating point value - set by constructor - converted from AlgValue
+  * @returns {float}
+  */
+  this.yVal = getNumber( this.y )
+
+  /**
+  * set to false if x or y are not a number
+  * @returns {boolean}
+  */
   this.isValid = true;
 
   // all point values must be able to be parsed a real float value
@@ -36,7 +79,20 @@ function Point(x, y, parent1, parent2) {
     return
   }
 
+  /**
+  * an array of parent elements that this point lies on
+  * @returns {Array} of Elements
+  */
   this.parents = [];
+
+  /**
+  * add a point to this element's point list
+  * usually called by the {@link Model} to add intersection points
+  * checks to determine if the point is already present
+  * @function
+  * @param {Point}
+  * @returns {Point}
+  */
   this.addParent = addParentToPoint
 
   //first points have no parents
@@ -45,19 +101,42 @@ function Point(x, y, parent1, parent2) {
     this.addParent(parent2)
   }
 
-  //TODO: make the point an SVG symbol
-
-  this.render = renderPoint
-
+  /**
+  * determine the distance from this point to the supplied point
+  * @function
+  * @param {Point}
+  * @returns {string} algebraic value
+  */
   this.distanceTo = distanceTo
 
+  /**
+  * used for sorting points on a line
+  * - if this point is less than test point return -1
+  * - if this point is greater than test point return 1
+  * - return zero if equal
+  * @function
+  * @param {Point} point to test
+  * @returns {int} -1, 0, 1
+  */
+  this.compare = comparePoint
 
+  /**
+  * formatted string representing attribute of the object
+  *
+  * @function
+  * @returns {string}
+  */
   this.toString = toStringPoint
 
+  /**
+  * grouped console output to represent the object
+  *
+  * perfect for logging
+  * @function
+  * @returns {string}
+  */
   this.log = consolePoint
 
-  console.dir(this);
-  console.groupEnd();
 }
 
 ////////////////
@@ -78,56 +157,15 @@ yVal =  ${this.yVal}
   return str;
 }
 
-function renderPoint() {
 
-  //draw into SVG panel
-  this.element = groupPoints.circle(PTRAD * 2).cx(this.xVal).cy(this.yVal)
-    .addClass("Point")
-    .attr({
-      id: 'p' + this.id,
-      'point-id': this.id,
-      title: `[${this.x}, ${this.y}]`,
-    });
-
-  //add point to the animation timeline
-  setPoint("#p" + this.id);
-
-  // set ui interactivity
-  this.element.on('click', click);
-  this.element.on('mouseover', hover);
-  this.element.on('mouseout', hover);
-
-}
-
-////////////////
-// log point to console
+/** @private */
 function consolePoint(title){
 
   let titleStr = title || "point"
 
-  console.group(`${titleStr}: ` + this.id)
+  console.group( `${this.id} : ${titleStr}` )
   log(this.toString());
   console.groupEnd();
-
-}
-
-////////////////
-
-// add a point to list but check if it exists first
-function addPointToList(point) {
-
-  // look for other points with same x, y
-  point = findPoint(point.x, point.y);
-
-  if (point) {
-    log("point exists: " + point.id )
-    return false
-
-  } else {
-    log("add point to list: " + point.id )
-    points.push(point)
-    return true
-  }
 
 }
 
@@ -141,12 +179,23 @@ function addParentToPoint(parent) {
   }
 }
 
+
+//used in Point object
+function distanceTo(point) {
+  var d = alg(
+    `( ((${this.x}) - (${point.x}))^2 + ((${point.y}) - (${this.y}))^2 )^(1/2)` );
+  return d;
+}
+
+
+
 // for sorting points along a line
-function comparePoints(p1, p2) {
-  var p1x = p1.xVal;
-  var p1y = p1.yVal;
-  var p2x = p2.xVal;
-  var p2y = p2.yVal;
+function comparePoint(point) {
+  var p1x = this.xVal;
+  var p1y = this.yVal;
+  var p2x = point.xVal;
+  var p2y = point.yVal;
+
 
   if (p1x < p2x) {
     return -1;
@@ -156,7 +205,7 @@ function comparePoints(p1, p2) {
   }
 
   //compare strings for equality - not values
-  if (p1.x === p2.x) {
+  if (this.x === point.x) {
     if (p1y < p2y) {
       return -1;
     }
@@ -166,20 +215,4 @@ function comparePoints(p1, p2) {
   }
   // p1 must be equal to p2
   return 0;
-}
-
-
-//used in Point object
-function distanceTo(point) {
-  var d = Algebrite.run(
-    `( ((${this.x}) - (${point.x}))^2 + ((${point.y}) - (${this.y}))^2 )^(1/2)` );
-  return d;
-}
-
-function findPoint(x, y) {
-  for (var i = 0; i < points.length; i++) {
-    if ( points[i].x == x  &&  points[i].y == y ) {
-      return points[i];
-    }
-  }
 }

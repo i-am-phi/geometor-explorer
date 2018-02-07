@@ -1,20 +1,52 @@
-/////////////////////////////////
+/**
+ * a set of parameters representing proportions for an element: {@link Line} or {@link Circle}
 
-// Equation - a set of proportions for an ELEMENT
-// uses a generalized form that supports both lines and circles
-// d x^2 + e x y + f y^2 + a x + b y + c
-// note that we position the c value - the constant term - on the other side of the equations
-// ensure that the sign of c is passed in correctly
-// can support other conic 2d forms in the future
-// the coefficients are held in an object as algebraic strings
-// algebrite provides all the calculatiosn of the values
+ * uses a generalized form that supports both lines and circles
 
+ * `d x^2 + e x y + f y^2 + a x + b y = c`
 
-// TODO - Equation should be treated as a static immutable object
-// anything that can be precalculated should be
+ * ensure that the sign of c is passed in correctly
+ * can support other conic 2d forms in the future
 
+ * the parameters are set as strings representing algebraic values <br>
+ * these parameters are held as properties of an object so that the properties can be iterated through for analysis
+
+ * algebrite provides all the calculations of the algebraic values and conversion to float when necessary
+
+ * - TODO:  Equation should be treated as a static immutable object
+ * - TODO: all values that don't change should be calculated on construction.
+ *
+ * @author 𝚽 <phi@geometor.com>
+ * @license MIT
+ *
+ * @constructor
+ * @param {string} d - coefficient for x^2 term - always 1 for a circle - 0 for line
+ * @param {string} e - coefficient for xy term - should always be zero in this model
+ * @param {string} f - coefficient for y^2 term - always 1 for a circle - 0 for line
+ * @param {string} a - coefficient for x term
+ * @param {string} b - coefficient for y term
+ * @param {string} c - constant - WATCH SIGN - note that we position the c value on the other side of the equations
+ */
 function Equation(d, e, f, a, b, c) {
 
+  /**
+  * an object of parameters
+
+  * can be iterated
+
+  * @returns {Object} with properties for each coefficient
+  * @example
+  * function nonZeroCoeffients() {
+  * let count = 0;
+  * for (var key in this.params) {
+  *   // don't count the final constant
+  *   if (key != 'c') {
+  *     if (this.params[key] != 0) { count++ }
+  *   }
+  * }
+  * return count
+  * }
+  */
   this.params = {
     d: d,
     e: e,
@@ -26,6 +58,7 @@ function Equation(d, e, f, a, b, c) {
 
   this.general = generalizeEq
   this.simple = simplifiedEq
+  // katex rendering
   this.render = renderSimple
 
   this.renderAlg = function () {

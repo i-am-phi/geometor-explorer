@@ -1,14 +1,25 @@
+
 const PRECISION = 8;
 
+/**
+* shortcut for Algebrite.run see: {@link http://algebrite.org}
 
-// shortcut for Algebrite.run
-// check valid result
-// return nothing if error
+* checks for valid result
+*
+* @function
+* @param {algCommand} cmd - Algebrite command string
+* @returns {algExpression} algebraic expression - nothing on error
+* @example
+* cmd = `c = ((${pt1.x}) * (${pt2.y})) - ((${pt2.x}) * (${pt1.y}))`
+* alg(cmd)
+* let c = alg(`c`)
+
+*/
 function alg( cmd ) {
   var result
 
   result = Algebrite.run( cmd.toString() )
-  if ( checkValid(result) ) {
+  if ( algCheckValid(result) ) {
     return result
   } else {
     console.error(`ALG: "${cmd}"
@@ -58,8 +69,14 @@ function round(number) {
 }
 
 
-// check if Alg string has has i or stop
-function checkValid(str) {
+/**
+* check if algExpression string has `"Stop:"` or `"nil"`
+*
+* @function
+* @param {algExpression} str - Algebrite command string
+* @returns {boolean} true or false
+*/
+function algCheckValid(str) {
   let valid = true;
 
   if ( str.indexOf("Stop:") !== -1 ) {
@@ -83,36 +100,4 @@ function checkComplex(str) {
   }
 
   return complex
-}
-
-
-///////////////////////////////////////////////////////////////////////////////
-
-function testAlgebrite() {
-
-
-  var cmd = `A = 1/2 y - 1/4 3^(1/2) - 1/2 3^(1/2) x
-B = 5/4 + x + x^2 + y^2
-C = A - B
-C
-  `;
-  var result = Algebrite.run( cmd );
-  result = Algebrite.run( 'C' );
-  log('C: ' + result);
-
-  result = Algebrite.run( 'simplify(C)' );
-  log('simplify(C): ' + result);
-  //
-  // result = Algebrite.run( 'expand(C)' );
-  // log('expand(C): ' + result);
-
-  result = Algebrite.run( "roots(C, x)" );
-  log('roots(C, x): ' + result);
-
-  var latex = Algebrite.run( 'printlatex(roots(C, x))' );
-  katex.render(latex, footerPanel);
-
-  result = Algebrite.run( "roots(C, y)" );
-  log('roots(C, y): ' + result);
-
 }
