@@ -87,6 +87,9 @@ function configurePanels() {
     console.log('footerPanel not found');
   }
 
+  /**  create an entry in the table for a point */
+  this.addPointToPanel = addPointToPanel
+
 }
 
 function configureBoundaryLines(tlPt, brPt) {
@@ -112,6 +115,8 @@ function addPointToView(newPoint) {
   newPoint.element.on('click', click);
   newPoint.element.on('mouseover', hover);
   newPoint.element.on('mouseout', hover);
+
+  this.addPointToPanel(newPoint)
 
   return newPoint.element
 
@@ -263,7 +268,6 @@ function renderCircle() {
   this.element.on('mouseover', hover);
   this.element.on('mouseout', hover);
 
-
 }
 
 
@@ -286,7 +290,7 @@ function addPointToPanel (point) {
 }
 
 function kat(str) {
-  let latex =  alg(`printlatex(${str})`);
+  let latex =  A.run(`printlatex(${str})`);
   return katex.renderToString(latex);
 }
 
@@ -296,7 +300,7 @@ function addCell(row, html, title) {
   if (title) cell.setAttribute('title', title);
 }
 
-function logElement (element) {
+function addElementToPanel (element) {
   // var item = line.id + `  [${line.points[0].id}, ${line.points[1].id}] ${line.eq} = 0 \n`;
   // linesPanel.innerHTML += item;
   // console.log(item);
@@ -367,39 +371,41 @@ var hover = function() {
   var latex;
 
   if (this.hasClass("Point")) {
+
     var id = this.attr( 'point-id' );
-    element = points[id];
-    latex = alg(`printlatex([ ${element.x}, ${element.y} ])`)
+    element = M.points[id];
+    latex = A.run(`printlatex([ ${element.x}, ${element.y} ])`)
+
   }
 
   if (this.hasClass("Circle")) {
     var id = this.attr( 'element-id' );
-    element = elements[id];
-    latex = alg(`printlatex(${element.eq})`) + " = 0"
+    element = M.elements[id];
+    latex = A.run(`printlatex(${element.eq})`) + " = 0"
   }
 
 
   if (this.hasClass("Line")) {
     var id = this.attr( 'element-id');
-    element = elements[id];
-    latex = "0 = " + alg(`printlatex(${element.eq})`);
+    element = M.elements[id];
+    latex = "0 = " + A.run(`printlatex(${element.eq})`);
   }
 
   if (this.hasClass("Segment")) {
 
 
     var id = this.attr( 'segment-id' );
-    element = segments[id];
+    element = M.segments[id];
 
     $(element.markerStart).toggleClass('hover');
     $(element.markerEnd).toggleClass('hover');
 
-    latex = alg(`printlatex([ ${element.length} ])`)
+    latex = A.run(`printlatex([ ${element.length} ])`)
   }
 
   // log(info);
-  infoPanel.innerHTML = element;
-  footerPanel.innerHTML = element.type + " " + element.id + ":  " + katex.renderToString(latex);
+  // infoPanel.innerHTML = element;
+  V.footerPanel.innerHTML = element.type + " " + element.id + ":  " + katex.renderToString(latex);
 
   // log(info);
 

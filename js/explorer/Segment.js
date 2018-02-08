@@ -52,7 +52,7 @@ function Segment(pt1, pt2, line) {
   * floating point value - set by constructor - converted from AlgValue
   * @returns {float}
   */
-  this.lengthVal = alg(`float(${this.length})`)
+  this.lengthVal = A.run(`float(${this.length})`)
 
   /**
   * formatted string representing attribute of the circle

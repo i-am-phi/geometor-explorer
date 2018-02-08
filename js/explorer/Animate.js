@@ -7,7 +7,7 @@ var TL_DRAW = new TimelineLite({paused: true});
  * animation timeline for the sequential display of golden sections in the Model
  * @global
  */
-var TL_GOLDEN  =  new TimelineLite({paused: true});
+var TL_GOLDEN = new TimelineLite({paused: true});
 /**
  * value for opacity when muting elements in drawing
  * @global

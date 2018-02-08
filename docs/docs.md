@@ -2,8 +2,17 @@
 
 ### Table of Contents
 
--   [alg](#alg)
--   [algCheckValid](#algcheckvalid)
+-   [A](#a)
+-   [Alg](#alg)
+    -   [PRECISION](#precision)
+    -   [run](#run)
+    -   [runLog](#runlog)
+    -   [parseRoots](#parseroots)
+    -   [isNumber](#isnumber)
+    -   [getNumber](#getnumber)
+    -   [checkValid](#checkvalid)
+    -   [isComplex](#iscomplex)
+    -   [round](#round)
 -   [Circle](#circle)
     -   [id](#id)
     -   [type](#type)
@@ -19,22 +28,26 @@
 -   [Element](#element)
 -   [Equation](#equation)
     -   [params](#params)
+-   [M](#m)
+-   [V](#v)
 -   [Explorer](#explorer)
+    -   [addPoint](#addpoint-1)
+    -   [addElement](#addelement)
 -   [Line](#line)
     -   [id](#id-1)
     -   [type](#type-1)
     -   [points](#points-1)
-    -   [addPoint](#addpoint-1)
+    -   [addPoint](#addpoint-2)
     -   [eq](#eq-1)
     -   [checkSegments](#checksegments)
     -   [toString](#tostring-1)
     -   [log](#log-1)
 -   [Model](#model)
     -   [points](#points-2)
-    -   [addPoint](#addpoint-2)
+    -   [addPoint](#addpoint-3)
     -   [findPoint](#findpoint)
     -   [elements](#elements)
-    -   [addElement](#addelement)
+    -   [addElement](#addelement-1)
     -   [findElement](#findelement)
     -   [segments](#segments)
     -   [addSegment](#addsegment)
@@ -67,11 +80,41 @@
     -   [PTRAD](#ptrad)
     -   [STROKEFACTOR](#strokefactor)
     -   [boundaryLines](#boundarylines)
-    -   [addPoint](#addpoint-3)
+    -   [addPoint](#addpoint-4)
 -   [D](#d)
+-   [E](#e)
 -   [main](#main)
 
-## alg
+## A
+
+A global instance of the [Alg](#alg) object
+
+**Examples**
+
+```javascript
+A.run( `a = x^2 - x - 1` )
+```
+
+**Meta**
+
+-   **author**: 𝚽 &lt;phi@geometor.com>
+-   **license**: MIT
+
+## Alg
+
+A container object for Algebrite helper functions<br>
+run from [A](#a)
+
+**Meta**
+
+-   **author**: 𝚽 &lt;phi@geometor.com>
+-   **license**: MIT
+
+### PRECISION
+
+for the round function
+
+### run
 
 shortcut for Algebrite.run see: <http://algebrite.org>
 
@@ -85,13 +128,54 @@ checks for valid result
 
 ```javascript
 cmd = `c = ((${pt1.x}) * (${pt2.y})) - ((${pt2.x}) * (${pt1.y}))`
-alg(cmd)
-let c = alg(`c`)
+A.run(cmd)
+let c = A.run(`c`)
 ```
 
 Returns **algExpression** algebraic expression - nothing on error
 
-## algCheckValid
+### runLog
+
+run command with logging cmd string before
+
+**Parameters**
+
+-   `cmd`  
+
+### parseRoots
+
+Algebrite may return a scalar (one result) or a tensor (a set of results) when solving.
+This function parses the result and always returns an array of on or more results
+
+**Parameters**
+
+-   `roots` **algValue** Algebrite command string
+
+Returns **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)** of algValues
+
+### isNumber
+
+check if algebraic value can be converted to a decimal float number
+returns false if not a number
+
+**Parameters**
+
+-   `val` **algValue** Algebrite command string
+
+Returns **[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** 
+
+### getNumber
+
+convert the algebraic value to float and check if number<br>
+returns false if not a number
+
+**Parameters**
+
+-   `val` **algValue** Algebrite command string
+
+Returns **(float | `false`)** 
+
+### checkValid
 
 check if algExpression string has `"Stop:"` or `"nil"`
 
@@ -100,6 +184,24 @@ check if algExpression string has `"Stop:"` or `"nil"`
 -   `str` **algExpression** Algebrite command string
 
 Returns **[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** true or false
+
+### isComplex
+
+check if algebraic value has the value `i`
+
+**Parameters**
+
+-   `str` **algExpression** Algebrite command string
+
+Returns **[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** true or false
+
+### round
+
+round for float comparison
+
+**Parameters**
+
+-   `number`  
 
 ## Circle
 
@@ -274,6 +376,14 @@ return count
 
 Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** with properties for each coefficient
 
+## M
+
+Global instance of the [Model](#model) object
+
+## V
+
+Global instance of the [View](#view) object
+
 ## Explorer
 
 Controller for the [Model](#model) and [View](#view)
@@ -284,6 +394,26 @@ primary interface for [main](#main)
 
 -   **author**: 𝚽 &lt;phi@geometor.com>
 -   **license**: MIT
+
+### addPoint
+
+add Point to Model and View
+
+**Parameters**
+
+-   `Point`  
+
+Returns **[Point](#point)** return existing if found.
+
+### addElement
+
+add Element to Model and View
+
+**Parameters**
+
+-   `Element`  
+
+Returns **[Element](#element)** return existing if found.
 
 ## Line
 
@@ -713,7 +843,7 @@ Array of `Line` objects defining the boundary of the Drawing<br>
 
 add a [Point](#point) to the View<br>
 SVG `circle` object representing the point location
-radius of `circle` set by **`this.PTRAD`**
+radius of `circle` set by `this.PTRAD`
 
 **Parameters**
 
@@ -724,6 +854,10 @@ Returns **[svgElement](https://developer.mozilla.org/docs/Web/SVG/Element/animat
 ## D
 
 SVG Drawing
+
+## E
+
+Global instance of the Explorer object
 
 ## main
 

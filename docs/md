@@ -3,7 +3,7 @@
 ### Table of Contents
 
 -   [alg](#alg)
--   [algCheckValid](#algcheckvalid)
+-   [A.checkValid](#A.checkValid)
 -   [Circle](#circle)
     -   [id](#id)
     -   [type](#type)
@@ -85,13 +85,13 @@ checks for valid result
 
 ```javascript
 cmd = `c = ((${pt1.x}) * (${pt2.y})) - ((${pt2.x}) * (${pt1.y}))`
-alg(cmd)
-let c = alg(`c`)
+A.run(cmd)
+let c = A.run(`c`)
 ```
 
 Returns **algExpression** algebraic expression - nothing on error
 
-## algCheckValid
+## A.checkValid
 
 check if algExpression string has `"Stop:"` or `"nil"`
 

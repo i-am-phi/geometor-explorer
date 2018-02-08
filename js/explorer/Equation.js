@@ -53,7 +53,7 @@ function Equation(d, e, f, a, b, c) {
     f: f,
     a: a,
     b: b,
-    c: alg(c)
+    c: A.run(c)
   }
 
   this.general = generalizeEq
@@ -62,7 +62,7 @@ function Equation(d, e, f, a, b, c) {
   this.render = renderSimple
 
   this.renderAlg = function () {
-    let latex = alg(`printlatex([ ${ this.simple() } ])`)
+    let latex = A.run(`printlatex([ ${ this.simple() } ])`)
     return katex.renderToString(latex);
   }
 
@@ -127,7 +127,7 @@ function logEquation(){
   log(  `   eq = (${ this.general() })`)
   cmd = `   eq = ${ this.simple() }`
   alglog(cmd)
-  log(  `      = ${ alg(`eq`) }`)
+  log(  `      = ${ A.run(`eq`) }`)
 
 
   log(`getRow: ` + this.getRow())
@@ -186,11 +186,11 @@ function nonZeroCoeffients() {
 
 function multiply(val) {
   // this.params.forEach( function (element, index, params) {
-  //   params[index] = alg(`(${element}) * (${val})`)
+  //   params[index] = A.run(`(${element}) * (${val})`)
   // }, this )
   log("multiply: " + val)
   for(var key in this.params) {
-    let newVal = alg(`(${ this.params[key] }) * (${val})`)
+    let newVal = A.run(`(${ this.params[key] }) * (${val})`)
     this.params[key] = newVal
   }
 }
@@ -199,7 +199,7 @@ function add(eq) {
   log("add: " + eq.toString())
 
   for(var key in this.params) {
-    let newVal = alg(`(${ this.params[key] }) + (${ eq.params[key] })`)
+    let newVal = A.run(`(${ this.params[key] }) + (${ eq.params[key] })`)
     this.params[key] = newVal
   }
 }
@@ -293,13 +293,13 @@ function dimY() {
 
 function getXroots() {
   if (this.hasX()) {
-    return parseRoots( alg(`roots((${ this.simple() }), x)`) )
+    return A.parseRoots( A.run(`roots((${ this.simple() }), x)`) )
   }
 }
 
 function getXRootsforY(y) {
   if (this.hasY()) {
-    return parseRoots( alg(`roots(subst((${y}), y, (${ this.simple() })), x)`) )
+    return A.parseRoots( A.run(`roots(subst((${y}), y, (${ this.simple() })), x)`) )
   }
 }
 
@@ -314,14 +314,14 @@ function getXforY(y) {
 
 function getYroots() {
   if (this.hasY()) {
-    return parseRoots( alg(`roots((${this.simple()}), y)`) )
+    return A.parseRoots( A.run(`roots((${this.simple()}), y)`) )
   }
 }
 
 
 function getYRootsforX(x) {
   if (this.hasX()) {
-    return parseRoots( alg(`roots(subst((${x}), x, (${ this.simple() })), y)`) )
+    return A.parseRoots( A.run(`roots(subst((${x}), x, (${ this.simple() })), y)`) )
   }
 }
 

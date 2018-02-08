@@ -1,0 +1,37 @@
+{
+  "name": "geometor-explorer",
+  "version": "0.0.1",
+  "description": "a platform for the algebraic and geometric investigation fo proportions",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "dependencies": {
+    "algebrite": "^1.1.2",
+    "filesaver": "^0.0.13",
+    "gsap": "^1.20.3",
+    "jquery": "^3.3.1",
+    "katex": "^0.9.0-beta",
+    "svg.js": "^2.6.3",
+    "svg.panzoom.js": "^1.2.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/i-am-phi/geometor-explorer.git"
+  },
+  "keywords": [
+    "CAS",
+    "Algebra",
+    "Geometry"
+  ],
+  "author": "illumiphi project <illumiphi@gmail.com> (illumiphi.com)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/i-am-phi/geometor-explorer/issues"
+  },
+  "homepage": "https://github.com/i-am-phi/geometor-explorer#readme"
+}

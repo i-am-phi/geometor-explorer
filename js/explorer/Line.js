@@ -58,27 +58,27 @@ function Line(pt1, pt2) {
   // ax + by + c form
 
   var cmd
-  alg(`clearall`)
+  A.run(`clearall`)
 
   // coefficent a
   // log(  `    a = (pt1.y) - (pt2.y)`)
   cmd = `a = (${pt1.y}) - (${pt2.y})`
-  alg(cmd)
-  let a = alg(`a`)
+  A.run(cmd)
+  let a = A.run(`a`)
   // log(  `  = ${a}`)
 
   // coefficent b
   // log(  `b = (pt2.x) - (pt1.x)`)
   cmd = `b = (${pt2.x}) - (${pt1.x})`
-  alg(cmd)
-  let b = alg(`b`)
+  A.run(cmd)
+  let b = A.run(`b`)
   // log(  `  = ${b}`)
 
   // coefficent c
   // log(  `c = ((pt1.x) * (pt2.y)) - ((pt2.x) * (pt1.y))`)
   cmd = `c = ((${pt1.x}) * (${pt2.y})) - ((${pt2.x}) * (${pt1.y}))`
-  alg(cmd)
-  let c = alg(`c`)
+  A.run(cmd)
+  let c = A.run(`c`)
   // log(  `  = ${c}`)
 
   /**
@@ -169,7 +169,7 @@ function checkSegments() {
 
   //check for golden ratio
   // const GR = "1/2 + 1/2 5^(1/2)"
-  // const GRval = alg( `float(${GR})`)
+  // const GRval = A.run( `float(${GR})`)
 
   for (var i = 0; i < points.length-2; i++) {
     //get first segment point
@@ -181,7 +181,7 @@ function checkSegments() {
     var cmd = `clearall
       PHI = 1/2 + 1/2 5^(1/2)
       `;
-    alg(cmd);
+    A.run(cmd);
 
     //loop the remaining points to set first segment
     for (var j = i+1; j < points.length-1; j++) {
@@ -191,9 +191,9 @@ function checkSegments() {
       cmd = `A = ${pt1.distanceTo(pt2)}
       A
       `;
-      var A = alg(cmd);
+      var A = A.run(cmd);
 
-      if ( algCheckValid(A) ){
+      if ( A.checkValid(A) ){
 
         console.groupCollapsed(`> (${pt2.id}) : ${A} ` );
 
@@ -205,9 +205,9 @@ function checkSegments() {
           cmd = `B = ${pt2.distanceTo(pt3)}
           B
           `;
-          var B = alg(cmd);
+          var B = A.run(cmd);
 
-          if ( algCheckValid(B) ){
+          if ( A.checkValid(B) ){
 
             // console.groupCollapsed(`>> (${pt3.id}) : ${B} = ${Bval}` );
             console.groupCollapsed(`>> (${pt3.id}) : ${B}` );
@@ -216,12 +216,12 @@ function checkSegments() {
             cmd = `R = simplify( A / B )
             R
             `;
-            var ratio = alg(cmd);
+            var ratio = A.run(cmd);
 
             log("        * ratio: " + ratio  );
 
-            var check = alg(` R - PHI `);
-            var checkVal = alg( `float( R - PHI )`)
+            var check = A.run(` R - PHI `);
+            var checkVal = A.run( `float( R - PHI )`)
 
             log("check: " + check   );
             log("  val: " + checkVal  );

@@ -53,13 +53,13 @@ function Point(x, y, parent1, parent2) {
   * floating point value - set by constructor - converted from AlgValue
   * @returns {float}
   */
-  this.xVal = getNumber( this.x )
+  this.xVal = A.getNumber( this.x )
 
   /**
   * floating point value - set by constructor - converted from AlgValue
   * @returns {float}
   */
-  this.yVal = getNumber( this.y )
+  this.yVal = A.getNumber( this.y )
 
   /**
   * set to false if x or y are not a number
@@ -164,8 +164,8 @@ function consolePoint(title){
   let titleStr = title || "point"
 
   console.group( `${this.id} : ${titleStr}` )
-  log(this.toString());
-  console.groupEnd();
+  console.table( this )
+  console.groupEnd()
 
 }
 
@@ -182,7 +182,7 @@ function addParentToPoint(parent) {
 
 //used in Point object
 function distanceTo(point) {
-  var d = alg(
+  var d = A.run(
     `( ((${this.x}) - (${point.x}))^2 + ((${point.y}) - (${this.y}))^2 )^(1/2)` );
   return d;
 }

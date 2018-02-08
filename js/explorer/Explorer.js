@@ -1,4 +1,15 @@
 /**
+* Global instance of the {@link Model} object
+* @const
+*/
+const M = new Model()
+/**
+* Global instance of the {@link View} object
+* @const
+*/
+const V = new View()
+
+/**
  * Controller for the {@link Model} and {@link View}
 
  * primary interface for {@link main}
@@ -9,19 +20,27 @@
  */
 function Explorer() {
 
-  this.model = new Model()
-  this.view = new View()
-
+  /**
+  * add Point to Model and View
+  * @function
+  * @param {Point}
+  * @returns {Point} return existing if found.
+  */
   this.addPoint  = addPointToExplorer
+  /** add Element to Model and View
+  * @function
+  * @param {Element}
+  * @returns {Element} return existing if found.
+  */
   this.addElement   = addElementToExplorer
 
 }
 
 function addPointToExplorer(point) {
 
-  point = this.model.addPoint(point)
+  point = M.addPoint(point)
 
-  this.view.addPoint(point)
+  V.addPoint(point)
 
   return point
 
@@ -29,18 +48,20 @@ function addPointToExplorer(point) {
 
 function addElementToExplorer(element) {
 
-  element = this.model.addElement(element)
+  element = M.addElement(element)
 
   //get intersection points with other elements
 
-  this.view.addElement(element)
+  V.addElement(element)
+
+  return element
 
 }
 
 function addCircleToExplorer(circle) {
 
-  this.model.addCircle(circle)
+  M.addCircle(circle)
 
-  this.view.addCircle(circle)
+  V.addCircle(circle)
 
 }

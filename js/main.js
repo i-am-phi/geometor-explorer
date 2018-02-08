@@ -1,8 +1,8 @@
 /**
 * Global instance of the Explorer object
-* @global
+* @const
 */
-var E = new Explorer();
+const E = new Explorer();
 
 /**
  * main.js - script to sequence the creating and display of the geometric model

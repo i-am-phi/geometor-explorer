@@ -55,12 +55,12 @@ function Circle(cpt, rpt) {
   //***************************************
 
   var cmd
-  alg(`clearall`)
+  A.run(`clearall`)
 
   // h = x offest
   // log(  `    h = cpt.x`)
   cmd = `    h = (${cpt.x})`
-  alg(cmd)
+  A.run(cmd)
   /**
   * represents the x-offset in `(x - h)^2 + (y - k)^2 = r^2`
 
@@ -68,37 +68,37 @@ function Circle(cpt, rpt) {
 
   * @returns {string} algebraic value
   */
-  this.h = alg(`h`)
+  this.h = A.run(`h`)
   // log(  `      = ${this.h}`)
 
   // a coefficient
   cmd = `    a = -2h`
-  alg(cmd)
-  let a = alg(`a`)
+  A.run(cmd)
+  let a = A.run(`a`)
   // log(  `      = ${a}`)
 
   // k = y offset
   // log(  `    k = cpt.y`)
   cmd = `    k = (${cpt.y})`
-  alg(cmd)
+  A.run(cmd)
   /**
   * represents the y-offset in `(x - h)^2 + (y - k)^2 = r^2`
   * @returns {string} algebraic value
   */
-  this.k = alg(`k`)
+  this.k = A.run(`k`)
   // log(  `      = ${this.k}`)
 
   // b coefficient
   cmd = `    b = -2k`
-  alg(cmd)
-  let b = alg(`b`)
+  A.run(cmd)
+  let b = A.run(`b`)
   // log(  `      = ${b}`)
 
 
   // calculate radius
   // log(  `    r = ( (cpt.x - rpt.x)^2 + (rpt.y - cpt.y)^2 )^(1/2)`)
   cmd = `    r = ( ((${cpt.x}) - (${rpt.x}))^2 + ((${rpt.y}) - (${cpt.y}))^2 )^(1/2)`
-  alg(cmd)
+  A.run(cmd)
   /**
   * represents the radius length in `(x - h)^2 + (y - k)^2 = r^2`
 
@@ -106,13 +106,13 @@ function Circle(cpt, rpt) {
 
   * @returns {string} algebraic value
   */
-  this.r = alg(`r`)
+  this.r = A.run(`r`)
   // log(  `      = ${this.r}`)
 
   // c coefficient
   cmd = `    c = h^2 + k^2 - r^2`
-  alg(cmd)
-  let c = alg(`c`)
+  A.run(cmd)
+  let c = A.run(`c`)
   // log(  `      = ${c}`)
 
   /**

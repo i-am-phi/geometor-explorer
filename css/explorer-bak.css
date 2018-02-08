@@ -11,9 +11,9 @@ body.explorer {
   background-color: black;
   display: grid;
   grid-gap: 0px;
-  grid-template-columns: 25vw 50vw 25vw;
-  /* grid-template-rows: 85vh 15vh; */
-  grid-template-areas: "aside main footer" ;
+  grid-template-columns: 25vw 75vw;
+  grid-template-rows: 85vh 15vh;
+  grid-template-areas: "aside main" "aside footer";
   width: 100vw;
   height: 100vh; }
   body.explorer main {
@@ -27,7 +27,7 @@ body.explorer {
     display: grid;
     grid-gap: .5em;
     grid-template-columns: 1fr;
-    grid-template-areas: "nav" "points" "elements" "segments" ; }
+    grid-template-areas: "points" "lines" "circles" "segments" "info"; }
 
 
 
@@ -39,9 +39,9 @@ body.explorer {
   body.explorer footer {
     grid-area: footer;
     color: white;
-    background-color: #111;
+    background-color: black;
     padding: .5em;
-    font-size: 1.5em; }
+    font-size: 2em; }
   body.explorer a, body.explorer a:visited {
     color: white; }
   body.explorer a:hover {
@@ -54,7 +54,7 @@ nav {
 }
 
 nav a {
-  flex-shrink: 1;
+  flex-grow: 1;
   text-align: center;
 }
 
