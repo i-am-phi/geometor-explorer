@@ -13,29 +13,27 @@ function Explorer() {
   this.view = new View()
 
   this.addPoint  = addPointToExplorer
-  this.addLine   = addLineToExplorer
-  this.addCircle = addCircleToExplorer
+  this.addElement   = addElementToExplorer
 
 }
 
 function addPointToExplorer(point) {
 
-  this.model.addPoint(point)
+  point = this.model.addPoint(point)
 
   this.view.addPoint(point)
 
+  return point
 
 }
 
-function addLineToExplorer(line) {
+function addElementToExplorer(element) {
 
-  this.model.addLine(line)
+  element = this.model.addElement(element)
 
   //get intersection points with other elements
 
-
-  this.view.addLine(line)
-
+  this.view.addElement(element)
 
 }
 

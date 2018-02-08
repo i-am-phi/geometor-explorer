@@ -12,21 +12,10 @@ var E = new Explorer();
  * @license MIT
  *
  * @function
- * @example
- * //initial points set by X Y
- * const P0 = new Point( "-1/2", "0" )
- * E.addPoint(P0)
- *
- * const P1 = new Point( "1/2", "0" )
- * E.addPoint(P1)
- *
- * //baseline
- * const BL = new Line( P0, P1 )
- * E.addElement(BL)
-
  */
 function main() {
 
+  console.time("* main *");
 
   //initial points set by X Y
   const P0 = new Point( "-1/2", "0" )
@@ -38,8 +27,8 @@ function main() {
   E.addPoint(P1)
 
   //baseline
-  const BL = new Line( P0, P1 )
-  E.addElement(BL)
+  // const BL = new Line( P0, P1 )
+  // E.addElement(BL)
 
   // vesica pisces
   // const CUw = Circle( P0, P1 );
@@ -55,12 +44,15 @@ function main() {
   // Circle( P0, points[3] );
   // Circle( P1, points[2] );
 
+  console.timeEnd("* main *");
 
-  logSummary();
+  console.time("* play *");
 
-  DrawTL.play();
+  TL_DRAW.play();
 
-  checkAllSegments();
+  console.timeEnd("* play *");
+
+  // checkAllSegments();
 
   //animateGoldenSegments();
 

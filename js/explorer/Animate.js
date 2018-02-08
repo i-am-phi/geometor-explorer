@@ -1,31 +1,40 @@
-var DrawTL = new TimelineLite({paused: true});
-var GoldenTL;
+/**
+ * animation timeline for the primary Drawing of the Model
+ * @global
+ */
+var TL_DRAW = new TimelineLite({paused: true});
+/**
+ * animation timeline for the sequential display of golden sections in the Model
+ * @global
+ */
+var TL_GOLDEN  =  new TimelineLite({paused: true});
+/**
+ * value for opacity when muting elements in drawing
+ * @global
+ */
 const MUTEOPACITY = .3;
 
 
 function animateGoldenSegments(){
 
-  if (!GoldenTL) {
-
-    GoldenTL = new TimelineLite({paused: true});
 
     var allSegments = $('.Segment');
-    GoldenTL.to(allSegments, 2, {strokeOpacity:0})
+    TL_GOLDEN.to(allSegments, 2, {strokeOpacity:0})
     var allMarkers = $('marker');
-    GoldenTL.to(allMarkers, 2, {strokeOpacity:0})
+    TL_GOLDEN.to(allMarkers, 2, {strokeOpacity:0})
 
 
     var allElements = $('.Line, .Circle');
-    GoldenTL.to(allElements, 2, {strokeOpacity: MUTEOPACITY}, "-=2")
+    TL_GOLDEN.to(allElements, 2, {strokeOpacity: MUTEOPACITY}, "-=2")
     var allPoints = $('.Point');
-    GoldenTL.to(allPoints, 2, {fillOpacity: MUTEOPACITY}, "-=4")
+    TL_GOLDEN.to(allPoints, 2, {fillOpacity: MUTEOPACITY}, "-=4")
 
     var j=0;
 
     golden.forEach( function(segPair) {
       console.group("golden pair", j++)
       // pause before starting
-      // GoldenTL.to(allElements, 1, {strokeOpacity:MUTEOPACITY}, "-=1")
+      // TL_GOLDEN.to(allElements, 1, {strokeOpacity:MUTEOPACITY}, "-=1")
       var ancestors = [];
       var segPoints = [];
 
@@ -58,32 +67,32 @@ function animateGoldenSegments(){
         }
         if (id) {
           console.log(id + "\n")
-          GoldenTL.to(id, .5, {strokeOpacity:1, fillOpacity: .05}, "-=.4")
+          TL_GOLDEN.to(id, .5, {strokeOpacity:1, fillOpacity: .05}, "-=.4")
         }
       })
 
       segPoints.forEach( function(point) {
-        GoldenTL.to("#p" + point.id, .5, {fillOpacity: 1}, "-=.25")
+        TL_GOLDEN.to("#p" + point.id, .5, {fillOpacity: 1}, "-=.25")
       })
 
-      GoldenTL.to(segPair[0].markerStart, .5, {strokeOpacity:1}, "+=0")
+      TL_GOLDEN.to(segPair[0].markerStart, .5, {strokeOpacity:1}, "+=0")
               .to(segPair[0].markerEnd, .5, {strokeOpacity:1}, "-=.25")
               .to(segPair[1].markerStart, .5, {strokeOpacity:1}, "+=0")
               .to(segPair[1].markerEnd, .5, {strokeOpacity:1}, "-=.25")
 
-      GoldenTL.to("#s" + segPair[0].id, .5, {strokeOpacity:1}, "+=0")
+      TL_GOLDEN.to("#s" + segPair[0].id, .5, {strokeOpacity:1}, "+=0")
               .to("#s" + segPair[1].id, .5, {strokeOpacity:1}, "-=.25")
               // pause on completed image
-      GoldenTL.to("#s" + segPair[0].id, .5, {strokeOpacity:0}, "+=3.0")
+      TL_GOLDEN.to("#s" + segPair[0].id, .5, {strokeOpacity:0}, "+=3.0")
               .to("#s" + segPair[1].id, .5, {strokeOpacity:0}, "-=.25")
 
-      GoldenTL.to(segPair[1].markerStart, .5, {strokeOpacity:0}, "-=.5")
+      TL_GOLDEN.to(segPair[1].markerStart, .5, {strokeOpacity:0}, "-=.5")
               .to(segPair[1].markerEnd, .5, {strokeOpacity:0}, "-=.25")
               .to(segPair[0].markerStart, .5, {strokeOpacity:0}, "+=0")
               .to(segPair[0].markerEnd, .5, {strokeOpacity:0}, "-=.25")
 
       segPoints.forEach( function(point) {
-        GoldenTL.to("#p" + point.id, .5, {fillOpacity: MUTEOPACITY}, "-=.25")
+        TL_GOLDEN.to("#p" + point.id, .5, {fillOpacity: MUTEOPACITY}, "-=.25")
       })
 
       // unwind the ancestors
@@ -99,35 +108,30 @@ function animateGoldenSegments(){
         }
         if (id) {
           console.log(id + "\n")
-          GoldenTL.to(id, .5, {strokeOpacity:MUTEOPACITY, fillOpacity: 0}, "-=.4")
+          TL_GOLDEN.to(id, .5, {strokeOpacity:MUTEOPACITY, fillOpacity: 0}, "-=.4")
         }
       })
       console.groupEnd();
 
       // pause between
-      GoldenTL.to(allElements, 1, {strokeOpacity:MUTEOPACITY}, "+=0")
+      TL_GOLDEN.to(allElements, 1, {strokeOpacity:MUTEOPACITY}, "+=0")
       console.groupEnd();
     });
-    GoldenTL.to(allElements, 2, {strokeOpacity:1})
-    GoldenTL.to(allPoints, 2, {fillOpacity:1}, "-=2")
+    TL_GOLDEN.to(allElements, 2, {strokeOpacity:1})
+    TL_GOLDEN.to(allPoints, 2, {fillOpacity:1}, "-=2")
 
-    GoldenTL.to(allSegments, 2, {strokeOpacity:.3}, "-=2")
-    GoldenTL.to(allMarkers, 0, {strokeOpacity:.3})
+    TL_GOLDEN.to(allSegments, 2, {strokeOpacity:.3}, "-=2")
+    TL_GOLDEN.to(allMarkers, 0, {strokeOpacity:.3})
 
-    GoldenTL.play();
+    TL_GOLDEN.play();
 
-  } else {
-
-    GoldenTL.restart();
-
-  }
 
 
 }
 
 
 function setPoint(id, position) {
-    DrawTL.fromTo(
+    TL_DRAW.fromTo(
         id,
         .5, {
             autoAlpha: 0,
@@ -142,7 +146,7 @@ function setPoint(id, position) {
 }
 
 function setLine(id) {
-    DrawTL.fromTo(
+    TL_DRAW.fromTo(
         id,
         .5,
         {
@@ -166,7 +170,7 @@ function setSegment(segment) {
     query += ", " + segment.markerEnd;
 
 
-    DrawTL.fromTo(
+    TL_DRAW.fromTo(
         query,
         .5,
         {
@@ -198,7 +202,7 @@ function setSegment(segment) {
 function strokeLine(id) {
     var len = $(id).get(0).getTotalLength();
 
-    DrawTL.fromTo(
+    TL_DRAW.fromTo(
         id,
         .5, {
             scale: 1,
@@ -219,7 +223,7 @@ function strokeLine(id) {
 function unStrokeLine(id) {
     var len = $(id).get(0).getTotalLength();
 
-    DrawTL.fromTo(
+    TL_DRAW.fromTo(
         id,
         1, {
             scale: 1,
@@ -240,7 +244,7 @@ function unStrokeLine(id) {
 function strokeLineReverse(id) {
     var len = $(id).get(0).getTotalLength();
 
-    DrawTL.fromTo(
+    TL_DRAW.fromTo(
         id,
         .5, {
             scale: 1,
@@ -261,7 +265,7 @@ function strokeLineReverse(id) {
 function strokeLineCenter(id) {
     var len = $(id).get(0).getTotalLength();
 
-    DrawTL.fromTo(
+    TL_DRAW.fromTo(
         id,
         .5, {
             autoAlpha: 1,
@@ -278,7 +282,7 @@ function strokeLineCenter(id) {
 }
 
 function setLines(id) {
-    DrawTL.staggerFrom(
+    TL_DRAW.staggerFrom(
         id,
         .5, {
             scale: 0,
@@ -288,7 +292,7 @@ function setLines(id) {
 }
 
 function setCircle(id) {
-    DrawTL.fromTo(
+    TL_DRAW.fromTo(
         id,
         .5, {
             autoAlpha: 1,
@@ -318,14 +322,14 @@ function sweepRadius(circleId, radiusId) {
 
     if (radiusId) {
         strokeLine(radiusId);
-        DrawTL.to(radiusId, 1, {
+        TL_DRAW.to(radiusId, 1, {
             rotation: 360,
             svgOrigin: center
         });
         timeOffset = "-=1";
     }
 
-    DrawTL.fromTo(
+    TL_DRAW.fromTo(
         circleId,
         1, {
             autoAlpha: 1,
@@ -347,13 +351,13 @@ function sweepRadius(circleId, radiusId) {
         hideElements(radiusId);
         // unStrokeLine(radiusId);
     }
-    DrawTL.to(circleId, .5, {
+    TL_DRAW.to(circleId, .5, {
         strokeWidth: .5
     }, "-=1")
 }
 
 function hideElements(id) {
-    DrawTL.staggerTo(
+    TL_DRAW.staggerTo(
         id,
         1, {
             autoAlpha: 0,
@@ -421,7 +425,7 @@ function zoomToElement(id, margin, scale) {
     console.log(viewBox);
 
     //scale lines and points with viewbox
-    DrawTL.to("#drawing", 1, {
+    TL_DRAW.to("#drawing", 1, {
             attr: {
                 viewBox: viewBox
             }

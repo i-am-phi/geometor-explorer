@@ -1,6 +1,7 @@
 /**
- * View - a container for drawing and animating the SVG panel
+ * a container for drawing and animating the SVG panel
  * and the other data panels of the UI
+ * - sets up boundary lines for the drawing
  * @author 𝚽 <phi@geometor.com>
  * @license MIT
  *
@@ -8,67 +9,30 @@
  */
 function View() {
 
-  // connect to SVG element
-  var D = SVG("drawing").panZoom({zoomMin: 50, zoomMax: 300, zoomFactor: 1.5});
+  /** radius for point icon */
+  this.PTRAD = .025
+  /** for variable width stroke on segments in proportion to the line length */
+  this.STROKEFACTOR = 20;
+  /** SVG Drawing */
+  const D = SVG("drawing").panZoom({zoomMin: 50, zoomMax: 300, zoomFactor: 1.5});
 
+  /**
+   * Array of `Line` objects defining the boundary of the Drawing<br>
+   * - using these in `View.addLine` to determine the end points of {@link Line} in the {@link model}
+   * - these lines are not added to the `Model.elements` array
+   */
   this.boundaryLines = []
 
   // TODO; set these values in main
-  let tlPt, brPt
-  tlPt = new Point("-4", "-4")
-  brPt = new Point("4", "4")
 
-  this.configureBoundaryLines = configureBoundaryLines
-  this.configureBoundaryLines(tlPt, brPt)
+  // top left
+  let tlPt = new Point("-4", "-4")
+  // bottom right
+  let brPt = new Point("4", "4")
 
-
-
-
-
-  // radius for point icon
-  const PTRAD = .025;
-  // for variable width stroke on segments in proportion to the line length
-  const STROKEFACTOR = 20;
-
-
-  //use groups as layers to keep points on top and selectable
-  this.groupPoints = D.group().attr({ id: "Points"  });
-  this.groupCircles = D.group().attr({ id: "Circles" });
-  this.groupLines = D.group().attr({ id: "Lines" });
-  this.groupSegments = D.group().attr({ id: "Segments" });
-
-  /**
-  * add a {@link Point} to the View<br>
-  * @function
-  * @param {Point} newPoint
-  * @returns {svgElement}
-  */
-  this.addPoint = addPointToView
-
-}
-
-function configurePanels() {
-  this.pointList = document.getElementById("pointList");
-  this.elementList = document.getElementById("elementList");
-  this.segmentList = document.getElementById("segmentList");
-
-
-  this.infoPanel = document.getElementById('info');
-  if ( !infoPanel ) {
-    console.log('infoPanel not found');
-  }
-
-  this.footerPanel = document.getElementById('footer');
-  if ( !footerPanel ) {
-    console.log('footerPanel not found');
-  }
-
-
-}
-
-function configureBoundaryLines(tlPt, brPt) {
-
+  // top right
   let trPt = new Point(brPt.x, tlPt.y)
+  // bottom left
   let blPt = new Point(tlPt.x, brPt.y)
 
   let lineN = new Line(tlPt, trPt)
@@ -82,6 +46,50 @@ function configureBoundaryLines(tlPt, brPt) {
 
   let lineE = new Line(trPt, brPt)
   this.boundaryLines.push(lineN)
+
+
+  //////
+
+  this.configurePanels = configurePanels
+  this.configurePanels()
+
+  //use groups as layers to keep points on top and selectable
+  this.groupPoints   = D.group().attr({ id: "Points"  });
+  this.groupCircles  = D.group().attr({ id: "Circles" });
+  this.groupLines    = D.group().attr({ id: "Lines" });
+  this.groupSegments = D.group().attr({ id: "Segments" });
+
+  /**
+  * add a {@link Point} to the View<br>
+  * SVG `circle` object representing the point location
+  * radius of `circle` set by `this.PTRAD`
+  * @function
+  * @param {Point} newPoint
+  * @returns {svgElement} `circle` object
+  */
+  this.addPoint = addPointToView
+
+}
+
+function configurePanels() {
+
+  this.pointList = document.getElementById("pointList");
+  this.elementList = document.getElementById("elementList");
+  this.segmentList = document.getElementById("segmentList");
+
+  this.infoPanel = document.getElementById('info');
+  if ( !this.infoPanel ) {
+    console.log('infoPanel not found');
+  }
+
+  this.footerPanel = document.getElementById('footer');
+  if ( !this.footerPanel ) {
+    console.log('footerPanel not found');
+  }
+
+}
+
+function configureBoundaryLines(tlPt, brPt) {
 
 
 }
@@ -98,7 +106,7 @@ function addPointToView(newPoint) {
     });
 
   //add point to the animation timeline
-  setPoint("#p" + newPoint.id);
+  // setPoint("#p" + newPoint.id);
 
   // set ui interactivity
   newPoint.element.on('click', click);
