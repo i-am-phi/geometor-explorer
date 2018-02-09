@@ -68,6 +68,7 @@ function View() {
   * @returns {svgElement} `circle` object
   */
   this.addPoint = addPointToView
+  this.addPoint = addPointToView
 
 }
 
@@ -100,7 +101,7 @@ function configureBoundaryLines(tlPt, brPt) {
 function addPointToView(newPoint) {
 
   //draw into SVG panel
-  newPoint.element = this.groupPoints.circle(this.PTRAD * 2).cx(newPoint.xVal).cy(newPoint.yVal)
+  let element = this.groupPoints.circle(this.PTRAD * 2).cx(newPoint.xVal).cy(newPoint.yVal)
     .addClass("Point")
     .attr({
       id: 'p' + newPoint.id,
@@ -112,13 +113,13 @@ function addPointToView(newPoint) {
   // setPoint("#p" + newPoint.id);
 
   // set ui interactivity
-  newPoint.element.on('click', click);
-  newPoint.element.on('mouseover', hover);
-  newPoint.element.on('mouseout', hover);
+  element.on('click', click);
+  element.on('mouseover', hover);
+  element.on('mouseout', hover);
 
-  this.addPointToPanel(newPoint)
+  // this.addPointToPanel(newPoint)
 
-  return newPoint.element
+  return element
 
 }
 
@@ -171,10 +172,10 @@ function renderLine() {
   var endPts = getLineEndPts(this);
 
   if (endPts) {
-    let x0 = getNumber( endPts[0].x )
-    let y0 = getNumber( endPts[0].y )
-    let x1 = getNumber( endPts[1].x )
-    let y1 = getNumber( endPts[1].y )
+    let x0 = parseFloat( endPts[0].x )
+    let y0 = parseFloat( endPts[0].y )
+    let x1 = parseFloat( endPts[1].x )
+    let y1 = parseFloat( endPts[1].y )
 
     //create SVG element
     this.element = groupLines.line( x0, y0, x1, y1 )
@@ -246,9 +247,9 @@ function getViewBox() {
 function renderCircle() {
   ////////////////////////////////////////////////////////
   //TODO: whay does the radius need to be multiplied by 2??
-  var cx = getNumber( cpt.x );
-  var cy = getNumber( cpt.y );
-  var r = getNumber( this.r );
+  var cx = parseFloat( cpt.x );
+  var cy = parseFloat( cpt.y );
+  var r = parseFloat( this.r );
 
   this.element = groupCircles.circle( r * 2 )
     .cx(cx)
@@ -294,11 +295,6 @@ function kat(str) {
   return katex.renderToString(latex);
 }
 
-function addCell(row, html, title) {
-  let cell = row.insertCell(-1);
-  cell.innerHTML = html
-  if (title) cell.setAttribute('title', title);
-}
 
 function addElementToPanel (element) {
   // var item = line.id + `  [${line.points[0].id}, ${line.points[1].id}] ${line.eq} = 0 \n`;
@@ -314,12 +310,12 @@ function addElementToPanel (element) {
 
   let p = element.eq.params
 
-  addCellParam(row, p['d'], getNumber(p['d']))
-  addCellParam(row, p['e'], getNumber(p['e']))
-  addCellParam(row, p['f'], getNumber(p['f']))
-  addCellParam(row, p['a'], getNumber(p['a']))
-  addCellParam(row, p['b'], getNumber(p['b']))
-  addCellParam(row, p['c'], getNumber(p['c']))
+  addCellParam(row, p['d'], parseFloat(p['d']))
+  addCellParam(row, p['e'], parseFloat(p['e']))
+  addCellParam(row, p['f'], parseFloat(p['f']))
+  addCellParam(row, p['a'], parseFloat(p['a']))
+  addCellParam(row, p['b'], parseFloat(p['b']))
+  addCellParam(row, p['c'], parseFloat(p['c']))
 }
 
 function addCellParam(row, html, title) {

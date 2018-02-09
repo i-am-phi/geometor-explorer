@@ -93,10 +93,10 @@ function Alg() {
   * @param {algValue} val - Algebrite command string
   * @returns {float | false}
   */
-  this.getNumber = function ( val ) {
+  this.parseFloat = function ( val ) {
     var num = parseFloat(A.run( `float(${val})` ))
     if ( isNaN( num ) ) {
-      log( `*** getNumber: "${val}" is not a Number.` )
+      log( `*** parseFloat: "${val}" is not a Number.` )
       return false
     }
     return num

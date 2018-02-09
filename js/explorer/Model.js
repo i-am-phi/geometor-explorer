@@ -112,11 +112,12 @@ function addPointToModel(newPoint) {
   } else {
 
     log("add point to list: " + newPoint.id )
+
     newPoint.id = this.points.length
     this.points.push(newPoint)
 
     newPoint.log();
-    
+
     return newPoint
 
   }

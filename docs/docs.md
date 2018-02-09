@@ -9,42 +9,36 @@
     -   [runLog](#runlog)
     -   [parseRoots](#parseroots)
     -   [isNumber](#isnumber)
-    -   [getNumber](#getnumber)
+    -   [parseFloat](#parsefloat)
     -   [checkValid](#checkvalid)
     -   [isComplex](#iscomplex)
     -   [round](#round)
 -   [Circle](#circle)
-    -   [id](#id)
-    -   [type](#type)
     -   [points](#points)
-    -   [addPoint](#addpoint)
     -   [center](#center)
     -   [h](#h)
     -   [k](#k)
     -   [r](#r)
     -   [eq](#eq)
     -   [toString](#tostring)
-    -   [log](#log)
 -   [Element](#element)
+    -   [type](#type)
+    -   [id](#id)
+    -   [log](#log)
+    -   [toString](#tostring-1)
 -   [Equation](#equation)
     -   [params](#params)
 -   [M](#m)
 -   [V](#v)
 -   [Explorer](#explorer)
-    -   [addPoint](#addpoint-1)
+    -   [addPoint](#addpoint)
     -   [addElement](#addelement)
 -   [Line](#line)
-    -   [id](#id-1)
-    -   [type](#type-1)
-    -   [points](#points-1)
-    -   [addPoint](#addpoint-2)
     -   [eq](#eq-1)
     -   [checkSegments](#checksegments)
-    -   [toString](#tostring-1)
-    -   [log](#log-1)
 -   [Model](#model)
-    -   [points](#points-2)
-    -   [addPoint](#addpoint-3)
+    -   [points](#points-1)
+    -   [addPoint](#addpoint-1)
     -   [findPoint](#findpoint)
     -   [elements](#elements)
     -   [addElement](#addelement-1)
@@ -54,34 +48,36 @@
     -   [goldensections](#goldensections)
     -   [systems](#systems)
 -   [Point](#point)
-    -   [id](#id-2)
-    -   [type](#type-2)
     -   [x](#x)
     -   [y](#y)
     -   [xVal](#xval)
     -   [yVal](#yval)
+    -   [Qv](#qv)
     -   [isValid](#isvalid)
     -   [parents](#parents)
     -   [addParent](#addparent)
+    -   [quadranceTo](#quadranceto)
     -   [distanceTo](#distanceto)
-    -   [compare](#compare)
-    -   [toString](#tostring-2)
-    -   [log](#log-2)
+    -   [comparePoint](#comparepoint)
 -   [Section](#section)
 -   [Segment](#segment)
-    -   [id](#id-3)
-    -   [type](#type-3)
-    -   [points](#points-3)
+    -   [id](#id-1)
+    -   [type](#type-1)
+    -   [points](#points-2)
     -   [length](#length)
     -   [lengthVal](#lengthval)
-    -   [toString](#tostring-3)
+    -   [toString](#tostring-2)
+-   [Struct](#struct)
+    -   [eq](#eq-2)
+    -   [addPoint](#addpoint-2)
 -   [System](#system)
 -   [View](#view)
     -   [PTRAD](#ptrad)
     -   [STROKEFACTOR](#strokefactor)
     -   [boundaryLines](#boundarylines)
-    -   [addPoint](#addpoint-4)
+    -   [addPoint](#addpoint-3)
 -   [D](#d)
+-   [addPointToPanel](#addpointtopanel)
 -   [E](#e)
 -   [main](#main)
 
@@ -164,7 +160,7 @@ returns false if not a number
 
 Returns **[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** 
 
-### getNumber
+### parseFloat
 
 convert the algebraic value to float and check if number<br>
 returns false if not a number
@@ -205,25 +201,18 @@ round for float comparison
 
 ## Circle
 
+**Extends Struct**
+
 represents a radial proportion between two points
 
 **Parameters**
 
+-   `pt1`  
+-   `pt2`  
+-   `type` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** type of element - default: Line
+-   `id` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** optional: unique id for the element
 -   `cpt` **[Point](#point)** center point of the circle
 -   `rpt` **[Point](#point)** radius point of the circle.
-
-### id
-
-id of the element - set by the context of the [Model](#model)<br>
-usually the index in the elements array
-
-Returns **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
-
-### type
-
-convenience type check for the element
-
-Returns **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** "circle"
 
 ### points
 
@@ -233,20 +222,6 @@ does not include center point (not on the circle)
 
 Returns **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)** of [Point](#point)
 
-### addPoint
-
-add a point to this element's point list
-
-usually called by the [Model](#model) to add intersection points
-
-checks to determine if the point is already present
-
-**Parameters**
-
--   `Point`  
-
-Returns **[Point](#point)** 
-
 ### center
 
 center point - set by constructor
@@ -255,45 +230,75 @@ Returns **[Point](#point)**
 
 ### h
 
-represents the x-offset in `(x - h)^2 + (y - k)^2 = r^2`
-
-h = (${cpt.x})
+-   represents the x-offset in `(x - h)^2 + (y - k)^2 = r^2`
+-   h = cpt.x
 
 Returns **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** algebraic value
 
 ### k
 
-represents the y-offset in `(x - h)^2 + (y - k)^2 = r^2`
+-   represents the y-offset in `(x - h)^2 + (y - k)^2 = r^2`
+-   k = cpt.y
 
 Returns **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** algebraic value
 
 ### r
 
-represents the radius length in `(x - h)^2 + (y - k)^2 = r^2`
-
-r = ( (cpt.x - rpt.x)^2 + (rpt.y - cpt.y)^2 )^(1/2)\`)
+-   represents the radius length in `(x - h)^2 + (y - k)^2 = r^2`
+-   `r = ( (cpt.x - rpt.x)^2 + (rpt.y - cpt.y)^2 )^(1/2) )`
 
 Returns **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** algebraic value
 
 ### eq
 
 the equation associated with this element
-set by constructor
 
-`d x^2 + e x y + f y^2 + a x + b y = c`
+**`d x^2 + e x y + f y^2 + a x + b y = c`**
 
-`d = 1` // always for a circle <br>
-`e = 0` // always for a circle <br>
-`f = 1` // always for a circle <br>
-`a = -2h` <br>
-`b = -2k` <br>
-`c = h^2 + k^2 - r^2` // but sign is changed to put it on the other side of the equals <br>
+-   `d = 1` // always for a circle <br>
+-   `e = 0` // always for a circle <br>
+-   `f = 1` // always for a circle <br>
+-   `a = -2h` <br>
+-   `b = -2k` <br>
+-   `c = h^2 + k^2 - r^2` // but sign is changed to put it on the other side of the equals <br>
 
 Returns **[Equation](#equation)** 
 
 ### toString
 
 formatted string representing attribute of the circle
+
+Returns **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
+
+## Element
+
+base class for the common properties of any entity of the [Model](#model),
+including [Point](#point) and [Struct](#struct)
+
+**Parameters**
+
+-   `type` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** type of element - such as "Point" - like a class in CSS
+-   `id` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** unique id for the element
+
+**Meta**
+
+-   **author**: 𝚽 &lt;phi@geometor.com>
+-   **license**: MIT
+
+### type
+
+type for the element
+
+-   can be coordinated with css and for selecting groupings within the UI
+
+Returns **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** default: "Element"
+
+### id
+
+id of the element - set by the context of the [Model](#model)<br>
+
+-   usually the index in the elements array
+-   will be used to coordinate with UI elements in View
 
 Returns **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
 
@@ -304,21 +309,11 @@ perfect for logging
 
 Returns **[console](https://developer.mozilla.org/docs/Web/API/Console)** 
 
-## Element
+### toString
 
-Intended to be a parent class for the common properties of [Line](#line) and [Circle](#circle)
+formatted string representing attribute of the object
 
-TODO: create a common Class of Element for Line and Circle
-
-**Parameters**
-
--   `pt1` **[Point](#point)** initial point of the element
--   `pt2` **[Point](#point)** initial point of the element
-
-**Meta**
-
--   **author**: 𝚽 &lt;phi@geometor.com>
--   **license**: MIT
+Returns **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
 
 ## Equation
 
@@ -417,6 +412,8 @@ Returns **[Element](#element)** return existing if found.
 
 ## Line
 
+**Extends Struct**
+
 a linear proportion established by two points
 
 constructor calculates linear proportions from the x, y values of the points recieved
@@ -427,42 +424,13 @@ TODO: points should be immutable after instantiation
 
 -   `pt1` **[Point](#point)** initial point of the line
 -   `pt2` **[Point](#point)** initial point of the line.
+-   `type` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** type of element - default: Line
+-   `id` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** optional: unique id for the element
 
 **Meta**
 
 -   **author**: 𝚽 &lt;phi@geometor.com>
 -   **license**: MIT
-
-### id
-
-id of the element - set by the context of the [Model](#model)<br>
-usually the index in the elements array
-
-Returns **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
-
-### type
-
-convenience type check for the element
-
-Returns **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** "line"
-
-### points
-
-an array of points on this element
-
-Returns **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)** of [Point](#point)
-
-### addPoint
-
-add a point to this element's point list
-usually called by the [Model](#model) to add intersection points
-checks to determine if the point is already present
-
-**Parameters**
-
--   `Point`  
-
-Returns **[Point](#point)** 
 
 ### eq
 
@@ -486,22 +454,6 @@ Returns **[Equation](#equation)**
 check all pairs of contiguous segments on this line for golden ratio instances
 
 Returns **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)** collection of new [Section](#section) objects where `.isGoldenRatio = true`
-
-### toString
-
-formatted string representing properties of the line
-
-good for logging
-
-Returns **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
-
-### log
-
-grouped console output to represent the object
-
-perfect for logging
-
-Returns **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
 
 ## Model
 
@@ -607,36 +559,31 @@ Returns **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Gl
 
 ## Point
 
-represents a position within a two dimension cartesian plane - specified by two values
+**Extends Element**
 
-other than the two starting points, points are derived through the intersection of elements
+-   represents a position within a two dimension cartesian plane - specified by two values
+-   also represents a node in a system of algebraic expressions
+
+-   other than the two starting points, points are derived through the intersection of elements
+-   the starting values of the first two points are explicitly set and have no parent [Struct](#struct)
 
 TODO: points should be immutable after instantiation
+
+TODO: each x, y value is a part of a result set from a System of two Structs
 
 **Parameters**
 
 -   `x` **algValue** string with algebraic value
 -   `y` **algValue** string with algebraic value
--   `parent1` **[Element](#element)** parent element - intersecting line or circle.
--   `parent2` **[Element](#element)** parent element - intersecting line or circle.
+-   `parent1` **[Struct](#struct)** parent structure - intersecting line or circle.
+-   `parent2` **[Struct](#struct)** parent structure - intersecting line or circle.
+-   `type` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** type of Element - such as "Point" - like a class in CSS
+-   `id` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** unique id for the Element
 
 **Meta**
 
 -   **author**: 𝚽 &lt;phi@geometor.com>
 -   **license**: MIT
-
-### id
-
-id of the element - set by the context of the [Model](#model)<br>
-usually the index in the elements array
-
-Returns **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
-
-### type
-
-convenience type check for the element
-
-Returns **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** "point"
 
 ### x
 
@@ -662,6 +609,14 @@ floating point value - set by constructor - converted from AlgValue
 
 Returns **float** 
 
+### Qv
+
+Quadrance - the square of the vector of this point from origin
+
+-   `(x)^2 + (y)^2`
+
+Returns **algValue** algebraic value
+
 ### isValid
 
 set to false if x or y are not a number
@@ -676,15 +631,25 @@ Returns **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Gl
 
 ### addParent
 
-add a point to this element's point list
+add a parent Element or Struct to this Point's parent array
 usually called by the [Model](#model) to add intersection points
-checks to determine if the point is already present
+checks to determine if the parent is already present before adding a new one
 
 **Parameters**
 
+-   `parent`  
+-   `Element`  
+
+### quadranceTo
+
+determine the quadrance (square of distance) from this point to the supplied point
+
+**Parameters**
+
+-   `point`  
 -   `Point`  
 
-Returns **[Point](#point)** 
+Returns **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** algebraic value
 
 ### distanceTo
 
@@ -692,11 +657,12 @@ determine the distance from this point to the supplied point
 
 **Parameters**
 
+-   `point`  
 -   `Point`  
 
 Returns **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** algebraic value
 
-### compare
+### comparePoint
 
 used for sorting points on a line
 
@@ -709,20 +675,6 @@ used for sorting points on a line
 -   `point` **[Point](#point)** to test
 
 Returns **int** \-1, 0, 1
-
-### toString
-
-formatted string representing attribute of the object
-
-Returns **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
-
-### log
-
-grouped console output to represent the object
-
-perfect for logging
-
-Returns **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
 
 ## Section
 
@@ -796,6 +748,46 @@ formatted string representing attribute of the circle
 
 Returns **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
 
+## Struct
+
+**Extends Element**
+
+-   base class for structures within the the [Model](#model)
+-   extends from [Element](#element) class
+-   a structure is an [Element](#element) defined by a set of proportions establsihed by two [Point](#point) objects
+-   see [Line](#line)
+-   see [Circle](#circle)
+
+**TODO** Struct should take an Array of Point objects - allowing for polygons
+
+**Parameters**
+
+-   `pt1` **[Point](#point)** initial point of the structure
+-   `pt2` **[Point](#point)** initial point of the structure
+-   `type` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** default: "Struct"
+-   `id` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** optional
+
+**Meta**
+
+-   **author**: 𝚽 &lt;phi@geometor.com>
+-   **license**: MIT
+
+### eq
+
+all Struct objects have an equation
+
+### addPoint
+
+-   adds [Point](#point) object **ON** the Struct
+-   usually from the intersection with another Struct
+-   derived by the [System](#system)
+
+**Parameters**
+
+-   `newPoint` **[Point](#point)** 
+
+Returns **[Point](#point)** returns existing point if there is a match
+
 ## System
 
 System - collection of equations - starting with two elements
@@ -854,6 +846,10 @@ Returns **[svgElement](https://developer.mozilla.org/docs/Web/SVG/Element/animat
 ## D
 
 SVG Drawing
+
+## addPointToPanel
+
+create an entry in the table for a point
 
 ## E
 

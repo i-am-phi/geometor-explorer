@@ -15,16 +15,42 @@ const E = new Explorer();
  */
 function main() {
 
+  // const E1 = new Element("E1", "Hydrogen")
+  // if (E1 instanceof Element) {
+  //   log("E1 instanceof Element")
+  // } else {
+  //   log("E1 NOT ELEMENT")
+  // }
+  // console.dir(E1)
+  // console.log(E1)
+  // console.log(E1.toString())
+  //
+
   console.time("* main *");
 
+
   //initial points set by X Y
-  const P0 = new Point( "-1/2", "0" )
+  let P0 = new Point( "-1/2", "0" )
   //sequence the animations here.
   E.addPoint(P0)
+  log(P0.toString())
 
 
-  const P1 = new Point( "1/2", "0" )
+  let P1 = new Point( "1/2", "0" )
   E.addPoint(P1)
+  log(P1.toString())
+
+
+  const L1 = new Line( P0, P1 )
+  if (L1 instanceof Struct) {
+    log("L1 instanceof Struct")
+  } else {
+    log("L1 NOT Struct")
+  }
+
+  console.dir(L1)
+  console.log(L1)
+  console.log(L1.toString())
 
   //baseline
   // const BL = new Line( P0, P1 )
