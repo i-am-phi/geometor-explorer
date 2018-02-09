@@ -21,3 +21,12 @@ function addCell(row, html, title) {
   cell.innerHTML = html
   if (title) cell.setAttribute('title', title);
 }
+
+function addCellParam(row, html, title) {
+  cell = row.insertCell(-1);
+  if (html != 0) {
+    cell.innerHTML = kat(html)
+  }
+  if (title) cell.setAttribute('title', title);
+
+}

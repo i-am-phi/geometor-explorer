@@ -117,15 +117,18 @@ class Model {
 
     } else {
 
-      this.structs.forEach( element => {
+      this.structs.forEach( exStruct => {
 
-        let sys = new System(newStruct, element)
-        this.systems.push(sys)
+        let sys = new System(newStruct, exStruct)
+
 
         //add new points to each Struct
         sys.roots.forEach( point => {
           this.addPoint(point)
         })
+
+        this.systems.push(sys)
+
 
       }, this);
 
@@ -193,9 +196,7 @@ class Model {
 
   }
 
-
-
-}
+} // class
 
 
 

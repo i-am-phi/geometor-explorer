@@ -41,7 +41,7 @@ class Explorer {
 
     //TODO: get intersection points with other structs
 
-    // V.addStruct(struct)
+    V.addStruct(struct)
 
     return struct
 

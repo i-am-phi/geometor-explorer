@@ -67,16 +67,13 @@ class View {
 
   }
 
+  /** setup DOM elements for List Tables in Aside */
   configurePanels() {
 
     this.pointList = document.getElementById("pointList");
-    this.elementList = document.getElementById("elementList");
+    this.structList = document.getElementById("structList");
     this.segmentList = document.getElementById("segmentList");
 
-    this.infoPanel = document.getElementById('info');
-    if (!this.infoPanel) {
-      console.log('infoPanel not found');
-    }
 
     this.footerPanel = document.getElementById('footer');
     if (!this.footerPanel) {
@@ -85,7 +82,6 @@ class View {
 
 
   }
-
 
   /**
    * add a {@link Point} to the View<br>
@@ -98,13 +94,7 @@ class View {
   addPoint(newPoint) {
 
     // DRAW ////////////////////////////////////////////////////////
-    let element = this.groupPoints.circle(this.PTRAD * 2).cx(newPoint.xVal).cy(newPoint.yVal)
-      .addClass("Point")
-      .attr({
-        id: 'p' + newPoint.id,
-        'point-id': newPoint.id,
-        title: `[${newPoint.x}, ${newPoint.y}]`,
-      });
+    let element = this.drawPoint(newPoint)
 
     // ANIMATE ////////////////////////////////////////////////////////
     //add point to the animation timeline
@@ -117,7 +107,27 @@ class View {
     element.on('mouseout', hover);
 
     // SHOW ////////////////////////////////////////////////////////
-    this.addPointToTable(newPoint)
+    this.listPoint(newPoint)
+
+    return element
+
+  }
+
+  /**
+   * draw the {@link Point} into the Drawing using SVG.js
+   * @function
+   * @param {Point} newPoint
+   * @returns {row} table row
+   */
+  drawPoint(newPoint) {
+
+    let element = this.groupPoints.circle(this.PTRAD * 2).cx(newPoint.xVal).cy(newPoint.yVal)
+      .addClass("Point")
+      .attr({
+        id: 'p' + newPoint.id,
+        'point-id': newPoint.id,
+        title: `[${newPoint.x}, ${newPoint.y}]`,
+      });
 
     return element
 
@@ -129,7 +139,7 @@ class View {
    * @param {Point} newPoint
    * @returns {row} table row
    */
-   addPointToTable(point) {
+  listPoint(point) {
 
     // Create an empty <tr> element and add it to the 1st position of the table:
     var row = this.pointList.insertRow(-1);
@@ -143,7 +153,194 @@ class View {
 
   }
 
+  /**
+   * add a {@link Struct} (Line or Circle) to the View<br>
+   * SVG `circle` object representing the point location
+   * radius of `circle` set by `this.PTRAD`
+   * @function
+   * @param {Point} newPoint
+   * @returns {svgElement}
+   */
+  addStruct(newStruct) {
+
+    // DRAW ////////////////////////////////////////////////////////
+    let element = this.drawStruct(newStruct)
+
+    // ANIMATE ////////////////////////////////////////////////////////
+    //add point to the animation timeline
+    // setPoint("#p" + newPoint.id);
+
+    // EVENTS ////////////////////////////////////////////////////////
+    // set ui interactivity
+    element.on('click', click);
+    element.on('mouseover', hover);
+    element.on('mouseout', hover);
+
+    // LIST ////////////////////////////////////////////////////////
+    this.listStruct(newStruct)
+
+    return element
+
+
+  }
+
+  /**
+   * draw the {@link Struct} into the Drawing using SVG.js
+   * @function
+   * @param {Struct} newStruct
+   * @returns {svgElement} table row
+   */
+  drawStruct(newStruct) {
+
+    if (newStruct instanceof Line) {
+      this.drawLine(newStruct)
+    }
+    if (newStruct instanceof Circle) {
+      this.drawCircle(newStruct)
+    }
+
+  }
+
+  /**
+   * add a {@link Struct} to the Structures UI List
+   * @function
+   * @param {Struct} newPoint
+   * @returns {row} table row
+   */
+
+  listStruct(newStruct) {
+    // var item = line.id + `  [${line.points[0].id}, ${line.points[1].id}] ${line.eq} = 0 \n`;
+    // linesPanel.innerHTML += item;
+    // console.log(item);
+
+    var row = this.structList.insertRow(-1);
+    row.classList.add(newStruct.type)
+
+    addCell(row, newStruct.id)
+    if (newStruct instanceof Line) {
+      addCell(row, "/", "line")
+    }
+    if (newStruct instanceof Circle) {
+      addCell(row, "⨀", "circle")
+    }
+
+    let p = newStruct.eq.params
+
+    addCellParam(row, p['d'], parseFloat(p['d']))
+    addCellParam(row, p['e'], parseFloat(p['e']))
+    addCellParam(row, p['f'], parseFloat(p['f']))
+    addCellParam(row, p['a'], parseFloat(p['a']))
+    addCellParam(row, p['b'], parseFloat(p['b']))
+    addCellParam(row, p['c'], parseFloat(p['c']))
+  }
+
+
+  drawLine(newLine) {
+    let svgStruct
+
+    //////////////////////////////////////////////
+    // draw line to edge of the viewbox
+    var endPts = this.getLineEndPts(newLine);
+
+    if (endPts) {
+      let x0 = endPts[0].xVal
+      let y0 = endPts[0].yVal
+      let x1 = endPts[1].xVal
+      let y1 = endPts[1].yVal
+
+      //create SVG svgStruct
+      svgStruct = this.groupLines.line(x0, y0, x1, y1)
+        .addClass("Line")
+        .attr({
+          id: "i" + newLine.id,
+          'svgStruct-id': newLine.id
+        });
+
+      // setLine("#i" + newLine.id);
+
+      // set UI hover and click
+      svgStruct.on('click', click);
+      svgStruct.on('mouseover', hover);
+      svgStruct.on('mouseout', hover);
+    }
+
+    return svgStruct
+
+  }
+
+  //pass in line coefficients to find endpoints at viewbox
+  getLineEndPts(line) {
+    //get bounds to margin for the line
+    // var box = D.viewbox()
+    // var bx1 = box.x
+    // var by1 = box.y
+    // var bx2 = box.x + box.width
+    // var by2 = box.y + box.height
+
+    var endPts = []
+
+    // check where line intersects they boundary lines
+    this.boundaryLines.forEach(bline => {
+
+      let sys = new System(line, bline)
+
+      // if intersect - ask bline if point is between defining points
+      if (sys.roots) {
+        sys.roots.forEach(point => {
+          var bl01 = bline.point[0].distanceTo(bline.point[1])
+          var bl0p = bline.point[0].distanceTo(point)
+          var bl1p = bline.point[1].distanceTo(point)
+
+          let result = alglog(`(bl01) = (bl0p) + (bl1p)`)
+          if (result == "1") {
+            endPts.push(point)
+          }
+        })
+      }
+    })
+
+    return endPts
+
+  }
+
+  drawCircle(newCircle) {
+
+    let svgStruct
+
+    ////////////////////////////////////////////////////////
+    //TODO: whay does the radius need to be multiplied by 2??
+    var cx = newCircle.xVal;
+    var cy = newCircle.yVal;
+    var r = parseFloat(this.r);
+
+    svgStruct = groupCircles.circle(r * 2)
+      .cx(cx)
+      .cy(cy)
+      .addClass("Circle")
+      .attr({
+        'id': `c${this.id}`,
+        'element-id': this.id
+      });
+
+    // setCircle("#c" + this.id);
+
+    //TODO: rotate circle to align start point with Radius
+
+    //UI interactvity
+    svgStruct.on('click', click);
+    svgStruct.on('mouseover', hover);
+    svgStruct.on('mouseout', hover);
+
+  }
+
 }
+
+
+
+
+
+
+
 
 
 
@@ -186,84 +383,6 @@ function addSegmentToView(segment) {
   segment.element.on('mouseout', hover);
 
   return segment.element
-
-}
-
-
-function renderLine() {
-
-  //////////////////////////////////////////////
-  // draw line to edge of the viewbox
-  var endPts = getLineEndPts(this);
-
-  if (endPts) {
-    let x0 = parseFloat(endPts[0].x)
-    let y0 = parseFloat(endPts[0].y)
-    let x1 = parseFloat(endPts[1].x)
-    let y1 = parseFloat(endPts[1].y)
-
-    //create SVG element
-    this.element = groupLines.line(x0, y0, x1, y1)
-      .addClass("Line")
-      .attr({
-        id: "i" + this.id,
-        'element-id': this.id
-      });
-
-    setLine("#i" + this.id);
-
-    // set UI hover and click
-    this.element.on('click', click);
-    this.element.on('mouseover', hover);
-    this.element.on('mouseout', hover);
-  }
-
-}
-
-
-//pass in line coefficients to find endpoints at viewbox
-function getLineEndPts(line) {
-  //get bounds to margin for the line
-  // var box = D.viewbox()
-  // var bx1 = box.x
-  // var by1 = box.y
-  // var bx2 = box.x + box.width
-  // var by2 = box.y + box.height
-
-  var endPts = []
-
-  // check where line intersects they boundary lines
-  boundaryLines.forEach(bline => {
-
-    let sys = new System(line, bline)
-
-    // if intersect - ask bline if point is between defining points
-    if (sys.roots) {
-      sys.roots.forEach(point => {
-        var bl01 = bline.point[0].distanceTo(bline.point[1])
-        var bl0p = bline.point[0].distanceTo(point)
-        var bl1p = bline.point[1].distanceTo(point)
-
-        let result = alglog(`(bl01) = (bl0p) + (bl1p)`)
-        if (result == "1") {
-          endPts.push(point)
-        }
-      })
-    }
-  })
-
-  return endPts
-
-
-}
-
-function getViewBox() {
-  //get bounds to margin for the line
-  // var box = D.viewbox()
-  // var bx1 = box.x
-  // var by1 = box.y
-  // var bx2 = box.x + box.width
-  // var by2 = box.y + box.height
 
 }
 
@@ -311,41 +430,6 @@ function kat(str) {
 }
 
 
-function addElementToPanel(element) {
-  // var item = line.id + `  [${line.points[0].id}, ${line.points[1].id}] ${line.eq} = 0 \n`;
-  // linesPanel.innerHTML += item;
-  // console.log(item);
-
-  var row = elementList.insertRow(-1);
-  row.classList.add(element.type)
-
-  addCell(row, element.id)
-  if (element.type == "line") {
-    addCell(row, "/", "line")
-  }
-  if (element.type == "circle") {
-    addCell(row, "⨀", "circle")
-  }
-
-  let p = element.eq.params
-
-  addCellParam(row, p['d'], parseFloat(p['d']))
-  addCellParam(row, p['e'], parseFloat(p['e']))
-  addCellParam(row, p['f'], parseFloat(p['f']))
-  addCellParam(row, p['a'], parseFloat(p['a']))
-  addCellParam(row, p['b'], parseFloat(p['b']))
-  addCellParam(row, p['c'], parseFloat(p['c']))
-}
-
-function addCellParam(row, html, title) {
-  cell = row.insertCell(-1);
-  if (html != 0) {
-    cell.innerHTML = kat(html)
-  }
-  if (title) cell.setAttribute('title', title);
-
-}
-
 function logSegments(str) {
   //  var item = circle.id + `  ( ${circle.h}, ${circle.k} )\t${circle.r}\t${circle.eq} = 0 \n`;
   segmentsPanel.innerHTML += str;
@@ -367,6 +451,15 @@ function logSummary() {
 }
 
 
+function getViewBox() {
+  //get bounds to margin for the line
+  // var box = D.viewbox()
+  // var bx1 = box.x
+  // var by1 = box.y
+  // var bx2 = box.x + box.width
+  // var by2 = box.y + box.height
+
+}
 
 
 ///////////////////////////////////////
