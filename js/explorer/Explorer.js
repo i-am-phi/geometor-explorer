@@ -1,13 +1,4 @@
-/**
-* Global instance of the {@link Model} object
-* @const
-*/
-const M = new Model()
-/**
-* Global instance of the {@link View} object
-* @const
-*/
-const V = new View()
+
 
 /**
  * Controller for the {@link Model} and {@link View}
@@ -16,52 +7,44 @@ const V = new View()
  * @author 𝚽 <phi@geometor.com>
  * @license MIT
  *
- * @constructor
+ * @class
  */
-function Explorer() {
+class Explorer {
 
   /**
   * add Point to Model and View
   * @function
-  * @param {Point}
+  * @param {Point} point
   * @returns {Point} return existing if found.
   */
-  this.addPoint  = addPointToExplorer
-  /** add Element to Model and View
+  addPoint(point) {
+
+    point = M.addPoint(point)
+
+    V.addPoint(point)
+
+    return point
+
+  }
+
+  /** add {@link Struct} (ie - Line or Circle) to Model and View
+
+  * TODO: get intersection points with other structs
+
   * @function
-  * @param {Element}
-  * @returns {Element} return existing if found.
+  * @param {Struct} struct
+  * @returns {Struct} return existing if found.
   */
-  this.addElement   = addElementToExplorer
+  addStruct(struct) {
 
-}
+    struct = M.addStruct(struct)
 
-function addPointToExplorer(point) {
+    //TODO: get intersection points with other structs
 
-  point = M.addPoint(point)
+    // V.addStruct(struct)
 
-  V.addPoint(point)
+    return struct
 
-  return point
-
-}
-
-function addElementToExplorer(element) {
-
-  element = M.addElement(element)
-
-  //get intersection points with other elements
-
-  V.addElement(element)
-
-  return element
-
-}
-
-function addCircleToExplorer(circle) {
-
-  M.addCircle(circle)
-
-  V.addCircle(circle)
+  }
 
 }

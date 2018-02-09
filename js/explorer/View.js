@@ -5,123 +5,148 @@
  * @author 𝚽 <phi@geometor.com>
  * @license MIT
  *
- * @constructor
+ * @class
  */
-function View() {
+class View {
+  constructor() {
 
-  /** radius for point icon */
-  this.PTRAD = .025
-  /** for variable width stroke on segments in proportion to the line length */
-  this.STROKEFACTOR = 20;
-  /** SVG Drawing */
-  const D = SVG("drawing").panZoom({zoomMin: 50, zoomMax: 300, zoomFactor: 1.5});
+    /** radius for point icon */
+    this.PTRAD = .025
+    /** for variable width stroke on segments in proportion to the line length */
+    this.STROKEFACTOR = 20;
 
-  /**
-   * Array of `Line` objects defining the boundary of the Drawing<br>
-   * - using these in `View.addLine` to determine the end points of {@link Line} in the {@link model}
-   * - these lines are not added to the `Model.elements` array
-   */
-  this.boundaryLines = []
+    /**
+     * Array of `Line` objects defining the boundary of the Drawing<br>
+     * - using these in `View.addLine` to determine the end points of {@link Line} in the {@link model}
+     * - these lines are not added to the `Model.elements` array
+     */
+    this.boundaryLines = []
 
-  // TODO; set these values in main
+    // TODO; set these values in main
 
-  // top left
-  let tlPt = new Point("-4", "-4")
-  // bottom right
-  let brPt = new Point("4", "4")
+    // top left
+    let tlPt = new Point("-4", "-4")
+    // bottom right
+    let brPt = new Point("4", "4")
 
-  // top right
-  let trPt = new Point(brPt.x, tlPt.y)
-  // bottom left
-  let blPt = new Point(tlPt.x, brPt.y)
+    // top right
+    let trPt = new Point(brPt.x, tlPt.y)
+    // bottom left
+    let blPt = new Point(tlPt.x, brPt.y)
 
-  let lineN = new Line(tlPt, trPt)
-  this.boundaryLines.push(lineN)
+    let lineN = new Line(tlPt, trPt)
+    this.boundaryLines.push(lineN)
 
-  let lineS = new Line(blPt, brPt)
-  this.boundaryLines.push(lineS)
+    let lineS = new Line(blPt, brPt)
+    this.boundaryLines.push(lineS)
 
-  let lineW = new Line(tlPt, blPt)
-  this.boundaryLines.push(lineN)
+    let lineW = new Line(tlPt, blPt)
+    this.boundaryLines.push(lineN)
 
-  let lineE = new Line(trPt, brPt)
-  this.boundaryLines.push(lineN)
-
-
-  //////
-
-  this.configurePanels = configurePanels
-  this.configurePanels()
-
-  //use groups as layers to keep points on top and selectable
-  this.groupPoints   = D.group().attr({ id: "Points"  });
-  this.groupCircles  = D.group().attr({ id: "Circles" });
-  this.groupLines    = D.group().attr({ id: "Lines" });
-  this.groupSegments = D.group().attr({ id: "Segments" });
-
-  /**
-  * add a {@link Point} to the View<br>
-  * SVG `circle` object representing the point location
-  * radius of `circle` set by `this.PTRAD`
-  * @function
-  * @param {Point} newPoint
-  * @returns {svgElement} `circle` object
-  */
-  this.addPoint = addPointToView
-  this.addPoint = addPointToView
-
-}
-
-function configurePanels() {
-
-  this.pointList = document.getElementById("pointList");
-  this.elementList = document.getElementById("elementList");
-  this.segmentList = document.getElementById("segmentList");
-
-  this.infoPanel = document.getElementById('info');
-  if ( !this.infoPanel ) {
-    console.log('infoPanel not found');
-  }
-
-  this.footerPanel = document.getElementById('footer');
-  if ( !this.footerPanel ) {
-    console.log('footerPanel not found');
-  }
-
-  /**  create an entry in the table for a point */
-  this.addPointToPanel = addPointToPanel
-
-}
-
-function configureBoundaryLines(tlPt, brPt) {
+    let lineE = new Line(trPt, brPt)
+    this.boundaryLines.push(lineN)
 
 
-}
+    //////
 
-function addPointToView(newPoint) {
+    this.configurePanels()
 
-  //draw into SVG panel
-  let element = this.groupPoints.circle(this.PTRAD * 2).cx(newPoint.xVal).cy(newPoint.yVal)
-    .addClass("Point")
-    .attr({
-      id: 'p' + newPoint.id,
-      'point-id': newPoint.id,
-      title: `[${newPoint.x}, ${newPoint.y}]`,
+    //use groups as layers to keep points on top and selectable
+    this.groupPoints = D.group().attr({
+      id: "Points"
+    });
+    this.groupCircles = D.group().attr({
+      id: "Circles"
+    });
+    this.groupLines = D.group().attr({
+      id: "Lines"
+    });
+    this.groupSegments = D.group().attr({
+      id: "Segments"
     });
 
-  //add point to the animation timeline
-  // setPoint("#p" + newPoint.id);
+  }
 
-  // set ui interactivity
-  element.on('click', click);
-  element.on('mouseover', hover);
-  element.on('mouseout', hover);
+  configurePanels() {
 
-  // this.addPointToPanel(newPoint)
+    this.pointList = document.getElementById("pointList");
+    this.elementList = document.getElementById("elementList");
+    this.segmentList = document.getElementById("segmentList");
 
-  return element
+    this.infoPanel = document.getElementById('info');
+    if (!this.infoPanel) {
+      console.log('infoPanel not found');
+    }
+
+    this.footerPanel = document.getElementById('footer');
+    if (!this.footerPanel) {
+      console.log('footerPanel not found');
+    }
+
+
+  }
+
+
+  /**
+   * add a {@link Point} to the View<br>
+   * SVG `circle` object representing the point location
+   * radius of `circle` set by `this.PTRAD`
+   * @function
+   * @param {Point} newPoint
+   * @returns {svgElement} `circle` object
+   */
+  addPoint(newPoint) {
+
+    // DRAW ////////////////////////////////////////////////////////
+    let element = this.groupPoints.circle(this.PTRAD * 2).cx(newPoint.xVal).cy(newPoint.yVal)
+      .addClass("Point")
+      .attr({
+        id: 'p' + newPoint.id,
+        'point-id': newPoint.id,
+        title: `[${newPoint.x}, ${newPoint.y}]`,
+      });
+
+    // ANIMATE ////////////////////////////////////////////////////////
+    //add point to the animation timeline
+    // setPoint("#p" + newPoint.id);
+
+    // EVENTS ////////////////////////////////////////////////////////
+    // set ui interactivity
+    element.on('click', click);
+    element.on('mouseover', hover);
+    element.on('mouseout', hover);
+
+    // SHOW ////////////////////////////////////////////////////////
+    this.addPointToTable(newPoint)
+
+    return element
+
+  }
+
+  /**
+   * add a {@link Point} to the UI List
+   * @function
+   * @param {Point} newPoint
+   * @returns {row} table row
+   */
+   addPointToTable(point) {
+
+    // Create an empty <tr> element and add it to the 1st position of the table:
+    var row = this.pointList.insertRow(-1);
+    row.classList.add("Point")
+
+    addCell(row, point.id)
+    addCell(row, kat(point.x), point.xVal)
+    addCell(row, kat(point.y), point.yVal)
+
+    return row
+
+  }
 
 }
+
+
+
 
 function addSegmentToView(segment) {
 
@@ -132,7 +157,7 @@ function addSegmentToView(segment) {
 
   var strokeWidth = segment.lengthVal / STROKEFACTOR;
   var dashOffset = strokeWidth;
-  var dashLength =  segment.lengthVal - (dashOffset * 2);
+  var dashLength = segment.lengthVal - (dashOffset * 2);
 
   segment.element = this.groupSegments.line(p1x, p1y, p2x, p2y)
     .addClass("Segment")
@@ -145,10 +170,10 @@ function addSegmentToView(segment) {
 
     })
     .marker('start', 4, 4, function(add) {
-      add.circle(2).center(2,2)
+      add.circle(2).center(2, 2)
     })
     .marker('end', 4, 4, function(add) {
-      add.circle(2).center(2,2)
+      add.circle(2).center(2, 2)
     })
 
   segment.markerStart = segment.element.attr('marker-start').replace("url(", "").replace(")", "")
@@ -172,19 +197,18 @@ function renderLine() {
   var endPts = getLineEndPts(this);
 
   if (endPts) {
-    let x0 = parseFloat( endPts[0].x )
-    let y0 = parseFloat( endPts[0].y )
-    let x1 = parseFloat( endPts[1].x )
-    let y1 = parseFloat( endPts[1].y )
+    let x0 = parseFloat(endPts[0].x)
+    let y0 = parseFloat(endPts[0].y)
+    let x1 = parseFloat(endPts[1].x)
+    let y1 = parseFloat(endPts[1].y)
 
     //create SVG element
-    this.element = groupLines.line( x0, y0, x1, y1 )
+    this.element = groupLines.line(x0, y0, x1, y1)
       .addClass("Line")
       .attr({
         id: "i" + this.id,
         'element-id': this.id
-      })
-      ;
+      });
 
     setLine("#i" + this.id);
 
@@ -209,7 +233,7 @@ function getLineEndPts(line) {
   var endPts = []
 
   // check where line intersects they boundary lines
-  boundaryLines.forEach( bline => {
+  boundaryLines.forEach(bline => {
 
     let sys = new System(line, bline)
 
@@ -247,18 +271,18 @@ function getViewBox() {
 function renderCircle() {
   ////////////////////////////////////////////////////////
   //TODO: whay does the radius need to be multiplied by 2??
-  var cx = parseFloat( cpt.x );
-  var cy = parseFloat( cpt.y );
-  var r = parseFloat( this.r );
+  var cx = parseFloat(cpt.x);
+  var cy = parseFloat(cpt.y);
+  var r = parseFloat(this.r);
 
-  this.element = groupCircles.circle( r * 2 )
+  this.element = groupCircles.circle(r * 2)
     .cx(cx)
     .cy(cy)
     .addClass("Circle")
     .attr({
       'id': `c${this.id}`,
       'element-id': this.id
-      });
+    });
 
   setCircle("#c" + this.id);
 
@@ -273,30 +297,21 @@ function renderCircle() {
 
 
 
-function log (msg) {
+function log(msg) {
   // segmentsPanel.innerHTML += msg + '\n';
   console.log(msg + '\n');
 }
 
-function addPointToPanel (point) {
-  // Create an empty <tr> element and add it to the 1st position of the table:
-  var row = pointList.insertRow(-1);
-  row.classList.add("point")
-
-
-  addCell(row, point.id)
-  addCell(row, kat(point.x), point.xVal)
-  addCell(row, kat(point.y), point.yVal)
-
-}
 
 function kat(str) {
-  let latex =  A.run(`printlatex(${str})`);
+
+  let latex = A.run(`printlatex(${str})`);
   return katex.renderToString(latex);
+
 }
 
 
-function addElementToPanel (element) {
+function addElementToPanel(element) {
   // var item = line.id + `  [${line.points[0].id}, ${line.points[1].id}] ${line.eq} = 0 \n`;
   // linesPanel.innerHTML += item;
   // console.log(item);
@@ -305,8 +320,12 @@ function addElementToPanel (element) {
   row.classList.add(element.type)
 
   addCell(row, element.id)
-  if (element.type == "line") {addCell(row, "/", "line")}
-  if (element.type == "circle") {addCell(row, "⨀", "circle")}
+  if (element.type == "line") {
+    addCell(row, "/", "line")
+  }
+  if (element.type == "circle") {
+    addCell(row, "⨀", "circle")
+  }
 
   let p = element.eq.params
 
@@ -327,13 +346,13 @@ function addCellParam(row, html, title) {
 
 }
 
-function logSegments (str) {
+function logSegments(str) {
   //  var item = circle.id + `  ( ${circle.h}, ${circle.k} )\t${circle.r}\t${circle.eq} = 0 \n`;
   segmentsPanel.innerHTML += str;
   // console.log(str);
 }
 
-function footer (msg) {
+function footer(msg) {
   footerPanel.innerHTML += msg + '\n';
   console.log(msg + '\n');
 }
@@ -368,21 +387,21 @@ var hover = function() {
 
   if (this.hasClass("Point")) {
 
-    var id = this.attr( 'point-id' );
+    var id = this.attr('point-id');
     element = M.points[id];
     latex = A.run(`printlatex([ ${element.x}, ${element.y} ])`)
 
   }
 
   if (this.hasClass("Circle")) {
-    var id = this.attr( 'element-id' );
+    var id = this.attr('element-id');
     element = M.elements[id];
     latex = A.run(`printlatex(${element.eq})`) + " = 0"
   }
 
 
   if (this.hasClass("Line")) {
-    var id = this.attr( 'element-id');
+    var id = this.attr('element-id');
     element = M.elements[id];
     latex = "0 = " + A.run(`printlatex(${element.eq})`);
   }
@@ -390,7 +409,7 @@ var hover = function() {
   if (this.hasClass("Segment")) {
 
 
-    var id = this.attr( 'segment-id' );
+    var id = this.attr('segment-id');
     element = M.segments[id];
 
     $(element.markerStart).toggleClass('hover');

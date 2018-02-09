@@ -173,4 +173,36 @@ class Point extends Element {
     return 0;
   }
 
+  /** for use with sort
+  * - first by x then y - low to high
+  * - useful for lines
+  */
+  static compare(point1, point2) {
+    var p1x = point1.xVal;
+    var p1y = point1.yVal;
+    var p2x = point2.xVal;
+    var p2y = point2.yVal;
+
+
+    if (p1x < p2x) {
+      return -1;
+    }
+    if (p1x > p2x) {
+      return 1;
+    }
+
+    //compare strings for equality - not values
+    if (point1.x === point2.x) {
+      if (p1y < p2y) {
+        return -1;
+      }
+      if (p1y > p2y) {
+        return 1;
+      }
+    }
+    // p1 must be equal to p2
+    return 0;
+  }
+
+
 }

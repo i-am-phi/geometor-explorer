@@ -249,26 +249,6 @@
               
                 
                 <li><a
-                  href='#m'
-                  class="">
-                  M
-                  
-                </a>
-                
-                </li>
-              
-                
-                <li><a
-                  href='#v'
-                  class="">
-                  V
-                  
-                </a>
-                
-                </li>
-              
-                
-                <li><a
                   href='#explorer'
                   class=" toggle-sibling">
                   Explorer
@@ -288,9 +268,9 @@
                       </a></li>
                       
                       <li><a
-                        href='#exploreraddelement'
+                        href='#exploreraddstruct'
                         class='regular pre-open'>
-                        #addElement
+                        #addStruct
                       </a></li>
                       
                     </ul>
@@ -356,33 +336,9 @@
                       </a></li>
                       
                       <li><a
-                        href='#modeladdpoint'
+                        href='#modelstructs'
                         class='regular pre-open'>
-                        #addPoint
-                      </a></li>
-                      
-                      <li><a
-                        href='#modelfindpoint'
-                        class='regular pre-open'>
-                        #findPoint
-                      </a></li>
-                      
-                      <li><a
-                        href='#modelelements'
-                        class='regular pre-open'>
-                        #elements
-                      </a></li>
-                      
-                      <li><a
-                        href='#modeladdelement'
-                        class='regular pre-open'>
-                        #addElement
-                      </a></li>
-                      
-                      <li><a
-                        href='#modelfindelement'
-                        class='regular pre-open'>
-                        #findElement
+                        #structs
                       </a></li>
                       
                       <li><a
@@ -392,21 +348,45 @@
                       </a></li>
                       
                       <li><a
-                        href='#modeladdsegment'
+                        href='#modelsections'
                         class='regular pre-open'>
-                        #addSegment
-                      </a></li>
-                      
-                      <li><a
-                        href='#modelgoldensections'
-                        class='regular pre-open'>
-                        #goldensections
+                        #sections
                       </a></li>
                       
                       <li><a
                         href='#modelsystems'
                         class='regular pre-open'>
                         #systems
+                      </a></li>
+                      
+                      <li><a
+                        href='#modeladdpoint'
+                        class='regular pre-open'>
+                        #addPoint
+                      </a></li>
+                      
+                      <li><a
+                        href='#modelfindpointbyxy'
+                        class='regular pre-open'>
+                        #findPointbyXY
+                      </a></li>
+                      
+                      <li><a
+                        href='#modeladdstruct'
+                        class='regular pre-open'>
+                        #addStruct
+                      </a></li>
+                      
+                      <li><a
+                        href='#modelfindstruct'
+                        class='regular pre-open'>
+                        #findStruct
+                      </a></li>
+                      
+                      <li><a
+                        href='#modeladdsegment'
+                        class='regular pre-open'>
+                        #addSegment
                       </a></li>
                       
                     </ul>
@@ -426,6 +406,17 @@
                 </a>
                 
                 <div class='toggle-target display-none'>
+                  
+                  <ul class='list-reset py1-ul pl1'>
+                    <li class='h5'><span>Static members</span></li>
+                    
+                      <li><a
+                        href='#pointcompare'
+                        class='regular pre-open'>
+                        .compare
+                      </a></li>
+                    
+                    </ul>
                   
                   
                     <ul class='list-reset py1-ul pl1'>
@@ -655,11 +646,27 @@
                         #addPoint
                       </a></li>
                       
+                      <li><a
+                        href='#viewaddpointtotable'
+                        class='regular pre-open'>
+                        #addPointToTable
+                      </a></li>
+                      
                     </ul>
                   
                   
                   
                 </div>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#m'
+                  class="">
+                  M
+                  
+                </a>
                 
                 </li>
               
@@ -675,9 +682,9 @@
               
                 
                 <li><a
-                  href='#addpointtopanel'
+                  href='#v'
                   class="">
-                  addPointToPanel
+                  V
                   
                 </a>
                 
@@ -2418,100 +2425,6 @@ these parameters are held as properties of an object so that the properties can 
   
   <div class='clearfix'>
     
-    <h3 class='fl m0' id='m'>
-      M
-    </h3>
-    
-    
-  </div>
-  
-
-  <p>Global instance of the <a href="#model">Model</a> object</p>
-
-
-  <div class='pre p1 fill-light mt0'>M</div>
-  
-  
-
-  
-  
-  
-  
-  
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-</section>
-
-          
-        
-          
-            <section class='p2 mb2 clearfix bg-white minishadow'>
-
-  
-  <div class='clearfix'>
-    
-    <h3 class='fl m0' id='v'>
-      V
-    </h3>
-    
-    
-  </div>
-  
-
-  <p>Global instance of the <a href="#view">View</a> object</p>
-
-
-  <div class='pre p1 fill-light mt0'>V</div>
-  
-  
-
-  
-  
-  
-  
-  
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-</section>
-
-          
-        
-          
-            <section class='p2 mb2 clearfix bg-white minishadow'>
-
-  
-  <div class='clearfix'>
-    
     <h3 class='fl m0' id='explorer'>
       Explorer
     </h3>
@@ -2555,7 +2468,7 @@ these parameters are held as properties of an object so that the properties can 
       <div class="clearfix small pointer toggle-sibling">
         <div class="py1 contain">
             <a class='icon pin-right py1 dark-link caret-right'>▸</a>
-            <span class='code strong strong truncate'>addPoint(Point)</span>
+            <span class='code strong strong truncate'>addPoint(point)</span>
         </div>
       </div>
       <div class="clearfix display-none toggle-target">
@@ -2566,7 +2479,7 @@ these parameters are held as properties of an object so that the properties can 
   <p>add Point to Model and View</p>
 
 
-  <div class='pre p1 fill-light mt0'>addPoint(Point: any): <a href="#point">Point</a></div>
+  <div class='pre p1 fill-light mt0'>addPoint(point: <a href="#point">Point</a>): <a href="#point">Point</a></div>
   
   
 
@@ -2583,7 +2496,7 @@ these parameters are held as properties of an object so that the properties can 
       
         <div class='space-bottom0'>
           <div>
-            <span class='code bold'>Point</span> <code class='quiet'>(any)</code>
+            <span class='code bold'>point</span> <code class='quiet'>(<a href="#point">Point</a>)</code>
 	    
           </div>
           
@@ -2618,11 +2531,11 @@ these parameters are held as properties of an object so that the properties can 
       </div>
     </div>
   
-    <div class='border-bottom' id='exploreraddelement'>
+    <div class='border-bottom' id='exploreraddstruct'>
       <div class="clearfix small pointer toggle-sibling">
         <div class="py1 contain">
             <a class='icon pin-right py1 dark-link caret-right'>▸</a>
-            <span class='code strong strong truncate'>addElement(Element)</span>
+            <span class='code strong strong truncate'>addStruct(struct)</span>
         </div>
       </div>
       <div class="clearfix display-none toggle-target">
@@ -2630,10 +2543,11 @@ these parameters are held as properties of an object so that the properties can 
 
   
 
-  <p>add Element to Model and View</p>
+  <p>add <a href="#struct">Struct</a> (ie - Line or Circle) to Model and View</p>
+<p>TODO: get intersection points with other structs</p>
 
 
-  <div class='pre p1 fill-light mt0'>addElement(Element: any): <a href="#element">Element</a></div>
+  <div class='pre p1 fill-light mt0'>addStruct(struct: <a href="#struct">Struct</a>): <a href="#struct">Struct</a></div>
   
   
 
@@ -2650,7 +2564,7 @@ these parameters are held as properties of an object so that the properties can 
       
         <div class='space-bottom0'>
           <div>
-            <span class='code bold'>Element</span> <code class='quiet'>(any)</code>
+            <span class='code bold'>struct</span> <code class='quiet'>(<a href="#struct">Struct</a>)</code>
 	    
           </div>
           
@@ -2664,7 +2578,7 @@ these parameters are held as properties of an object so that the properties can 
   
     
       <div class='py1 quiet mt1 prose-big'>Returns</div>
-      <code><a href="#element">Element</a></code>:
+      <code><a href="#struct">Struct</a></code>:
         return existing if found.
 
       
@@ -3019,11 +2933,11 @@ segments and other graphical elements may also be contained in the model</p>
       </div>
     </div>
   
-    <div class='border-bottom' id='modeladdpoint'>
+    <div class='border-bottom' id='modelstructs'>
       <div class="clearfix small pointer toggle-sibling">
         <div class="py1 contain">
             <a class='icon pin-right py1 dark-link caret-right'>▸</a>
-            <span class='code strong strong truncate'>addPoint(newPoint)</span>
+            <span class='code strong strong truncate'>structs</span>
         </div>
       </div>
       <div class="clearfix display-none toggle-target">
@@ -3031,154 +2945,10 @@ segments and other graphical elements may also be contained in the model</p>
 
   
 
-  <p>add a <a href="#point">Point</a> to the Model.points Array<br>
-usually called to add new intersection points<br>
-checks to determine if the newPoint is already in the Array - if so, returns exisitng point<br></p>
+  <p>the array of <a href="#struct">Struct</a> objects (Lines and Circles) within the Model</p>
 
 
-  <div class='pre p1 fill-light mt0'>addPoint(newPoint: <a href="#point">Point</a>): <a href="#point">Point</a></div>
-  
-  
-
-  
-  
-  
-  
-  
-  
-
-  
-    <div class='py1 quiet mt1 prose-big'>Parameters</div>
-    <div class='prose'>
-      
-        <div class='space-bottom0'>
-          <div>
-            <span class='code bold'>newPoint</span> <code class='quiet'>(<a href="#point">Point</a>)</code>
-	    
-          </div>
-          
-        </div>
-      
-    </div>
-  
-
-  
-
-  
-    
-      <div class='py1 quiet mt1 prose-big'>Returns</div>
-      <code><a href="#point">Point</a></code>:
-        returns existing point if there is a match or new point if not
-
-      
-    
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-</section>
-
-      </div>
-    </div>
-  
-    <div class='border-bottom' id='modelfindpoint'>
-      <div class="clearfix small pointer toggle-sibling">
-        <div class="py1 contain">
-            <a class='icon pin-right py1 dark-link caret-right'>▸</a>
-            <span class='code strong strong truncate'>findPoint(x, y)</span>
-        </div>
-      </div>
-      <div class="clearfix display-none toggle-target">
-        <section class='p2 mb2 clearfix bg-white minishadow'>
-
-  
-
-  <p>Find <a href="#point">Point</a> in Model.points with a matching x, y</p>
-
-
-  <div class='pre p1 fill-light mt0'>findPoint(x: algValue, y: algValue): <a href="#point">Point</a></div>
-  
-  
-
-  
-  
-  
-  
-  
-  
-
-  
-    <div class='py1 quiet mt1 prose-big'>Parameters</div>
-    <div class='prose'>
-      
-        <div class='space-bottom0'>
-          <div>
-            <span class='code bold'>x</span> <code class='quiet'>(algValue)</code>
-	    
-          </div>
-          
-        </div>
-      
-        <div class='space-bottom0'>
-          <div>
-            <span class='code bold'>y</span> <code class='quiet'>(algValue)</code>
-	    
-          </div>
-          
-        </div>
-      
-    </div>
-  
-
-  
-
-  
-    
-      <div class='py1 quiet mt1 prose-big'>Returns</div>
-      <code><a href="#point">Point</a></code>:
-        returns existing point if there is a match
-
-      
-    
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-</section>
-
-      </div>
-    </div>
-  
-    <div class='border-bottom' id='modelelements'>
-      <div class="clearfix small pointer toggle-sibling">
-        <div class="py1 contain">
-            <a class='icon pin-right py1 dark-link caret-right'>▸</a>
-            <span class='code strong strong truncate'>elements</span>
-        </div>
-      </div>
-      <div class="clearfix display-none toggle-target">
-        <section class='p2 mb2 clearfix bg-white minishadow'>
-
-  
-
-  <p>the array of <a href="#element">Element</a> objects (Lines and Circles) within the Model</p>
-
-
-  <div class='pre p1 fill-light mt0'>elements</div>
+  <div class='pre p1 fill-light mt0'>structs</div>
   
   
 
@@ -3198,151 +2968,6 @@ checks to determine if the newPoint is already in the Array - if so, returns exi
       <div class='py1 quiet mt1 prose-big'>Returns</div>
       <code><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array">Array</a></code>:
         
-
-      
-    
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-</section>
-
-      </div>
-    </div>
-  
-    <div class='border-bottom' id='modeladdelement'>
-      <div class="clearfix small pointer toggle-sibling">
-        <div class="py1 contain">
-            <a class='icon pin-right py1 dark-link caret-right'>▸</a>
-            <span class='code strong strong truncate'>addElement(newElement)</span>
-        </div>
-      </div>
-      <div class="clearfix display-none toggle-target">
-        <section class='p2 mb2 clearfix bg-white minishadow'>
-
-  
-
-  <p>add an <a href="#element">Element</a> to the Model.elements Array
-usually called after a valid Element is created
-checks to determine if the Element is already present</p>
-
-
-  <div class='pre p1 fill-light mt0'>addElement(newElement: <a href="#element">Element</a>): <a href="#element">Element</a></div>
-  
-  
-
-  
-  
-  
-  
-  
-  
-
-  
-    <div class='py1 quiet mt1 prose-big'>Parameters</div>
-    <div class='prose'>
-      
-        <div class='space-bottom0'>
-          <div>
-            <span class='code bold'>newElement</span> <code class='quiet'>(<a href="#element">Element</a>)</code>
-	    
-          </div>
-          
-        </div>
-      
-    </div>
-  
-
-  
-
-  
-    
-      <div class='py1 quiet mt1 prose-big'>Returns</div>
-      <code><a href="#element">Element</a></code>:
-        returns existing element if there is a match
-
-      
-    
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-</section>
-
-      </div>
-    </div>
-  
-    <div class='border-bottom' id='modelfindelement'>
-      <div class="clearfix small pointer toggle-sibling">
-        <div class="py1 contain">
-            <a class='icon pin-right py1 dark-link caret-right'>▸</a>
-            <span class='code strong strong truncate'>findElement(x, y)</span>
-        </div>
-      </div>
-      <div class="clearfix display-none toggle-target">
-        <section class='p2 mb2 clearfix bg-white minishadow'>
-
-  
-
-  <p>Find <a href="#element">Element</a> in Model.elements with a matching equation parameters</p>
-<p>TODO: complete this</p>
-
-
-  <div class='pre p1 fill-light mt0'>findElement(x: <a href="#element">Element</a>, y: algValue): <a href="#point">Point</a></div>
-  
-  
-
-  
-  
-  
-  
-  
-  
-
-  
-    <div class='py1 quiet mt1 prose-big'>Parameters</div>
-    <div class='prose'>
-      
-        <div class='space-bottom0'>
-          <div>
-            <span class='code bold'>x</span> <code class='quiet'>(<a href="#element">Element</a>)</code>
-	    
-          </div>
-          
-        </div>
-      
-        <div class='space-bottom0'>
-          <div>
-            <span class='code bold'>y</span> <code class='quiet'>(algValue)</code>
-	    
-          </div>
-          
-        </div>
-      
-    </div>
-  
-
-  
-
-  
-    
-      <div class='py1 quiet mt1 prose-big'>Returns</div>
-      <code><a href="#point">Point</a></code>:
-        returns existing point if there is a match
 
       
     
@@ -3416,80 +3041,11 @@ checks to determine if the Element is already present</p>
       </div>
     </div>
   
-    <div class='border-bottom' id='modeladdsegment'>
+    <div class='border-bottom' id='modelsections'>
       <div class="clearfix small pointer toggle-sibling">
         <div class="py1 contain">
             <a class='icon pin-right py1 dark-link caret-right'>▸</a>
-            <span class='code strong strong truncate'>addSegment(newSegment)</span>
-        </div>
-      </div>
-      <div class="clearfix display-none toggle-target">
-        <section class='p2 mb2 clearfix bg-white minishadow'>
-
-  
-
-  <p>add a <a href="#segment">Segment</a> to the Model.segments Array
-usually called when the lengths of pair of segments are in the golden ratio
-checks to determine if the point is already present</p>
-
-
-  <div class='pre p1 fill-light mt0'>addSegment(newSegment: <a href="#segment">Segment</a>): <a href="#segment">Segment</a></div>
-  
-  
-
-  
-  
-  
-  
-  
-  
-
-  
-    <div class='py1 quiet mt1 prose-big'>Parameters</div>
-    <div class='prose'>
-      
-        <div class='space-bottom0'>
-          <div>
-            <span class='code bold'>newSegment</span> <code class='quiet'>(<a href="#segment">Segment</a>)</code>
-	    
-          </div>
-          
-        </div>
-      
-    </div>
-  
-
-  
-
-  
-    
-      <div class='py1 quiet mt1 prose-big'>Returns</div>
-      <code><a href="#segment">Segment</a></code>:
-        returns existing segment if there is a match
-
-      
-    
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-</section>
-
-      </div>
-    </div>
-  
-    <div class='border-bottom' id='modelgoldensections'>
-      <div class="clearfix small pointer toggle-sibling">
-        <div class="py1 contain">
-            <a class='icon pin-right py1 dark-link caret-right'>▸</a>
-            <span class='code strong strong truncate'>goldensections</span>
+            <span class='code strong strong truncate'>sections</span>
         </div>
       </div>
       <div class="clearfix display-none toggle-target">
@@ -3500,7 +3056,7 @@ checks to determine if the point is already present</p>
   <p>the array of <a href="#section">Section</a> objects on a line that are in the golden ratio</p>
 
 
-  <div class='pre p1 fill-light mt0'>goldensections</div>
+  <div class='pre p1 fill-light mt0'>sections</div>
   
   
 
@@ -3574,6 +3130,362 @@ checks to determine if the point is already present</p>
       <div class='py1 quiet mt1 prose-big'>Returns</div>
       <code><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array">Array</a></code>:
         
+
+      
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+      </div>
+    </div>
+  
+    <div class='border-bottom' id='modeladdpoint'>
+      <div class="clearfix small pointer toggle-sibling">
+        <div class="py1 contain">
+            <a class='icon pin-right py1 dark-link caret-right'>▸</a>
+            <span class='code strong strong truncate'>addPoint(newPoint)</span>
+        </div>
+      </div>
+      <div class="clearfix display-none toggle-target">
+        <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+
+  <p>add a <a href="#point">Point</a> to the Model.points Array<br>
+usually called to add new intersection points<br>
+checks to determine if the newPoint is already in the Array - if so, returns exisitng point<br></p>
+
+
+  <div class='pre p1 fill-light mt0'>addPoint(newPoint: <a href="#point">Point</a>): <a href="#point">Point</a></div>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>newPoint</span> <code class='quiet'>(<a href="#point">Point</a>)</code>
+	    
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+    
+      <div class='py1 quiet mt1 prose-big'>Returns</div>
+      <code><a href="#point">Point</a></code>:
+        returns existing point if there is a match or new point if not
+
+      
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+      </div>
+    </div>
+  
+    <div class='border-bottom' id='modelfindpointbyxy'>
+      <div class="clearfix small pointer toggle-sibling">
+        <div class="py1 contain">
+            <a class='icon pin-right py1 dark-link caret-right'>▸</a>
+            <span class='code strong strong truncate'>findPointbyXY(x, y)</span>
+        </div>
+      </div>
+      <div class="clearfix display-none toggle-target">
+        <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+
+  <p>Find <a href="#point">Point</a> in Model.points with a matching x, y</p>
+<ul>
+<li>comparison of algValue strings of the x, y</li>
+</ul>
+
+
+  <div class='pre p1 fill-light mt0'>findPointbyXY(x: algValue, y: algValue): <a href="#point">Point</a></div>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>x</span> <code class='quiet'>(algValue)</code>
+	    
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>y</span> <code class='quiet'>(algValue)</code>
+	    
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+    
+      <div class='py1 quiet mt1 prose-big'>Returns</div>
+      <code><a href="#point">Point</a></code>:
+        returns existing point if there is a match
+
+      
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+      </div>
+    </div>
+  
+    <div class='border-bottom' id='modeladdstruct'>
+      <div class="clearfix small pointer toggle-sibling">
+        <div class="py1 contain">
+            <a class='icon pin-right py1 dark-link caret-right'>▸</a>
+            <span class='code strong strong truncate'>addStruct(newStruct)</span>
+        </div>
+      </div>
+      <div class="clearfix display-none toggle-target">
+        <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+
+  <p>add an <a href="#struct">Struct</a> to the Model.structs Array
+usually called after a valid Struct is created
+checks to determine if the Struct is already present</p>
+
+
+  <div class='pre p1 fill-light mt0'>addStruct(newStruct: <a href="#struct">Struct</a>): <a href="#struct">Struct</a></div>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>newStruct</span> <code class='quiet'>(<a href="#struct">Struct</a>)</code>
+	    
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+    
+      <div class='py1 quiet mt1 prose-big'>Returns</div>
+      <code><a href="#struct">Struct</a></code>:
+        returns existing element if there is a match
+
+      
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+      </div>
+    </div>
+  
+    <div class='border-bottom' id='modelfindstruct'>
+      <div class="clearfix small pointer toggle-sibling">
+        <div class="py1 contain">
+            <a class='icon pin-right py1 dark-link caret-right'>▸</a>
+            <span class='code strong strong truncate'>findStruct(newStruct)</span>
+        </div>
+      </div>
+      <div class="clearfix display-none toggle-target">
+        <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+
+  <p>Find <a href="#struct">Struct</a> in Model.elements with a matching equation parameters</p>
+<p>TODO: complete this</p>
+
+
+  <div class='pre p1 fill-light mt0'>findStruct(newStruct: <a href="#struct">Struct</a>): <a href="#struct">Struct</a></div>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>newStruct</span> <code class='quiet'>(<a href="#struct">Struct</a>)</code>
+	    
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+    
+      <div class='py1 quiet mt1 prose-big'>Returns</div>
+      <code><a href="#struct">Struct</a></code>:
+        returns existing Struct if there is a match
+
+      
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+      </div>
+    </div>
+  
+    <div class='border-bottom' id='modeladdsegment'>
+      <div class="clearfix small pointer toggle-sibling">
+        <div class="py1 contain">
+            <a class='icon pin-right py1 dark-link caret-right'>▸</a>
+            <span class='code strong strong truncate'>addSegment(newSegment)</span>
+        </div>
+      </div>
+      <div class="clearfix display-none toggle-target">
+        <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+
+  <p>add a <a href="#segment">Segment</a> to the Model.segments Array
+usually called when the lengths of pair of segments are in the golden ratio
+checks to determine if the point is already present</p>
+<ul>
+<li><strong>TODO</strong> needs rework</li>
+</ul>
+
+
+  <div class='pre p1 fill-light mt0'>addSegment(newSegment: <a href="#segment">Segment</a>): <a href="#segment">Segment</a></div>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>newSegment</span> <code class='quiet'>(<a href="#segment">Segment</a>)</code>
+	    
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+    
+      <div class='py1 quiet mt1 prose-big'>Returns</div>
+      <code><a href="#segment">Segment</a></code>:
+        returns existing segment if there is a match
 
       
     
@@ -3720,6 +3632,83 @@ checks to determine if the point is already present</p>
   
 
   
+
+  
+    <div class='py1 quiet mt1 prose-big'>Static Members</div>
+    <div class="clearfix">
+  
+    <div class='border-bottom' id='pointcompare'>
+      <div class="clearfix small pointer toggle-sibling">
+        <div class="py1 contain">
+            <a class='icon pin-right py1 dark-link caret-right'>▸</a>
+            <span class='code strong strong truncate'>compare(point1, point2)</span>
+        </div>
+      </div>
+      <div class="clearfix display-none toggle-target">
+        <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+
+  <p>for use with sort</p>
+<ul>
+<li>first by x then y - low to high</li>
+<li>useful for lines</li>
+</ul>
+
+
+  <div class='pre p1 fill-light mt0'>compare(point1: any, point2: any)</div>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>point1</span> <code class='quiet'>(any)</code>
+	    
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>point2</span> <code class='quiet'>(any)</code>
+	    
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+      </div>
+    </div>
+  
+</div>
 
   
 
@@ -5455,7 +5444,129 @@ radius of <code>circle</code> set by <code>this.PTRAD</code></p>
       </div>
     </div>
   
+    <div class='border-bottom' id='viewaddpointtotable'>
+      <div class="clearfix small pointer toggle-sibling">
+        <div class="py1 contain">
+            <a class='icon pin-right py1 dark-link caret-right'>▸</a>
+            <span class='code strong strong truncate'>addPointToTable(point, newPoint)</span>
+        </div>
+      </div>
+      <div class="clearfix display-none toggle-target">
+        <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+
+  <p>add a <a href="#point">Point</a> to the UI List</p>
+
+
+  <div class='pre p1 fill-light mt0'>addPointToTable(point: any, newPoint: <a href="#point">Point</a>): row</div>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>point</span> <code class='quiet'>(any)</code>
+	    
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>newPoint</span> <code class='quiet'>(<a href="#point">Point</a>)</code>
+	    
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+    
+      <div class='py1 quiet mt1 prose-big'>Returns</div>
+      <code>row</code>:
+        table row
+
+      
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+      </div>
+    </div>
+  
 </div>
+
+  
+
+  
+</section>
+
+          
+        
+          
+            <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='m'>
+      M
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Global instance of the <a href="#model">Model</a> object</p>
+
+
+  <div class='pre p1 fill-light mt0'>M</div>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
 
   
 
@@ -5517,18 +5628,18 @@ radius of <code>circle</code> set by <code>this.PTRAD</code></p>
   
   <div class='clearfix'>
     
-    <h3 class='fl m0' id='addpointtopanel'>
-      addPointToPanel
+    <h3 class='fl m0' id='v'>
+      V
     </h3>
     
     
   </div>
   
 
-  <p>create an entry in the table for a point</p>
+  <p>Global instance of the <a href="#view">View</a> object</p>
 
 
-  <div class='pre p1 fill-light mt0'>addPointToPanel</div>
+  <div class='pre p1 fill-light mt0'>V</div>
   
   
 
@@ -5572,7 +5683,7 @@ radius of <code>circle</code> set by <code>this.PTRAD</code></p>
   </div>
   
 
-  <p>Global instance of the Explorer object</p>
+  <p>Global instance of the <a href="#explorer">Explorer</a> object</p>
 
 
   <div class='pre p1 fill-light mt0'>E</div>

@@ -1,8 +1,25 @@
 /**
-* Global instance of the Explorer object
+* Global instance of the {@link Model} object
+* @const
+*/
+const M = new Model()
+
+/** SVG Drawing */
+const D = SVG("drawing").panZoom({zoomMin: 50, zoomMax: 300, zoomFactor: 1.5});
+
+/**
+* Global instance of the {@link View} object
+* @const
+*/
+const V = new View()
+
+/**
+* Global instance of the {@link Explorer} object
 * @const
 */
 const E = new Explorer();
+
+
 
 /**
  * main.js - script to sequence the creating and display of the geometric model
@@ -33,24 +50,18 @@ function main() {
   let P0 = new Point( "-1/2", "0" )
   //sequence the animations here.
   E.addPoint(P0)
-  log(P0.toString())
+  P0.log()
 
 
   let P1 = new Point( "1/2", "0" )
   E.addPoint(P1)
-  log(P1.toString())
+  P1.log()
 
 
   const L1 = new Line( P0, P1 )
-  if (L1 instanceof Struct) {
-    log("L1 instanceof Struct")
-  } else {
-    log("L1 NOT Struct")
-  }
+  E.addStruct(L1)
+  L1.log()
 
-  console.dir(L1)
-  console.log(L1)
-  console.log(L1.toString())
 
   //baseline
   // const BL = new Line( P0, P1 )

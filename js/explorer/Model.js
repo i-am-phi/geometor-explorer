@@ -1,3 +1,4 @@
+
 /**
  * a container for holding a sets of points, elements.
  * segments and other graphical elements may also be contained in the model
@@ -7,16 +8,44 @@
  * @author 𝚽 <phi@geometor.com>
  * @license MIT
  *
- * @constructor
+ *
+ * @class
  */
-function Model() {
+class Model {
+  constructor() {
 
-  /**
-  * the array of {@link Point} objects within the Model
+    /**
+    * the array of {@link Point} objects within the Model
+    * @returns {Array} of {@link Point}
+    */
+    this.points = []
 
-  * @returns {Array} of {@link Point}
-  */
-  this.points = []
+    /**
+    * the array of {@link Struct} objects (Lines and Circles) within the Model
+    * @returns {Array}
+    */
+    this.structs = []
+
+    /**
+    * the array of {@link Segment} along lines that are participating in golden sections
+    * @returns {Array}
+    */
+    this.segments = []
+
+    /**
+    * the array of {@link Section} objects on a line that are in the golden ratio
+    * @returns {Array}
+    */
+    this.sections = []
+
+    // store each system solution in an array
+    /**
+    * the array of {@link System} objects
+    * @returns {Array}
+    */
+    this.systems = [];
+
+  }
   /**
   * add a {@link Point} to the Model.points Array<br>
   * usually called to add new intersection points<br>
@@ -25,191 +54,155 @@ function Model() {
   * @param {Point} newPoint
   * @returns {Point} returns existing point if there is a match or new point if not
   */
-  this.addPoint = addPointToModel
+  addPoint(newPoint) {
+
+    // look for exisiting points with same x, y
+    let existingPoint = this.findPointbyXY(newPoint.x, newPoint.y);
+
+    if (existingPoint) {
+
+      // add new point parents to existing point
+      newPoint.parents.forEach( parent => {
+        existingPoint.addParent(parent)
+      })
+
+      return existingPoint
+
+    } else {
+
+      newPoint.id = this.points.length
+      this.points.push(newPoint)
+
+      return newPoint
+
+    }
+
+  }
+
   /**
   * Find {@link Point} in Model.points with a matching x, y
+  * - comparison of algValue strings of the x, y
   * @function
   * @param {algValue} x
   * @param {algValue} y
   * @returns {Point} returns existing point if there is a match
   */
-  this.findPoint = findPointInModel
+  findPointbyXY(x, y) {
+
+    this.points.forEach(point => {
+      // compare algValue
+      if ( point.x == x  &&  point.y == y ) {
+        return point
+      }
+    })
+
+  }
 
   /**
-  * the array of {@link Element} objects (Lines and Circles) within the Model
-  * @returns {Array}
-  */
-  this.elements = []
-  /**
-  * add an {@link Element} to the Model.elements Array
-  * usually called after a valid Element is created
-  * checks to determine if the Element is already present
+  * add an {@link Struct} to the Model.structs Array
+  * usually called after a valid Struct is created
+  * checks to determine if the Struct is already present
   * @function
-  * @param {Element} newElement
-  * @returns {Element} returns existing element if there is a match
+  * @param {Struct} newStruct
+  * @returns {Struct} returns existing element if there is a match
   */
-  this.addElement = addElementToModel
+  addStruct(newStruct) {
+
+    // look for other points with same x, y
+    let existingStruct //= this.findStruct( newStruct );
+
+    if (existingStruct) {
+
+      return existingStruct
+
+    } else {
+
+      this.structs.forEach( element => {
+
+        let sys = new System(newStruct, element)
+        this.systems.push(sys)
+
+        //add new points to each Struct
+        sys.roots.forEach( point => {
+          this.addPoint(point)
+        })
+
+      }, this);
+
+      newStruct.id = this.structs.length
+
+      this.structs.push(newStruct)
+      return newStruct
+
+    }
+
+  }
+
   /**
-  * Find {@link Element} in Model.elements with a matching equation parameters
+  * Find {@link Struct} in Model.elements with a matching equation parameters
 
   * TODO: complete this
 
   * @function
-  * @param {Element} x
-  * @param {algValue} y
-  * @returns {Point} returns existing point if there is a match
+  * @param {Struct} newStruct
+  * @returns {Struct} returns existing Struct if there is a match
   */
-  this.findElement = findElementInModel
+  findStruct( newStruct ) {
 
-  /**
-  * the array of {@link Segment} along lines that are participating in golden sections
-  * @returns {Array}
-  */
-  this.segments = []
+    // check equation parameters for sameness
+    this.structs.forEach( exStruct => {
+      if ( exStruct.eq.a == newStruct.eq.a  &&
+           exStruct.eq.b == newStruct.eq.b  &&
+           exStruct.eq.c == newStruct.eq.c  &&
+           exStruct.eq.d == newStruct.eq.d  &&
+           exStruct.eq.e == newStruct.eq.e  &&
+           exStruct.eq.f == newStruct.eq.f
+          ) {
+        return exStruct
+      }
+    })
+  }
+
   /**
   * add a {@link Segment} to the Model.segments Array
   * usually called when the lengths of pair of segments are in the golden ratio
   * checks to determine if the point is already present
+
+  * - **TODO** needs rework
   * @function
   * @param {Segment} newSegment
   * @returns {Segment} returns existing segment if there is a match
   */
-  this.addSegment = addSegmentToModel
+  addSegment( newSegment ) {
 
-  /**
-  * the array of {@link Section} objects on a line that are in the golden ratio
-  * @returns {Array}
-  */
-  this.goldensections = []
-
-  // store each system solution in an array
-  /**
-  * the array of {@link System} objects
-  * @returns {Array}
-  */
-  this.systems = [];
-
-
-}
-
-// add a point to list but check if it exists first
-function addPointToModel(newPoint) {
-
-  // look for exisiting points with same x, y
-  existingPoint = this.findPoint(newPoint.x, newPoint.y);
-
-  if (existingPoint) {
-
-    log("point exists: " + existingPoint.id )
-
-    // add new point parents to existing point
-    newPoint.parents.forEach( parent => {
-      existingPoint.addParent(parent)
-    })
-
-    return existingPoint
-
-  } else {
-
-    log("add point to list: " + newPoint.id )
-
-    newPoint.id = this.points.length
-    this.points.push(newPoint)
-
-    newPoint.log();
-
-    return newPoint
-
-  }
-
-}
-
-function findPointInModel(x, y) {
-
-  this.points.forEach(point => {
-    if ( point.x == x  &&  point.y == y ) {
-      return point
-    }
-  })
-
-}
-
-
-function addElementToModel(newElement) {
-
-  // look for other points with same x, y
-  existingElement = this.findElement( newElement );
-
-  if (existingElement) {
-
-    log("element exists: " + existingElement.id )
-    return existingElement
-
-  } else {
-
-    log("adding element to model: " + newElement.id )
-
-    //////////////////////////////////////////////
-    // TODO check for intersections with existing elements
-    // this.intersect = lineIntersect;
-    elements.forEach( element => {
-
-      // console.group(`> ${element.id} : ${element.type} `)
-      let sys = new System(newElement, element)
-      this.systems.push(sys)
-
-      sys.roots.forEach( point => {
-        this.addPoint(point)
-      })      // console.groupEnd();
-
-    }, this);
-
-    newElement.id = this.elements.length
-
-    this.elements.push(newElement)
-    return newElement
-
-  }
-
-}
-
-function findElementInModel(element) {
-
-  // check equation parameters for sameness
-  this.elements.forEach( exElement => {
-    if ( exElement.eq.a == element.eq.a  &&
-         exElement.eq.b == element.eq.b  &&
-         exElement.eq.c == element.eq.c  &&
-         exElement.eq.d == element.eq.d  &&
-         exElement.eq.e == element.eq.e  &&
-         exElement.eq.f == element.eq.f
-        ) {
-      return exElement
-    }
-  })
-}
-
-
-// maintain single instance of a segment
-function addSegmentToModel(pt1, pt2, line) {
-
-  // look for a segment on the line with matching points
-  var seg = segments.filter( segment => {
-      if ( segment.line === line ) {
-        if ( segment.points.includes(pt1) && segment.points.includes(pt2) ) {
-          return true
+    // look for a segment on the line with matching points
+    var seg = segments.filter( segment => {
+        if ( segment.line === line ) {
+          if ( segment.points.includes(pt1) && segment.points.includes(pt2) ) {
+            return true
+          }
         }
-      }
-    });
+      });
 
-  if ( seg.length != 0 ) {
-    // if any segments were found, send the first
-    return seg[0]
-  } else {
-    return new Segment( pt1, pt2, line )
+    if ( seg.length != 0 ) {
+      // if any segments were found, send the first
+      return seg[0]
+    } else {
+      return new Segment( pt1, pt2, line )
+    }
+
   }
 
+
+
 }
+
+
+
+
+
+
+
 
 function getPointAncestors(point, ancestors) {
   //stop at starting points

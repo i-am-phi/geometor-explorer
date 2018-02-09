@@ -28,25 +28,23 @@
     -   [toString](#tostring-1)
 -   [Equation](#equation)
     -   [params](#params)
--   [M](#m)
--   [V](#v)
 -   [Explorer](#explorer)
     -   [addPoint](#addpoint)
-    -   [addElement](#addelement)
+    -   [addStruct](#addstruct)
 -   [Line](#line)
     -   [eq](#eq-1)
     -   [checkSegments](#checksegments)
 -   [Model](#model)
     -   [points](#points-1)
-    -   [addPoint](#addpoint-1)
-    -   [findPoint](#findpoint)
-    -   [elements](#elements)
-    -   [addElement](#addelement-1)
-    -   [findElement](#findelement)
+    -   [structs](#structs)
     -   [segments](#segments)
-    -   [addSegment](#addsegment)
-    -   [goldensections](#goldensections)
+    -   [sections](#sections)
     -   [systems](#systems)
+    -   [addPoint](#addpoint-1)
+    -   [findPointbyXY](#findpointbyxy)
+    -   [addStruct](#addstruct-1)
+    -   [findStruct](#findstruct)
+    -   [addSegment](#addsegment)
 -   [Point](#point)
     -   [x](#x)
     -   [y](#y)
@@ -59,6 +57,7 @@
     -   [quadranceTo](#quadranceto)
     -   [distanceTo](#distanceto)
     -   [comparePoint](#comparepoint)
+    -   [compare](#compare)
 -   [Section](#section)
 -   [Segment](#segment)
     -   [id](#id-1)
@@ -76,8 +75,10 @@
     -   [STROKEFACTOR](#strokefactor)
     -   [boundaryLines](#boundarylines)
     -   [addPoint](#addpoint-3)
+    -   [addPointToTable](#addpointtotable)
+-   [M](#m)
 -   [D](#d)
--   [addPointToPanel](#addpointtopanel)
+-   [V](#v)
 -   [E](#e)
 -   [main](#main)
 
@@ -371,14 +372,6 @@ return count
 
 Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** with properties for each coefficient
 
-## M
-
-Global instance of the [Model](#model) object
-
-## V
-
-Global instance of the [View](#view) object
-
 ## Explorer
 
 Controller for the [Model](#model) and [View](#view)
@@ -396,19 +389,21 @@ add Point to Model and View
 
 **Parameters**
 
--   `Point`  
+-   `point` **[Point](#point)** 
 
 Returns **[Point](#point)** return existing if found.
 
-### addElement
+### addStruct
 
-add Element to Model and View
+add [Struct](#struct) (ie - Line or Circle) to Model and View
+
+TODO: get intersection points with other structs
 
 **Parameters**
 
--   `Element`  
+-   `struct` **[Struct](#struct)** 
 
-Returns **[Element](#element)** return existing if found.
+Returns **[Struct](#struct)** return existing if found.
 
 ## Line
 
@@ -473,6 +468,30 @@ the array of [Point](#point) objects within the Model
 
 Returns **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)** of [Point](#point)
 
+### structs
+
+the array of [Struct](#struct) objects (Lines and Circles) within the Model
+
+Returns **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)** 
+
+### segments
+
+the array of [Segment](#segment) along lines that are participating in golden sections
+
+Returns **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)** 
+
+### sections
+
+the array of [Section](#section) objects on a line that are in the golden ratio
+
+Returns **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)** 
+
+### systems
+
+the array of [System](#system) objects
+
+Returns **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)** 
+
 ### addPoint
 
 add a [Point](#point) to the Model.points Array<br>
@@ -485,9 +504,11 @@ checks to determine if the newPoint is already in the Array - if so, returns exi
 
 Returns **[Point](#point)** returns existing point if there is a match or new point if not
 
-### findPoint
+### findPointbyXY
 
 Find [Point](#point) in Model.points with a matching x, y
+
+-   comparison of algValue strings of the x, y
 
 **Parameters**
 
@@ -496,42 +517,29 @@ Find [Point](#point) in Model.points with a matching x, y
 
 Returns **[Point](#point)** returns existing point if there is a match
 
-### elements
+### addStruct
 
-the array of [Element](#element) objects (Lines and Circles) within the Model
-
-Returns **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)** 
-
-### addElement
-
-add an [Element](#element) to the Model.elements Array
-usually called after a valid Element is created
-checks to determine if the Element is already present
+add an [Struct](#struct) to the Model.structs Array
+usually called after a valid Struct is created
+checks to determine if the Struct is already present
 
 **Parameters**
 
--   `newElement` **[Element](#element)** 
+-   `newStruct` **[Struct](#struct)** 
 
-Returns **[Element](#element)** returns existing element if there is a match
+Returns **[Struct](#struct)** returns existing element if there is a match
 
-### findElement
+### findStruct
 
-Find [Element](#element) in Model.elements with a matching equation parameters
+Find [Struct](#struct) in Model.elements with a matching equation parameters
 
 TODO: complete this
 
 **Parameters**
 
--   `x` **[Element](#element)** 
--   `y` **algValue** 
+-   `newStruct` **[Struct](#struct)** 
 
-Returns **[Point](#point)** returns existing point if there is a match
-
-### segments
-
-the array of [Segment](#segment) along lines that are participating in golden sections
-
-Returns **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)** 
+Returns **[Struct](#struct)** returns existing Struct if there is a match
 
 ### addSegment
 
@@ -539,23 +547,13 @@ add a [Segment](#segment) to the Model.segments Array
 usually called when the lengths of pair of segments are in the golden ratio
 checks to determine if the point is already present
 
+-   **TODO** needs rework
+
 **Parameters**
 
 -   `newSegment` **[Segment](#segment)** 
 
 Returns **[Segment](#segment)** returns existing segment if there is a match
-
-### goldensections
-
-the array of [Section](#section) objects on a line that are in the golden ratio
-
-Returns **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)** 
-
-### systems
-
-the array of [System](#system) objects
-
-Returns **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)** 
 
 ## Point
 
@@ -675,6 +673,18 @@ used for sorting points on a line
 -   `point` **[Point](#point)** to test
 
 Returns **int** \-1, 0, 1
+
+### compare
+
+for use with sort
+
+-   first by x then y - low to high
+-   useful for lines
+
+**Parameters**
+
+-   `point1`  
+-   `point2`  
 
 ## Section
 
@@ -843,17 +853,32 @@ radius of `circle` set by `this.PTRAD`
 
 Returns **[svgElement](https://developer.mozilla.org/docs/Web/SVG/Element/animate)** `circle` object
 
+### addPointToTable
+
+add a [Point](#point) to the UI List
+
+**Parameters**
+
+-   `point`  
+-   `newPoint` **[Point](#point)** 
+
+Returns **row** table row
+
+## M
+
+Global instance of the [Model](#model) object
+
 ## D
 
 SVG Drawing
 
-## addPointToPanel
+## V
 
-create an entry in the table for a point
+Global instance of the [View](#view) object
 
 ## E
 
-Global instance of the Explorer object
+Global instance of the [Explorer](#explorer) object
 
 ## main
 
