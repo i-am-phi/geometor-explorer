@@ -25,7 +25,7 @@
     -   [tag](#tag)
     -   [history](#history)
     -   [log](#log)
-    -   [h](#h-1)
+    -   [hlog](#hlog)
     -   [toString](#tostring)
 -   [Equation](#equation)
     -   [history](#history-1)
@@ -49,7 +49,6 @@
     -   [multiply](#multiply)
     -   [divide](#divide)
     -   [add](#add)
-    -   [clone](#clone)
     -   [toString](#tostring-1)
     -   [log](#log-1)
     -   [getRow](#getrow)
@@ -289,7 +288,7 @@ Returns **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/G
 
 ### eq
 
-the [Squation](Squation) associated with this Circle
+the [Equation](#equation) associated with this Circle
 
 **`d x^2 + e x y + f y^2 + a x + b y = c`**
 
@@ -351,7 +350,7 @@ a place to log the work
 
 grouped console output to represent the object<br>
 
-### h
+### hlog
 
 log string to history
 
@@ -576,12 +575,6 @@ clone this equation then add all the parameters from the passed equation
 **Parameters**
 
 -   `eq` **[Equation](#equation)** 
-
-Returns **[Equation](#equation)** 
-
-### clone
-
-make a copy of this equation
 
 Returns **[Equation](#equation)** 
 
