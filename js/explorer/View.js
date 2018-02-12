@@ -2,8 +2,6 @@
  * a container for drawing and animating the SVG panel
  * and the other data panels of the UI
  * - sets up boundary lines for the drawing
- * @author 𝚽 <phi@geometor.com>
- * @license MIT
  *
  * @class
  */
@@ -333,13 +331,10 @@ class View {
 
   }
 
-}
-
-
-
-
-
-
+  /** @author 𝚽 <phi@geometor.com>
+  * @license MIT
+  */
+} //class
 
 
 

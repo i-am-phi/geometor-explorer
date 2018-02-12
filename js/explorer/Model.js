@@ -1,17 +1,13 @@
 
 /**
  * a container for holding a sets of points, elements.
- * segments and other graphical elements may also be contained in the model
-
- * generally instantiated by Explorer
-
- * @author 𝚽 <phi@geometor.com>
- * @license MIT
- *
+ * - segments and other graphical elements may also be contained in the model
+ * - generally instantiated by Explorer
  *
  * @class
  */
 class Model {
+
   constructor() {
 
     /**
@@ -117,18 +113,23 @@ class Model {
 
     } else {
 
+      // check all other structs for intersection
       this.structs.forEach( exStruct => {
 
         let sys = new System(newStruct, exStruct)
 
-
         //add new points to each Struct
         sys.roots.forEach( point => {
           this.addPoint(point)
-        })
 
+          //add point to each parent point list
+          newStruct.addPoint(newPoint);
+          exStruct.addPoint(newPoint);
+
+        }, this)
+
+        //add this system to the collection
         this.systems.push(sys)
-
 
       }, this);
 
@@ -196,7 +197,10 @@ class Model {
 
   }
 
-} // class
+  /** @author 𝚽 <phi@geometor.com>
+  * @license MIT
+  */
+} //class
 
 
 

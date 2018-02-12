@@ -1,29 +1,31 @@
 /**
- * pair of segments
- * derives length for determining Golden Ratio instances
- * @author 𝚽 <phi@geometor.com>
- * @license MIT
+* a **Set** of contiguous {@link Segment} objects along a line that demonstrate Golden Ratio harmonics
+
+ * **TODO:** - take a Set of segments as parameter
  *
- * @constructor
+ * @class
  * @param {Segment} segment1 -  point on the line
- * @param {Segment} segment2 -  point on the line.
+ * @param {Segment} segment2 -  point on the line
  */
-function Section(segment1, segment2) {
+class Section {
 
-  //TODO
+  constructor(segment1, segment2) {
+    //unique points
+    this.points
 
-  //unique points
-  this.points
+    this.largerSegment
 
-  this.largerSegment
+    this.smallerSegment
 
-  this.smallerSegment
+    this.ratio
 
-  this.ratio
+    this.ratioVal
 
-  this.ratioVal
+    this.isGoldenRatio
+    this.isEqual
+  }
 
-  this.isGoldenRatio
-  this.isEqual
-
-}
+  /** @author 𝚽 <phi@geometor.com>
+  * @license MIT
+  */
+} //class

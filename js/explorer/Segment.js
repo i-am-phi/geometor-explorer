@@ -3,10 +3,6 @@
  * - derives length for determining *Golden Ratio* instances
 
  * TODO: could be of type {@link Element}
-
- * @author 𝚽 <phi@geometor.com>
- * @license MIT
-
  *
  * @constructor
  * @param {Point} pt1 -  endpoint of the segment
@@ -71,4 +67,7 @@ function Segment(pt1, pt2, line) {
     return str;
   }
 
-}
+  /** @author 𝚽 <phi@geometor.com>
+  * @license MIT
+  */
+} //class

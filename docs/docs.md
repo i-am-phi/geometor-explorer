@@ -14,20 +14,45 @@
     -   [isComplex](#iscomplex)
     -   [round](#round)
 -   [Circle](#circle)
-    -   [points](#points)
     -   [center](#center)
     -   [h](#h)
     -   [k](#k)
     -   [r](#r)
     -   [eq](#eq)
-    -   [toString](#tostring)
 -   [Element](#element)
     -   [type](#type)
     -   [id](#id)
+    -   [tag](#tag)
+    -   [history](#history)
     -   [log](#log)
-    -   [toString](#tostring-1)
+    -   [h](#h-1)
+    -   [toString](#tostring)
 -   [Equation](#equation)
+    -   [history](#history-1)
     -   [params](#params)
+    -   [general](#general)
+    -   [simple](#simple)
+    -   [simple0](#simple0)
+    -   [hasX](#hasx)
+    -   [hasY](#hasy)
+    -   [vars](#vars)
+    -   [dimX](#dimx)
+    -   [dimY](#dimy)
+    -   [dim](#dim)
+    -   [xRoots](#xroots)
+    -   [yRoots](#yroots)
+    -   [getXRootsforY](#getxrootsfory)
+    -   [getXforY](#getxfory)
+    -   [getYRootsforX](#getyrootsforx)
+    -   [getYforX](#getyforx)
+    -   [simpleKatex](#simplekatex)
+    -   [multiply](#multiply)
+    -   [divide](#divide)
+    -   [add](#add)
+    -   [clone](#clone)
+    -   [toString](#tostring-1)
+    -   [log](#log-1)
+    -   [getRow](#getrow)
 -   [Explorer](#explorer)
     -   [addPoint](#addpoint)
     -   [addStruct](#addstruct)
@@ -35,7 +60,7 @@
     -   [eq](#eq-1)
     -   [checkSegments](#checksegments)
 -   [Model](#model)
-    -   [points](#points-1)
+    -   [points](#points)
     -   [structs](#structs)
     -   [segments](#segments)
     -   [sections](#sections)
@@ -46,14 +71,15 @@
     -   [findStruct](#findstruct)
     -   [addSegment](#addsegment)
 -   [Point](#point)
-    -   [x](#x)
+    -   [params](#params-1)
     -   [y](#y)
     -   [xVal](#xval)
     -   [yVal](#yval)
+    -   [tag](#tag-1)
     -   [Qv](#qv)
     -   [isValid](#isvalid)
-    -   [parents](#parents)
-    -   [addParent](#addparent)
+    -   [structs](#structs-1)
+    -   [addStructs](#addstructs)
     -   [quadranceTo](#quadranceto)
     -   [distanceTo](#distanceto)
     -   [comparePoint](#comparepoint)
@@ -62,25 +88,44 @@
 -   [Segment](#segment)
     -   [id](#id-1)
     -   [type](#type-1)
-    -   [points](#points-2)
+    -   [points](#points-1)
     -   [length](#length)
     -   [lengthVal](#lengthval)
     -   [toString](#tostring-2)
 -   [Struct](#struct)
+    -   [points](#points-2)
     -   [eq](#eq-2)
     -   [addPoint](#addpoint-2)
 -   [System](#system)
+    -   [structs](#structs-2)
+    -   [eqs](#eqs)
+    -   [history](#history-2)
+    -   [points](#points-3)
+    -   [equationRank](#equationrank)
+-   [Value](#value)
+    -   [alg](#alg-1)
+    -   [isValid](#isvalid-1)
+    -   [float](#float)
+    -   [latex](#latex)
+    -   [katex](#katex)
+    -   [toString](#tostring-3)
+    -   [valueOf](#valueof)
 -   [View](#view)
     -   [PTRAD](#ptrad)
     -   [STROKEFACTOR](#strokefactor)
     -   [boundaryLines](#boundarylines)
+    -   [configurePanels](#configurepanels)
     -   [addPoint](#addpoint-3)
-    -   [addPointToTable](#addpointtotable)
--   [M](#m)
--   [D](#d)
--   [V](#v)
--   [E](#e)
+    -   [drawPoint](#drawpoint)
+    -   [listPoint](#listpoint)
+    -   [addStruct](#addstruct-2)
+    -   [drawStruct](#drawstruct)
+    -   [listStruct](#liststruct)
 -   [main](#main)
+-   [main](#main-1)
+-   [main](#main-2)
+-   [main](#main-3)
+-   [main](#main-4)
 
 ## A
 
@@ -92,20 +137,10 @@ A global instance of the [Alg](#alg) object
 A.run( `a = x^2 - x - 1` )
 ```
 
-**Meta**
-
--   **author**: 𝚽 &lt;phi@geometor.com>
--   **license**: MIT
-
 ## Alg
 
 A container object for Algebrite helper functions<br>
 run from [A](#a)
-
-**Meta**
-
--   **author**: 𝚽 &lt;phi@geometor.com>
--   **license**: MIT
 
 ### PRECISION
 
@@ -200,28 +235,27 @@ round for float comparison
 
 -   `number`  
 
+## 
+
+**Meta**
+
+-   **author**: 𝚽 &lt;phi@geometor.com>
+-   **license**: MIT
+
 ## Circle
 
 **Extends Struct**
 
-represents a radial proportion between two points
+represents a circular proportion between two points
+
+-   constructor calculates a generalized algebraic [Equation](#equation) to represent the circular proportions of the x, y values of the points recieved
 
 **Parameters**
 
--   `pt1`  
--   `pt2`  
--   `type` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** type of element - default: Line
--   `id` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** optional: unique id for the element
 -   `cpt` **[Point](#point)** center point of the circle
 -   `rpt` **[Point](#point)** radius point of the circle.
-
-### points
-
-an array of points on this element
-
-does not include center point (not on the circle)
-
-Returns **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)** of [Point](#point)
+-   `type` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** optional: type of element - default: "Circle"
+-   `id` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** optional: unique id for the element - default: ""
 
 ### center
 
@@ -231,28 +265,31 @@ Returns **[Point](#point)**
 
 ### h
 
--   represents the x-offset in `(x - h)^2 + (y - k)^2 = r^2`
--   h = cpt.x
+the x-offset in `(x - h)^2 + (y - k)^2 = r^2`
+
+-   `h = cpt.x`
 
 Returns **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** algebraic value
 
 ### k
 
--   represents the y-offset in `(x - h)^2 + (y - k)^2 = r^2`
--   k = cpt.y
+the y-offset in `(x - h)^2 + (y - k)^2 = r^2`
+
+-   `k = cpt.y`
 
 Returns **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** algebraic value
 
 ### r
 
--   represents the radius length in `(x - h)^2 + (y - k)^2 = r^2`
+the radius length in `(x - h)^2 + (y - k)^2 = r^2`
+
 -   `r = ( (cpt.x - rpt.x)^2 + (rpt.y - cpt.y)^2 )^(1/2) )`
 
 Returns **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** algebraic value
 
 ### eq
 
-the equation associated with this element
+the [Squation](Squation) associated with this Circle
 
 **`d x^2 + e x y + f y^2 + a x + b y = c`**
 
@@ -265,26 +302,25 @@ the equation associated with this element
 
 Returns **[Equation](#equation)** 
 
-### toString
-
-formatted string representing attribute of the circle
-
-Returns **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
-
-## Element
-
-base class for the common properties of any entity of the [Model](#model),
-including [Point](#point) and [Struct](#struct)
-
-**Parameters**
-
--   `type` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** type of element - such as "Point" - like a class in CSS
--   `id` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** unique id for the element
+## 
 
 **Meta**
 
 -   **author**: 𝚽 &lt;phi@geometor.com>
 -   **license**: MIT
+
+## Element
+
+represents the common properties and methods of any entity of the [Model](#model)<br>
+in homage to Euclid
+
+-   see subclass [Point](#point)
+-   see subclass [Struct](#struct)
+
+**Parameters**
+
+-   `type` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** optional: type of element - such as "Point" - like a class in CSS
+-   `id` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** optional: unique id for the element
 
 ### type
 
@@ -303,36 +339,57 @@ id of the element - set by the context of the [Model](#model)<br>
 
 Returns **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
 
+### tag
+
+will generally be set by extending class to create a unique identifier based on parameters
+
+### history
+
+a place to log the work
+
 ### log
 
 grouped console output to represent the object<br>
-perfect for logging
 
-Returns **[console](https://developer.mozilla.org/docs/Web/API/Console)** 
+### h
+
+log string to history
+
+**Parameters**
+
+-   `str`  
 
 ### toString
 
-formatted string representing attribute of the object
+formatted string representing properties of the object<br>
+will list the items in member arrays like points or parents
 
 Returns **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
 
+## 
+
+**Meta**
+
+-   **author**: 𝚽 &lt;phi@geometor.com>
+-   **license**: MIT
+
 ## Equation
 
-a set of parameters representing proportions for an element: [Line](#line) or [Circle](#circle)
+a set of parameters representing proportions for a [Struct](#struct)
 
-uses a generalized form that supports both lines and circles
+uses a generalized form that supports both [Line](#line) and [Circle](#circle) structs
 
 `d x^2 + e x y + f y^2 + a x + b y = c`
 
-ensure that the sign of c is passed in correctly
-can support other conic 2d forms in the future
+-   ensure that the sign of c is passed in correctly
+-   can support other conic 2d forms in the future
 
 the parameters are set as strings representing algebraic values <br>
 these parameters are held as properties of an object so that the properties can be iterated through for analysis
 
-algebrite provides all the calculations of the algebraic values and conversion to float when necessary
+**Algebrite** library <http://algebrite.org> provides all the calculations of the algebraic values and conversion to float when necessary
 
--   TODO:  Equation should be treated as a static immutable object
+-   TODO: Equation should be treated as a static immutable object
 -   TODO: all values that don't change should be calculated on construction.
 
 **Parameters**
@@ -344,16 +401,16 @@ algebrite provides all the calculations of the algebraic values and conversion t
 -   `b` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** coefficient for y term
 -   `c` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** constant - WATCH SIGN - note that we position the c value on the other side of the equations
 
-**Meta**
+### history
 
--   **author**: 𝚽 &lt;phi@geometor.com>
--   **license**: MIT
+internal log to **Show The Work**
 
 ### params
 
-an object of parameters
+-   an object of parameters
+-   can be iterated
 
-can be iterated
+**TODO:** each parameter should be checked as a valid Value object - if string, create new Value object
 
 **Examples**
 
@@ -372,16 +429,209 @@ return count
 
 Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** with properties for each coefficient
 
-## Explorer
+### general
 
-Controller for the [Model](#model) and [View](#view)
+full expression for the Equation
 
-primary interface for [main](#main)
+-   `(d)x^2 + (e)xy + (f)y^2 + (a)x + (b)y + (c)`
+    TODO: validate corrct sign for c
+
+Returns **algExpression** 
+
+### simple
+
+simplified expression for the Equation
+
+-   removes terms with coeffient of `0`
+    TODO: validate correct sign for c
+
+Returns **algExpression** 
+
+### simple0
+
+returns expression equal to `0`
+
+### hasX
+
+does the equation have an x variable?
+
+-   `( p.d != 0 || p.e != 0 || p.a != 0 )`
+
+Returns **[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** 
+
+### hasY
+
+does the equation have a y variable?
+
+Returns **[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** 
+
+### vars
+
+-   use this.vars().count to determine number of variables in the equation
+
+Returns **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)** returns an array of strings representing the vars in the equation ["x", "y"]
+
+### dimX
+
+returns dimension of the x variable
+
+Returns **int** 0, 1, 2
+
+### dimY
+
+returns dimension of the y variable
+
+Returns **int** 0, 1, 2
+
+### dim
+
+highest dimension for the equation
+
+Returns **int** 0, 1, 2
+
+### xRoots
+
+get all roots `x` for the Equation
+
+Returns **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)** of algExpressions
+
+### yRoots
+
+get all roots `y` for the Equation
+
+Returns **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)** of algExpressions
+
+### getXRootsforY
+
+get roots of `x` for a value of `y`
+
+**Parameters**
+
+-   `y` **algValue** 
+
+Returns **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)** of algExpression
+
+### getXforY
+
+shortcut for 1 dimensional equations
+
+-   returns first value in array from getXRootsforY
+
+**Parameters**
+
+-   `y` **algValue** 
+
+Returns **algExpression** 
+
+### getYRootsforX
+
+get roots of `y` for a value of `x`
+
+**Parameters**
+
+-   `x` **algValue** 
+
+Returns **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)** of algExpression
+
+### getYforX
+
+shortcut for 1 dimensional equations
+
+-   returns first value in array from getYRootsforX
+
+**Parameters**
+
+-   `x` **algValue** 
+
+Returns **algExpression** 
+
+### simpleKatex
+
+render simple equation latex in Katex
+
+### multiply
+
+clone this equation then multiply all the parameters by the value
+
+**Parameters**
+
+-   `val` **algValue** 
+
+Returns **[Equation](#equation)** 
+
+### divide
+
+clone this equation then divide all the parameters by the value
+
+**Parameters**
+
+-   `val` **algValue** 
+
+Returns **[Equation](#equation)** 
+
+### add
+
+clone this equation then add all the parameters from the passed equation
+
+**Parameters**
+
+-   `eq` **[Equation](#equation)** 
+
+Returns **[Equation](#equation)** 
+
+### clone
+
+make a copy of this equation
+
+Returns **[Equation](#equation)** 
+
+### toString
+
+list properties
+
+### log
+
+this.toString() in a console.group()
+
+### getRow
+
+get tab-delimited matrix row
+
+## 
 
 **Meta**
 
 -   **author**: 𝚽 &lt;phi@geometor.com>
 -   **license**: MIT
+
+## Explorer
+
+provides the context for an algebriac framework to explore proportions in classical constructive geometry.
+
+-   establishes a two dimensional cartesian plane
+-   maintains the [Model](#model) - a collection of [Element](#element) objects
+-   controls the [View](#view) - methods for rendering an [Element](#element) in SVG and UI lists
+-   provides an interface to create [Point](#point) and [Struct](#struct) objects
+-   script the construction in [main](#main)
+
+**Examples**
+
+```javascript
+const E = new Explorer();
+
+//initial points set by X Y
+let P0 = new Point( "-1/2", "0" )
+E.addPoint(P0)
+P0.log()
+
+let P1 = new Point( "1/2", "0" )
+E.addPoint(P1)
+P1.log()
+
+const L1 = new Line( P0, P1 )
+E.addStruct(L1)
+L1.log()
+```
 
 ### addPoint
 
@@ -395,7 +645,7 @@ Returns **[Point](#point)** return existing if found.
 
 ### addStruct
 
-add [Struct](#struct) (ie - Line or Circle) to Model and View
+add [Struct](#struct) (ie - Line or Circle) to [Model](#model) and [View](#view)
 
 TODO: get intersection points with other structs
 
@@ -405,27 +655,27 @@ TODO: get intersection points with other structs
 
 Returns **[Struct](#struct)** return existing if found.
 
-## Line
-
-**Extends Struct**
-
-a linear proportion established by two points
-
-constructor calculates linear proportions from the x, y values of the points recieved
-
-TODO: points should be immutable after instantiation
-
-**Parameters**
-
--   `pt1` **[Point](#point)** initial point of the line
--   `pt2` **[Point](#point)** initial point of the line.
--   `type` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** type of element - default: Line
--   `id` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** optional: unique id for the element
+## 
 
 **Meta**
 
 -   **author**: 𝚽 &lt;phi@geometor.com>
 -   **license**: MIT
+
+## Line
+
+**Extends Struct**
+
+represents a linear proportion established by two points
+
+-   constructor calculates a generalized algebraic [Equation](#equation) to represent the linear proportions of the x, y values of the points recieved
+
+**Parameters**
+
+-   `pt1` **[Point](#point)** initial point of the Line
+-   `pt2` **[Point](#point)** initial point of the Line.
+-   `type` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** type of element - default: "Line"
+-   `id` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** optional: unique id for the Struct
 
 ### eq
 
@@ -433,14 +683,14 @@ the equation associated with this element
 
 -   set by constructor
 
-d x^2 + e x y + f y^2 + a x + b y = c
+`d x^2 + e x y + f y^2 + a x + b y = c`
 
-d = 0 // always for a line <br>
-e = 0 // always for a line <br>
-f = 0 // always for a line <br>
-a = (pt1.y) - (pt2.y) <br>
-b = (pt2.x) - (pt1.x) <br>
-c = ((pt1.x) _ (pt2.y)) - ((pt2.x) _ (pt1.y))   // but sign is changed to put it on the other side of the equals <br>
+`d = 0` // always for a line <br>
+`e = 0` // always for a line <br>
+`f = 0` // always for a line <br>
+`a = (pt1.y) - (pt2.y)` <br>
+`b = (pt2.x) - (pt1.x)` <br>
+`c = ((pt1.x) * (pt2.y)) - ((pt2.x) * (pt1.y))`   // but sign is changed to put it on the other side of the equals <br>
 
 Returns **[Equation](#equation)** 
 
@@ -450,17 +700,19 @@ check all pairs of contiguous segments on this line for golden ratio instances
 
 Returns **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)** collection of new [Section](#section) objects where `.isGoldenRatio = true`
 
-## Model
-
-a container for holding a sets of points, elements.
-segments and other graphical elements may also be contained in the model
-
-generally instantiated by Explorer
+## 
 
 **Meta**
 
 -   **author**: 𝚽 &lt;phi@geometor.com>
 -   **license**: MIT
+
+## Model
+
+a container for holding a sets of points, elements.
+
+-   segments and other graphical elements may also be contained in the model
+-   generally instantiated by Explorer
 
 ### points
 
@@ -555,39 +807,44 @@ checks to determine if the point is already present
 
 Returns **[Segment](#segment)** returns existing segment if there is a match
 
-## Point
-
-**Extends Element**
-
--   represents a position within a two dimension cartesian plane - specified by two values
--   also represents a node in a system of algebraic expressions
-
--   other than the two starting points, points are derived through the intersection of elements
--   the starting values of the first two points are explicitly set and have no parent [Struct](#struct)
-
-TODO: points should be immutable after instantiation
-
-TODO: each x, y value is a part of a result set from a System of two Structs
-
-**Parameters**
-
--   `x` **algValue** string with algebraic value
--   `y` **algValue** string with algebraic value
--   `parent1` **[Struct](#struct)** parent structure - intersecting line or circle.
--   `parent2` **[Struct](#struct)** parent structure - intersecting line or circle.
--   `type` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** type of Element - such as "Point" - like a class in CSS
--   `id` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** unique id for the Element
+## 
 
 **Meta**
 
 -   **author**: 𝚽 &lt;phi@geometor.com>
 -   **license**: MIT
 
-### x
+## Point
 
-algebraic value - set by constructor
+**Extends Element**
 
-Returns **algValue** algebraic value
+represents an ordered **List** of two algebraic values
+
+-   extends from [Element](#element)
+-   can be considered the coordinates `x, y` within a two dimensional cartesian plane
+-   other than the two "given" starting points, new points in the model are derived
+    from the root set of a [System](#system) of algebraic expressions defined by two [Struct](#struct)
+-   the starting values of the first two points are explicitly set and have no parent [Struct](#struct)
+
+**TODO:** points should be immutable after instantiation<br>
+**TODO:** each x, y value pair is a part of a result set from a [System](#system) of two Structs - relate the System to the Point<br>
+**TODO:** create a [Value](#value) object as a container for Algebraic and Float representations
+**TODO:** make x, y [Value](#value) objects - validate
+
+**Parameters**
+
+-   `x` **algValue** string with algebraic value
+-   `y` **algValue** string with algebraic value
+-   `struct1` **[Struct](#struct)** parent structure - such as intersecting line or circle.
+-   `struct2` **[Struct](#struct)** parent structure - such as intersecting line or circle.
+-   `type` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** optional: type of Element - default: "Point"
+-   `id` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** optional: unique id for the Element
+
+### params
+
+TODO: set these as [Value](#value) objects
+
+-   every element should have a set of defining parameters
 
 ### y
 
@@ -597,15 +854,19 @@ Returns **algValue** algebraic value
 
 ### xVal
 
-floating point value - set by constructor - converted from AlgValue
+floating point value - set by constructor - converted from algValue
 
 Returns **float** 
 
 ### yVal
 
-floating point value - set by constructor - converted from AlgValue
+floating point value - set by constructor - converted from algValue
 
 Returns **float** 
+
+### tag
+
+intended as a unique idenifier for the element withing the model. based on its parameters
 
 ### Qv
 
@@ -621,31 +882,31 @@ set to false if x or y are not a number
 
 Returns **[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** 
 
-### parents
+### structs
 
-an array of parent elements that this point lies on
+an array of parent [Struct](#struct) objects that this Point lies on
 
 Returns **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)** of Elements
 
-### addParent
+### addStructs
 
-add a parent Element or Struct to this Point's parent array
+add a parent [Struct](#struct) to this Point's structs array
 usually called by the [Model](#model) to add intersection points
 checks to determine if the parent is already present before adding a new one
 
 **Parameters**
 
--   `parent`  
--   `Element`  
+-   `newStruct` **[Struct](#struct)** 
 
 ### quadranceTo
 
 determine the quadrance (square of distance) from this point to the supplied point
 
+-   `((this.x) - (point.x))^2 + ((point.y) - (this.y))^2`
+
 **Parameters**
 
--   `point`  
--   `Point`  
+-   `point` **[Point](#point)** 
 
 Returns **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** algebraic value
 
@@ -653,10 +914,11 @@ Returns **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/G
 
 determine the distance from this point to the supplied point
 
+-   `( ((this.x) - (point.x))^2 + ((point.y) - (this.y))^2 )^(1/2)`
+
 **Parameters**
 
--   `point`  
--   `Point`  
+-   `point` **[Point](#point)** 
 
 Returns **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** algebraic value
 
@@ -683,18 +945,34 @@ for use with sort
 
 **Parameters**
 
--   `point1`  
--   `point2`  
+-   `point1` **[Point](#point)** 
+-   `point2` **[Point](#point)** 
+
+## 
+
+algebraic value - set by constructor
+
+Returns **algValue** algebraic value
+
+## 
+
+**Meta**
+
+-   **author**: 𝚽 &lt;phi@geometor.com>
+-   **license**: MIT
 
 ## Section
 
-pair of segments
-derives length for determining Golden Ratio instances
+a **Set** of contiguous [Segment](#segment) objects along a line that demonstrate Golden Ratio harmonics
+
+**TODO:** - take a Set of segments as parameter
 
 **Parameters**
 
 -   `segment1` **[Segment](#segment)**  point on the line
--   `segment2` **[Segment](#segment)**  point on the line.
+-   `segment2` **[Segment](#segment)**  point on the line
+
+## 
 
 **Meta**
 
@@ -713,11 +991,6 @@ TODO: could be of type [Element](#element)
 -   `pt1` **[Point](#point)**  endpoint of the segment
 -   `pt2` **[Point](#point)**  endpoint of the segment
 -   `line` **[Line](#line)**  the line.
-
-**Meta**
-
--   **author**: 𝚽 &lt;phi@geometor.com>
--   **license**: MIT
 
 ### id
 
@@ -758,39 +1031,50 @@ formatted string representing attribute of the circle
 
 Returns **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
 
-## Struct
-
-**Extends Element**
-
--   base class for structures within the the [Model](#model)
--   extends from [Element](#element) class
--   a structure is an [Element](#element) defined by a set of proportions establsihed by two [Point](#point) objects
--   see [Line](#line)
--   see [Circle](#circle)
-
-**TODO** Struct should take an Array of Point objects - allowing for polygons
-
-**Parameters**
-
--   `pt1` **[Point](#point)** initial point of the structure
--   `pt2` **[Point](#point)** initial point of the structure
--   `type` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** default: "Struct"
--   `id` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** optional
+## 
 
 **Meta**
 
 -   **author**: 𝚽 &lt;phi@geometor.com>
 -   **license**: MIT
 
+## Struct
+
+**Extends Element**
+
+represents a structure defined by a set of proportions establsihed by two [Point](#point) objects
+
+-   extends from [Element](#element)
+-   base class for structures within the [Model](#model)
+-   see subclass [Line](#line)
+-   see subclass [Circle](#circle)
+
+**TODO** Struct should take an Array of Point objects - allowing for polygons<br>
+**TODO** There are only 3 distinct relationships that can occur between two points - a Line and two Circle.
+The determination of these three relationships could happen here as fundamental to a Struct of two points
+
+These three objects, Line and two Circles, always imply at least 4 additional points to the model
+
+**Parameters**
+
+-   `pt1` **[Point](#point)** initial point of the structure
+-   `pt2` **[Point](#point)** initial point of the structure
+-   `type` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** optional - default: "Struct"
+-   `id` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** optional
+
+### points
+
+Array of [Point](#point) objects on this Struct
+
 ### eq
 
-all Struct objects have an equation
+all Struct objects have an equation that are set by the sub class
 
 ### addPoint
 
 -   adds [Point](#point) object **ON** the Struct
 -   usually from the intersection with another Struct
--   derived by the [System](#system)
+-   derived by a [System](#system) object
 
 **Parameters**
 
@@ -798,16 +1082,115 @@ all Struct objects have an equation
 
 Returns **[Point](#point)** returns existing point if there is a match
 
+## 
+
+**Meta**
+
+-   **author**: 𝚽 &lt;phi@geometor.com>
+-   **license**: MIT
+
 ## System
 
-System - collection of equations - starting with two elements
+**Extends Element**
+
+System - collection of equations - starting with two structures
 provides a roots solution set - an array of objects with x, y values
 should show all the work
 
 **Parameters**
 
--   `element1` **[Element](#element)** first element
--   `element2` **[Element](#element)** second element
+-   `struct1` **[Struct](#struct)** first struct
+-   `struct2` **[Struct](#struct)** second struct
+-   `type` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** optional: type of element - such as "Point" - like a class in CSS
+-   `id` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** optional: unique id for the element
+
+### structs
+
+Array fo the [Struct](#struct) objects of the System
+
+### eqs
+
+Array of Equation objects from the Structs
+
+-   new equations may be added to show the work of solution
+
+### history
+
+a place to log the work
+
+### points
+
+Array of [Point](#point) objects representing roots of the System
+
+### equationRank
+
+used for sorting equations by number of vars and number of dimensions
+
+sort by number vars then number of dimensions - descending order
+
+**Parameters**
+
+-   `eq0` **[Equation](#equation)** 
+-   `eq1` **[Equation](#equation)** 
+
+## 
+
+**Meta**
+
+-   **author**: 𝚽 &lt;phi@geometor.com>
+-   **license**: MIT
+
+## 
+
+**Meta**
+
+-   **author**: 𝚽 &lt;phi@geometor.com>
+-   **license**: MIT
+
+## Value
+
+represents a value within the [Model](#model) - relative to the unit measure establish by the starting points <br>
+
+-   see [Point](#point)
+
+**TODO:** validation!!!!!! simplify?? make immutable!!!
+
+**Parameters**
+
+-   `algValue` **algValue** the algebraic expression of the value -s hould NOT contain variables
+-   `id` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** unique id for the element
+
+### alg
+
+internal constant
+
+### isValid
+
+the floating point expression of the value of the value
+
+-   shold contain variables
+
+### float
+
+returns float if valid number
+
+### latex
+
+latex string from Algebrite print latex when valid
+
+### katex
+
+katex.renderToString(this.latex)
+
+### toString
+
+override toString()
+
+### valueOf
+
+override valueOf()
+
+## 
 
 **Meta**
 
@@ -820,11 +1203,6 @@ a container for drawing and animating the SVG panel
 and the other data panels of the UI
 
 -   sets up boundary lines for the drawing
-
-**Meta**
-
--   **author**: 𝚽 &lt;phi@geometor.com>
--   **license**: MIT
 
 ### PTRAD
 
@@ -841,6 +1219,10 @@ Array of `Line` objects defining the boundary of the Drawing<br>
 -   using these in `View.addLine` to determine the end points of [Line](#line) in the [model](model)
 -   these lines are not added to the `Model.elements` array
 
+### configurePanels
+
+setup DOM elements for List Tables in Aside
+
 ### addPoint
 
 add a [Point](#point) to the View<br>
@@ -853,7 +1235,17 @@ radius of `circle` set by `this.PTRAD`
 
 Returns **[svgElement](https://developer.mozilla.org/docs/Web/SVG/Element/animate)** `circle` object
 
-### addPointToTable
+### drawPoint
+
+draw the [Point](#point) into the Drawing using SVG.js
+
+**Parameters**
+
+-   `newPoint` **[Point](#point)** 
+
+Returns **row** table row
+
+### listPoint
 
 add a [Point](#point) to the UI List
 
@@ -864,21 +1256,50 @@ add a [Point](#point) to the UI List
 
 Returns **row** table row
 
-## M
+### addStruct
 
-Global instance of the [Model](#model) object
+add a [Struct](#struct) (Line or Circle) to the View<br>
+SVG `circle` object representing the point location
+radius of `circle` set by `this.PTRAD`
 
-## D
+**Parameters**
 
-SVG Drawing
+-   `newStruct`  
+-   `newPoint` **[Point](#point)** 
 
-## V
+Returns **[svgElement](https://developer.mozilla.org/docs/Web/SVG/Element/animate)** 
+
+### drawStruct
+
+draw the [Struct](#struct) into the Drawing using SVG.js
+
+**Parameters**
+
+-   `newStruct` **[Struct](#struct)** 
+
+Returns **[svgElement](https://developer.mozilla.org/docs/Web/SVG/Element/animate)** table row
+
+### listStruct
+
+add a [Struct](#struct) to the Structures UI List
+
+**Parameters**
+
+-   `newStruct`  
+-   `newPoint` **[Struct](#struct)** 
+
+Returns **row** table row
+
+## 
+
+**Meta**
+
+-   **author**: 𝚽 &lt;phi@geometor.com>
+-   **license**: MIT
+
+## main
 
 Global instance of the [View](#view) object
-
-## E
-
-Global instance of the [Explorer](#explorer) object
 
 ## main
 
@@ -890,3 +1311,15 @@ primary interface for [main](#main)
 
 -   **author**: 𝚽 &lt;phi@geometor.com>
 -   **license**: MIT
+
+## main
+
+Global instance of the [Model](#model) object
+
+## main
+
+SVG Drawing
+
+## main
+
+Global instance of the [Explorer](#explorer) object

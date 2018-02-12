@@ -1,18 +1,12 @@
 /**
- * a linear proportion established by two points
-
- * constructor calculates linear proportions from the x, y values of the points recieved
-
- * TODO: points should be immutable after instantiation
-
- * @author 𝚽 <phi@geometor.com>
- * @license MIT
+ * represents a linear proportion established by two points
+ * - constructor calculates a generalized algebraic {@link Equation} to represent the linear proportions of the x, y values of the points recieved
  *
  * @class
- * @param {Point} pt1 - initial point of the line
- * @param {Point} pt2 - initial point of the line.
- * @param {string} type - type of element - default: Line
- * @param {string} id - optional: unique id for the element
+ * @param {Point} pt1 - initial point of the Line
+ * @param {Point} pt2 - initial point of the Line.
+ * @param {string} type - type of element - default: "Line"
+ * @param {string} id - optional: unique id for the Struct
 
 */
 class Line extends Struct {
@@ -32,24 +26,29 @@ class Line extends Struct {
     A.run(`clearall`)
 
     // coefficent a
-    // log(  `    a = (pt1.y) - (pt2.y)`)
+    this.hlog(`a = (pt1.y) - (pt2.y)`)
     cmd = `a = (${pt1.y}) - (${pt2.y})`
+    this.hlog(cmd)
     A.run(cmd)
     let a = A.run(`a`)
-    // log(  `  = ${a}`)
+    this.hlog(`  = ${a}`)
 
     // coefficent b
-    // log(  `b = (pt2.x) - (pt1.x)`)
+    this.hlog(`b = (pt2.x) - (pt1.x)`)
     cmd = `b = (${pt2.x}) - (${pt1.x})`
+    this.hlog(cmd)
     A.run(cmd)
     let b = A.run(`b`)
-    // log(  `  = ${b}`)
+    this.hlog(`  = ${b}`)
 
     // coefficent c
-    // log(  `c = ((pt1.x) * (pt2.y)) - ((pt2.x) * (pt1.y))`)
+    this.hlog(`c = ((pt1.x) * (pt2.y)) - ((pt2.x) * (pt1.y))`)
     cmd = `c = ((${pt1.x}) * (${pt2.y})) - ((${pt2.x}) * (${pt1.y}))`
+    this.hlog(cmd)
     A.run(cmd)
     let c = A.run(`c`)
+    this.hlog(`  = ${c}`)
+
     // log(  `  = ${c}`)
 
 
@@ -57,18 +56,18 @@ class Line extends Struct {
     * the equation associated with this element
     * - set by constructor
 
-    * d x^2 + e x y + f y^2 + a x + b y = c
+    * `d x^2 + e x y + f y^2 + a x + b y = c`
 
-    * d = 0 // always for a line <br>
-    * e = 0 // always for a line <br>
-    * f = 0 // always for a line <br>
-    * a = (pt1.y) - (pt2.y) <br>
-    * b = (pt2.x) - (pt1.x) <br>
-    * c = ((pt1.x) * (pt2.y)) - ((pt2.x) * (pt1.y))   // but sign is changed to put it on the other side of the equals <br>
+    * `d = 0` // always for a line <br>
+    * `e = 0` // always for a line <br>
+    * `f = 0` // always for a line <br>
+    * `a = (pt1.y) - (pt2.y)` <br>
+    * `b = (pt2.x) - (pt1.x)` <br>
+    * `c = ((pt1.x) * (pt2.y)) - ((pt2.x) * (pt1.y))`   // but sign is changed to put it on the other side of the equals <br>
 
     * @returns {Equation}
     */
-    this.eq = new Equation(0, 0, 0, a, b, '-' + c)
+    this.eq = new Equation("0", "0", "0", a, b, `-(${c})`)
 
   } //constructor
 
@@ -173,7 +172,7 @@ class Line extends Struct {
     console.groupEnd();
   }
 
-
-
-
-}
+  /** @author 𝚽 <phi@geometor.com>
+  * @license MIT
+  */
+} //class

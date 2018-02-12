@@ -1,34 +1,41 @@
-// @namespace Geometry */
-
 /**
- * - represents a position within a two dimension cartesian plane - specified by two values
- * - also represents a node in a system of algebraic expressions
-
- * - other than the two starting points, points are derived through the intersection of elements
+ * represents an ordered **List** of two algebraic values
+ * - extends from {@link Element}
+ * - can be considered the coordinates `x, y` within a two dimensional cartesian plane
+ * - other than the two "given" starting points, new points in the model are derived
+ from the root set of a {@link System} of algebraic expressions defined by two {@link Struct}
  * - the starting values of the first two points are explicitly set and have no parent {@link Struct}
 
- * TODO: points should be immutable after instantiation
-
- * TODO: each x, y value is a part of a result set from a System of two Structs
-
- * @author 𝚽 <phi@geometor.com>
- * @license MIT
+ * **TODO:** points should be immutable after instantiation<br>
+ * **TODO:** each x, y value pair is a part of a result set from a {@link System} of two Structs - relate the System to the Point<br>
+ * **TODO:** create a {@link Value} object as a container for Algebraic and Float representations
+ * **TODO:** make x, y {@link Value} objects - validate
  *
  * @class
  * @param {algValue} x - string with algebraic value
  * @param {algValue} y - string with algebraic value
- * @param {Struct} parent1 - parent structure - intersecting line or circle.
- * @param {Struct} parent2 - parent structure - intersecting line or circle.
- * @param {string} type - type of Element - such as "Point" - like a class in CSS
- * @param {string} id - unique id for the Element
+ * @param {Struct} struct1 - parent structure - such as intersecting line or circle.
+ * @param {Struct} struct2 - parent structure - such as intersecting line or circle.
+ * @param {string} type - optional: type of Element - default: "Point"
+ * @param {string} id - optional: unique id for the Element
 
  */
 class Point extends Element {
 
-  constructor(x, y, parent1, parent2, type, id) {
+  constructor(x, y, struct1, struct2, type, id) {
 
     type = type || "Point"
+
     super(type, id)
+
+
+    /** TODO: set these as {@link Value} objects
+    * - every element should have a set of defining parameters*/
+    this.params = {
+      x: x,
+      y: y
+    }
+
 
     // TODO: use get method to prevent changing value
     /**
@@ -44,16 +51,19 @@ class Point extends Element {
     this.y = y
 
     /**
-     * floating point value - set by constructor - converted from AlgValue
+     * floating point value - set by constructor - converted from algValue
      * @returns {float}
      */
     this.xVal = A.parseFloat(this.x)
 
     /**
-     * floating point value - set by constructor - converted from AlgValue
+     * floating point value - set by constructor - converted from algValue
      * @returns {float}
      */
     this.yVal = A.parseFloat(this.y)
+
+    /** intended as a unique idenifier for the element withing the model. based on its parameters */
+    this.tag = `[ (${this.x}), (${this.y}) ]`
 
     /**
      * Quadrance - the square of the vector of this point from origin
@@ -68,7 +78,7 @@ class Point extends Element {
      */
     this.isValid = true;
 
-    // all point values must be able to be parsed a real float value
+    // all Point values must be able to be parsed a real float value
     if (isNaN(this.xVal)) {
       this.isValid = false;
       console.error(`x value (${this.x}) is not a number: ${this.xVal}`)
@@ -81,44 +91,45 @@ class Point extends Element {
     }
 
     /**
-     * an array of parent elements that this point lies on
+     * an array of parent {@link Struct} objects that this Point lies on
      * @returns {Array} of Elements
      */
-    this.parents = [];
-    //first points have no parents
-    if (parent1 && parent2) {
-      this.addParent(parent1)
-      this.addParent(parent2)
+    this.structs = [];
+    //first points have no structs
+    if (struct1 && struct2) {
+      this.addStructs(struct1)
+      this.addStructs(struct2)
     }
 
   } //constructor
 
 
   /**
-   * add a parent Element or Struct to this Point's parent array
+   * add a parent {@link Struct} to this Point's structs array
    * usually called by the {@link Model} to add intersection points
    * checks to determine if the parent is already present before adding a new one
    * @function
-   * @param {Element}
+   * @param {Struct} newStruct
    */
-  addParent(parent) {
-    // check if parent is already in list
-    if (!this.parents.includes(parent)) {
-      // add new parent to point
-      this.parents.push(parent);
+  addStructs(newStruct) {
+    // check if newStruct is already in list
+    if (!this.structs.includes(newStruct)) {
+      // add new newStruct to point
+      this.structs.push(newStruct);
     }
   }
 
 
   /**
    * determine the quadrance (square of distance) from this point to the supplied point
+   * - `((this.x) - (point.x))^2 + ((point.y) - (this.y))^2 `
    * @function
-   * @param {Point}
+   * @param {Point} point
    * @returns {string} algebraic value
    */
   quadranceTo(point) {
     var q = A.run(
-      `( (${this.x}) - (${point.x}))^2 + ((${point.y}) - (${this.y}))^2 )`);
+      `((${this.x}) - (${point.x}))^2 + ((${point.y}) - (${this.y}))^2 `);
     return q;
   }
 
@@ -126,8 +137,9 @@ class Point extends Element {
 
   /**
    * determine the distance from this point to the supplied point
+   * - `( ((this.x) - (point.x))^2 + ((point.y) - (this.y))^2 )^(1/2)`
    * @function
-   * @param {Point}
+   * @param {Point} point
    * @returns {string} algebraic value
    */
   distanceTo(point) {
@@ -176,6 +188,8 @@ class Point extends Element {
   /** for use with sort
   * - first by x then y - low to high
   * - useful for lines
+  * @param {Point} point1
+  * @param {Point} point2
   */
   static compare(point1, point2) {
     var p1x = point1.xVal;
@@ -204,5 +218,7 @@ class Point extends Element {
     return 0;
   }
 
-
-}
+  /** @author 𝚽 <phi@geometor.com>
+  * @license MIT
+  */
+} //class

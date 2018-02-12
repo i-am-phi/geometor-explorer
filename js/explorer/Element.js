@@ -1,14 +1,12 @@
 /**
- * base class for the common properties of any entity of the {@link Model},
- * including {@link Point} and {@link Struct}
-
- * @author 𝚽 <phi@geometor.com>
- * @license MIT
+ * represents the common properties and methods of any entity of the {@link Model}<br>
+ * in homage to Euclid
+ * - see subclass {@link Point}
+ * - see subclass {@link Struct}
  *
  * @class
- * @param {string} type - type of element - such as "Point" - like a class in CSS
- * @param {string} id - unique id for the element
-
+ * @param {string} type - optional: type of element - such as "Point" - like a class in CSS
+ * @param {string} id - optional: unique id for the element
  */
 class Element {
 
@@ -29,48 +27,63 @@ class Element {
      */
     this.id = id || ""
 
-  }
+    /** will generally be set by extending class to create a unique identifier based on parameters */
+    this.tag = ""
+
+    /** a place to log the work
+    @type {Array}*/
+    this.history = []
+
+  } //constructor
 
   /**
-  * grouped console output to represent the object<br>
-  * perfect for logging
-  * @function
-  *
-  * @returns {console}
-  */
-  log(){
+   * grouped console output to represent the object<br>
+   * @function
+   */
+  log() {
 
-    console.group( `${this.id} : ${this.type}` )
+    console.group(`${this.id} : ${this.type}`)
     log(this.toString());
     console.groupEnd();
 
   }
 
+  /** log string to history */
+  hlog(str) {
+    this.history.push(str)
+  }
+
   /**
-   * formatted string representing attribute of the object
+   * formatted string representing properties of the object<br>
+   * will list the items in member arrays like points or parents
    *
    * @function
    * @returns {string}
    */
   toString() {
-    var str = `${this.id} : ${this.type}\n`
-    for (var key in this){
 
-      let label = " ".repeat(10-key.length) + key
+    let str = `${this.id} : ${this.type}\n`
 
-      // list array items
+    //iterate the properties of this object
+    for (let key in this) {
+
+      // pad the key as the label for right justify
+      let label = " ".repeat(10 - key.length) + key
+
       if (this[key] instanceof Array) {
+        // list array items
         // label with count of items
         str += label + ' : ' + this[key].length + '\n'
 
-        this[key].forEach( item => {
-          label = " ".repeat(15-item.id.toString().length) + item.id
+        this[key].forEach(item => {
+          label = " ".repeat(15 - item.id.toString().length) + item.id
           str += `${label} : ${item.type}\n`
         })
       } else if (this[key] instanceof Equation) {
-
-        str += label + ' : ' + this[key].toString() + '\n'
+        // TODO: does this need to be here
+        str += label + ' : ' + this[key].simple + '\n'
       } else {
+        //default output
         str += label + ' : ' + this[key] + '\n'
       }
     }
@@ -78,6 +91,7 @@ class Element {
     return str;
   }
 
-
-
-}
+  /** @author 𝚽 <phi@geometor.com>
+  * @license MIT
+  */
+} //class

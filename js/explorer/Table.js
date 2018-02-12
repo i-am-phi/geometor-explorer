@@ -14,7 +14,10 @@ function TableProperty( caption ) {
     addCell(row, kat(point.y), point.yVal)
 
   }
-}
+  /** @author 𝚽 <phi@geometor.com>
+  * @license MIT
+  */
+} //class
 
 function addCell(row, html, title) {
   let cell = row.insertCell(-1);

@@ -1,10 +1,5 @@
 /**
  * A global instance of the {@link Alg} object
-
- * @author 𝚽 <phi@geometor.com>
- * @license MIT
-
- * @const
  * @example
  * A.run( `a = x^2 - x - 1` )
  */
@@ -13,13 +8,9 @@ const A = new Alg()
 /**
  * A container object for Algebrite helper functions<br>
  * run from {@link A}
-
- * @author 𝚽 <phi@geometor.com>
- * @license MIT
  *
  * @class
  */
-
 function Alg() {
 
   /** for the round function */
@@ -148,5 +139,7 @@ function Alg() {
     return Math.floor(number * factor) / factor;
   }
 
-
-}
+  /** @author 𝚽 <phi@geometor.com>
+  * @license MIT
+  */
+} //function
