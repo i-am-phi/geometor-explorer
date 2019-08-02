@@ -50,7 +50,7 @@ function Alg() {
   }
 
   /** Algebrite may return a scalar (one result) or a tensor (a set of results) when solving.
-  * This function parses the result and always returns an array of on or more results
+  * This function parses the result and always returns an array of one or more results
   * @function
   * @param {algValue} roots - Algebrite command string
   * @returns {Array} of algValues
