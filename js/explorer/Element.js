@@ -42,9 +42,9 @@ class Element {
    */
   log() {
 
-    console.group(`${this.id} : ${this.type}`)
-    log(this.toString());
-    console.groupEnd();
+    console.groupCollapsed(`${this.id} : ${this.type}`)
+    console.dir(this)
+    console.groupEnd()
 
   }
 
@@ -56,7 +56,7 @@ class Element {
   /**
    * formatted string representing properties of the object<br>
    * will list the items in member arrays like points or parents
-   *
+   * TODO: resolve circular reference
    * @function
    * @returns {string}
    */
@@ -70,22 +70,24 @@ class Element {
       // pad the key as the label for right justify
       let label = " ".repeat(10 - key.length) + key
 
-      if (this[key] instanceof Array) {
-        // list array items
-        // label with count of items
-        str += label + ' : ' + this[key].length + '\n'
-
-        this[key].forEach(item => {
-          label = " ".repeat(15 - item.id.toString().length) + item.id
-          str += `${label} : ${item.type}\n`
-        })
-      } else if (this[key] instanceof Equation) {
-        // TODO: does this need to be here
-        str += label + ' : ' + this[key].simple + '\n'
-      } else {
-        //default output
-        str += label + ' : ' + this[key] + '\n'
-      }
+      /**
+      // if (this[key] instanceof Array) {
+      //   // list array items
+      //   // label with count of items
+      //   str += label + ' : ' + this[key].length + '\n'
+      //
+      //   this[key].forEach( item => {
+      //     // label = " ".repeat(15 - item.id.toString().length) + item.id
+      //     // str += `${label} : ${item.type}\n`
+      //     str += `${item}\n`
+      //   })
+      // } else if (this[key] instanceof Equation) {
+      //   // TODO: does this need to be here
+      //   str += label + ' : ' + this[key].simple + '\n'
+      // } else {
+      //   //default output
+      //   str += label + ' : ' + this[key] + '\n'
+      // }
     }
 
     return str;
