@@ -6,6 +6,7 @@
  * @class
  */
 class View {
+
   constructor() {
 
     /** radius for point icon */
@@ -13,6 +14,18 @@ class View {
     /** for variable width stroke on segments in proportion to the line length */
     this.STROKEFACTOR = 20;
 
+    /** SVG Drawing */
+    this.D = SVG("drawing").panZoom({zoomMin: 50, zoomMax: 300, zoomFactor: 1.5});
+
+    //////
+    this.setBoundingBox()
+    this.setElementGroups()
+    this.configurePanels()
+
+  }
+
+  /** define the bounding box for lines in the drawing */
+  setBoundingBox() {
     /**
      * Array of `Line` objects defining the boundary of the Drawing<br>
      * - using these in `View.addLine` to determine the end points of {@link Line} in the {@link model}
@@ -39,27 +52,26 @@ class View {
     this.boundaryLines.push(lineS)
 
     let lineW = new Line(tlPt, blPt)
-    this.boundaryLines.push(lineN)
+    this.boundaryLines.push(lineW)
 
     let lineE = new Line(trPt, brPt)
-    this.boundaryLines.push(lineN)
+    this.boundaryLines.push(lineE)
 
+  }
 
-    //////
-
-    this.configurePanels()
-
+  /** set up SVG groups for drawing */
+  setElementGroups() {
     //use groups as layers to keep points on top and selectable
-    this.groupPoints = D.group().attr({
+    this.groupPoints = this.D.group().attr({
       id: "Points"
     });
-    this.groupCircles = D.group().attr({
+    this.groupCircles = this.D.group().attr({
       id: "Circles"
     });
-    this.groupLines = D.group().attr({
+    this.groupLines = this.D.group().attr({
       id: "Lines"
     });
-    this.groupSegments = D.group().attr({
+    this.groupSegments = this.D.group().attr({
       id: "Segments"
     });
 
@@ -77,7 +89,6 @@ class View {
     if (!this.footerPanel) {
       console.log('footerPanel not found');
     }
-
 
   }
 
@@ -139,13 +150,15 @@ class View {
    */
   listPoint(point) {
 
-    // Create an empty <tr> element and add it to the 1st position of the table:
     var row = this.pointList.insertRow(-1);
     row.classList.add("Point")
+    row.id = "L-" + point.id
 
     addCell(row, point.id)
     addCell(row, kat(point.x), point.xVal)
     addCell(row, kat(point.y), point.yVal)
+
+    // log("Point " + point.id)
 
     return row
 
@@ -191,10 +204,10 @@ class View {
   drawStruct(newStruct) {
 
     if (newStruct instanceof Line) {
-      this.drawLine(newStruct)
+      return this.drawLine(newStruct)
     }
     if (newStruct instanceof Circle) {
-      this.drawCircle(newStruct)
+      return this.drawCircle(newStruct)
     }
 
   }
@@ -260,6 +273,7 @@ class View {
       svgStruct.on('click', click);
       svgStruct.on('mouseover', hover);
       svgStruct.on('mouseout', hover);
+
     }
 
     return svgStruct
@@ -268,32 +282,19 @@ class View {
 
   //pass in line coefficients to find endpoints at viewbox
   getLineEndPts(line) {
-    //get bounds to margin for the line
-    // var box = D.viewbox()
-    // var bx1 = box.x
-    // var by1 = box.y
-    // var bx2 = box.x + box.width
-    // var by2 = box.y + box.height
 
     var endPts = []
 
-    // check where line intersects they boundary lines
-    this.boundaryLines.forEach(bline => {
+    // check where line intersects each boundary lines
+    this.boundaryLines.forEach( bline => {
 
       let sys = new System(line, bline)
 
       // if intersect - ask bline if point is between defining points
-      if (sys.roots) {
-        sys.roots.forEach(point => {
-          var bl01 = bline.point[0].distanceTo(bline.point[1])
-          var bl0p = bline.point[0].distanceTo(point)
-          var bl1p = bline.point[1].distanceTo(point)
+      if (sys.points[0]) {
 
-          let result = alglog(`(bl01) = (bl0p) + (bl1p)`)
-          if (result == "1") {
-            endPts.push(point)
-          }
-        })
+            endPts.push(sys.points[0])
+
       }
     })
 
@@ -303,24 +304,19 @@ class View {
 
   drawCircle(newCircle) {
 
-    let svgStruct
-
     ////////////////////////////////////////////////////////
-    //TODO: whay does the radius need to be multiplied by 2??
-    var cx = newCircle.xVal;
-    var cy = newCircle.yVal;
-    var r = parseFloat(this.r);
+    var cx = newCircle.center.xVal;
+    var cy = newCircle.center.yVal;
+    var r = parseFloat(newCircle.r);
 
-    svgStruct = groupCircles.circle(r * 2)
-      .cx(cx)
-      .cy(cy)
+    //TODO: why does the radius need to be multiplied by 2??
+    let svgStruct = this.groupCircles.circle(r * 2)
+      .center(cx, cy)
       .addClass("Circle")
       .attr({
         'id': `c${this.id}`,
         'element-id': this.id
       });
-
-    // setCircle("#c" + this.id);
 
     //TODO: rotate circle to align start point with Radius
 
@@ -328,6 +324,8 @@ class View {
     svgStruct.on('click', click);
     svgStruct.on('mouseover', hover);
     svgStruct.on('mouseout', hover);
+
+    return svgStruct
 
   }
 
@@ -448,7 +446,7 @@ function logSummary() {
 
 function getViewBox() {
   //get bounds to margin for the line
-  // var box = D.viewbox()
+  // var box = this.D.viewbox()
   // var bx1 = box.x
   // var by1 = box.y
   // var bx2 = box.x + box.width
@@ -482,20 +480,19 @@ var hover = function() {
   }
 
   if (this.hasClass("Circle")) {
-    var id = this.attr('element-id');
-    element = M.elements[id];
+    var id = this.attr('-id');
+    element = M.structs[id];
     latex = A.run(`printlatex(${element.eq})`) + " = 0"
   }
 
 
   if (this.hasClass("Line")) {
-    var id = this.attr('element-id');
-    element = M.elements[id];
+    var id = this.attr('id');
+    element = M.structs[id];
     latex = "0 = " + A.run(`printlatex(${element.eq})`);
   }
 
   if (this.hasClass("Segment")) {
-
 
     var id = this.attr('segment-id');
     element = M.segments[id];
