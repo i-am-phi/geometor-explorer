@@ -53,14 +53,18 @@ class Model {
   addPoint(newPoint) {
 
     // look for exisiting points with same x, y
-    let existingPoint = this.findPointbyXY(newPoint.x, newPoint.y);
+    let existingPoint = this.findPointbyTag(newPoint.tag);
 
     if (existingPoint) {
 
+      console.log("existing point found")
       // add new point parents to existing point
-      newPoint.parents.forEach( parent => {
-        existingPoint.addParent(parent)
-      })
+      if (newPoint.parents) {
+        newPoint.parents.forEach( parent => {
+          existingPoint.addParent(parent)
+        })
+
+      }
 
       return existingPoint
 
@@ -75,22 +79,21 @@ class Model {
 
   }
 
+
   /**
-  * Find {@link Point} in Model.points with a matching x, y
-  * - comparison of algValue strings of the x, y
+  * Find {@link Point} in Model.points with a matching tag string
+  * tag should be a unique string with the X, Y values
   * @function
-  * @param {algValue} x
-  * @param {algValue} y
+  * @param {String} tag
   * @returns {Point} returns existing point if there is a match
   */
-  findPointbyXY(x, y) {
+  findPointbyTag(tag) {
 
-    this.points.forEach(point => {
-      // compare algValue
-      if ( point.x == x  &&  point.y == y ) {
-        return point
+    for (const i in this.points) {
+      if ( this.points[i].tag == tag ) {
+        return this.points[i]
       }
-    })
+    }
 
   }
 
@@ -113,29 +116,10 @@ class Model {
 
     } else {
 
-      // check all other structs for intersection
-      this.structs.forEach( exStruct => {
-
-        let sys = new System(newStruct, exStruct)
-
-        //add new points to each Struct
-        sys.roots.forEach( point => {
-          this.addPoint(point)
-
-          //add point to each parent point list
-          newStruct.addPoint(newPoint);
-          exStruct.addPoint(newPoint);
-
-        }, this)
-
-        //add this system to the collection
-        this.systems.push(sys)
-
-      }, this);
-
       newStruct.id = this.structs.length
 
       this.structs.push(newStruct)
+
       return newStruct
 
     }
@@ -143,7 +127,46 @@ class Model {
   }
 
   /**
-  * Find {@link Struct} in Model.elements with a matching equation parameters
+  * get list of new intersection points for the struct
+  * @function
+  * @param {Struct} newStruct
+  * @returns {Array} array of intersection points
+  */
+
+  getIntersectionPoints(newStruct) {
+
+    let intersectionPoints = []
+
+    // check all other existing structs for intersection
+    this.structs.forEach( exStruct => {
+
+      if (newStruct.id != exStruct.id) {
+        let sys = new System(newStruct, exStruct)
+
+        //add new points to each Struct
+        sys.points.forEach( point => {
+
+          this.addPoint(point)
+          intersectionPoints.push(point)
+
+          //add point to each parent point list
+          newStruct.addPoint(point);
+          exStruct.addPoint(point);
+
+        }, this)
+
+        //add this system to the collection
+        this.systems.push(sys)
+      }
+
+
+    }, this);
+
+    return intersectionPoints
+
+  }
+  /**
+  * Find {@link Struct} in Model.structs with a matching equation parameters
 
   * TODO: complete this
 
