@@ -12,7 +12,7 @@
 
  * const E = new Explorer();
 
- * //initial points set by X Y
+ * // initial points set by X Y
  * let P0 = new Point( "-1/2", "0" )
  * E.addPoint(P0)
  * P0.log()
@@ -28,6 +28,21 @@
  */
 class Explorer {
 
+  constructor() {
+    /**
+    * Global instance of the {@link Model} object
+    * @const
+    */
+    this.M = new Model()
+
+    /**
+    * Global instance of the {@link View} object
+    * @const
+    */
+    this.V = new View()
+
+  }
+
   /**
    * add Point to Model and View
    * @function
@@ -36,12 +51,16 @@ class Explorer {
    */
   addPoint(point) {
 
-    point = M.addPoint(point)
+    // reassign in case existing point is found
+    point = this.M.addPoint(point)
 
-    V.addPoint(point)
+    this.V.addPoint(point)
 
     return point
+  }
 
+  getPoints() {
+    return this.M.points
   }
 
   /** add {@link Struct} (ie - Line or Circle) to {@link Model} and {@link View}
@@ -54,11 +73,14 @@ class Explorer {
   */
   addStruct(struct) {
 
-    struct = M.addStruct(struct)
+    // reassign in case existing struct is found
+    struct = this.M.addStruct(struct)
 
-    //TODO: get intersection points with other structs
+    let intersectionPoints = this.M.getIntersectionPoints(struct)
 
-    V.addStruct(struct)
+    this.V.addStruct(struct)
+
+    intersectionPoints.forEach( point => this.V.addPoint(point) )
 
     return struct
 
