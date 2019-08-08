@@ -70,7 +70,7 @@ class Element {
       // pad the key as the label for right justify
       let label = " ".repeat(10 - key.length) + key
 
-      /**
+
       // if (this[key] instanceof Array) {
       //   // list array items
       //   // label with count of items
@@ -86,8 +86,9 @@ class Element {
       //   str += label + ' : ' + this[key].simple + '\n'
       // } else {
       //   //default output
-      //   str += label + ' : ' + this[key] + '\n'
+        str += label + ' : ' + this[key] + '\n'
       // }
+
     }
 
     return str;
