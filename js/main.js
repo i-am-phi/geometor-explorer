@@ -37,18 +37,10 @@ function main() {
   E.addPoint(P1)
   P1.log()
 
-  let L0 = new Line( P0, P1 )
-  E.addStruct(L0)
-  L0.log()
-
-  let C0 = new Circle( P0, P1 )
-  // console.dir(C0)
-  E.addStruct(C0)
-  C0.log()
-
-  let C1 = new Circle( P1, P0 )
-  E.addStruct(C1)
-  // C0.log()
+  E.addCircle(0, 1)
+  E.addCircle(1, 0)
+  // E.addCircle(2, 0)
+  // E.addCircle(3, 0)
 
 
 

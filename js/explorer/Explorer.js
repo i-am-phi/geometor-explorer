@@ -57,6 +57,7 @@ class Explorer {
     this.V.addPoint(point)
 
     return point
+
   }
 
   getPoints() {
@@ -64,9 +65,6 @@ class Explorer {
   }
 
   /** add {@link Struct} (ie - Line or Circle) to {@link Model} and {@link View}
-
-  * TODO: get intersection points with other structs
-
   * @function
   * @param {Struct} struct
   * @returns {Struct} return existing if found.
@@ -84,6 +82,58 @@ class Explorer {
 
     return struct
 
+  }
+
+  /** add {@link Line} to {@link Model} and {@link View}
+  *
+
+  * @function
+  * @param {int} pt0Id - index of point in collection to use for first point
+  * @param {int} pt1Id - index of point in collection to use for second point
+  * @returns {Line} return existing if found.
+  */
+  addLine(pt0Id, pt1Id) {
+
+    // reassign in case existing struct is found
+    let pt0 = this.M.points[pt0Id]
+    let pt1 = this.M.points[pt1Id]
+    let line = new Line(pt0, pt1)
+
+    let struct = this.M.addStruct(line)
+
+    let intersectionPoints = this.M.getIntersectionPoints(struct)
+
+    this.V.addStruct(struct)
+
+    intersectionPoints.forEach( point => this.V.addPoint(point) )
+
+    return struct
+  }
+
+  /** add {@link Circle} to {@link Model} and {@link View}
+  *
+
+  * @function
+  * @param {int} ptCid - index of point in collection to use for center
+  * @param {int} ptRid - index of point in collection to use for radius
+  * @returns {Circle} return existing if found.
+  */
+  addCircle(ptCid, ptRid) {
+
+    // reassign in case existing struct is found
+    let ptC = this.M.points[ptCid]
+    let ptR = this.M.points[ptRid]
+    let circle = new Circle(ptC, ptR)
+
+    let struct = this.M.addStruct(circle)
+
+    let intersectionPoints = this.M.getIntersectionPoints(struct)
+
+    this.V.addStruct(struct)
+
+    intersectionPoints.forEach( point => this.V.addPoint(point) )
+
+    return struct
   }
 
   /** @author 𝚽 <phi@geometor.com>

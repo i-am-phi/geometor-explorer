@@ -416,9 +416,15 @@ function log(msg) {
 
 
 function kat(str) {
+  console.log("KAT:\t" + str)
+  let latex = A.run(`printlatex(simplify(${str}))`);
+  console.log("\t" + latex)
 
-  let latex = A.run(`printlatex(${str})`);
-  return katex.renderToString(latex);
+  let kStr = katex.renderToString(latex)
+  // let kStr = katex.renderToString(str)
+  console.log("\t" + kStr)
+
+  return kStr
 
 }
 

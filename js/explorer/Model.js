@@ -157,6 +157,8 @@ class Model {
 
         //add this system to the collection
         this.systems.push(sys)
+
+        console.dir(sys)
       }
 
 
