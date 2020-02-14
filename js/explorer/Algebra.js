@@ -1,3 +1,4 @@
+const PRECISION = 8;
 
 
 // shortcut for Algebrite.run
@@ -51,24 +52,39 @@ function getNumber( val ) {
   return num;
 }
 
+function round(number) {
+  var factor = Math.pow(10, PRECISION);
+  return Math.floor(number * factor) / factor;
+}
+
+
 // check if Alg string has has i or stop
 function checkValid(str) {
   let valid = true;
-  if ( str.indexOf("Stop:") !== -1  ) {
+
+  if ( str.indexOf("Stop:") !== -1 ) {
     console.warn(`value: (${str}) contains 'Stop'`);
     valid = false;
   }
-  if ( str.indexOf("i") !== -1   ) {
-    console.warn(`value: (${str}) contains 'i'`);
-    valid = false;
-  }
-  if ( str.indexOf("nil") !== -1   ) {
+
+  if ( str.indexOf("nil") !== -1 ) {
     console.warn(`value: (${str}) contains 'nil'`);
     valid = false;
   }
 
   return valid;
 }
+
+function checkComplex(str) {
+  let complex = false
+
+  if ( str.indexOf("i") !== -1 ) {
+    complex = true
+  }
+
+  return complex
+}
+
 
 ///////////////////////////////////////////////////////////////////////////////
 

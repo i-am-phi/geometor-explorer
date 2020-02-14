@@ -18,8 +18,8 @@ function main() {
   Line( points[4], points[5] );
 
   // unit 2 circles from starting points
-  Circle( points[0], points[3] );
-  Circle( points[1], points[2] );
+  // Circle( points[0], points[3] );
+  // Circle( points[1], points[2] );
 
 
   logSummary();
