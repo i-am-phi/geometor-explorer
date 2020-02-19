@@ -18,24 +18,25 @@ type Script = {
 };
 
 /**
- * Unicode block data for the families of scripts we support.
+ * Unicode block data for the families of scripts we support in \text{}.
+ * Scripts only need to appear here if they do not have font metrics.
  */
 const scriptData: Array<Script> = [
     {
-        // Chinese and Japanese.
-        // The "k" in cjk is for Korean, but we've separated Korean out
-        name: "cjk",
+        // Latin characters beyond the Latin-1 characters we have metrics for.
+        // Needed for Czech, Hungarian and Turkish text, for example.
+        name: 'latin',
         blocks: [
-            [0x3000, 0x30FF], // CJK symbols and punctuation, Hiragana, Katakana
-            [0x4E00, 0x9FAF], // CJK ideograms
-            [0xFF00, 0xFF60], // Fullwidth punctuation
-            // TODO: add halfwidth Katakana and Romanji glyphs
+            [0x0100, 0x024f],  // Latin Extended-A and Latin Extended-B
+            [0x0300, 0x036f],  // Combining Diacritical marks
         ],
     },
     {
-        // Korean
-        name: 'hangul',
-        blocks: [[0xAC00, 0xD7AF]],
+        // The Cyrillic script used by Russian and related languages.
+        // A Cyrillic subset used to be supported as explicitly defined
+        // symbols in symbols.js
+        name: 'cyrillic',
+        blocks: [[0x0400, 0x04ff]],
     },
     {
         // The Brahmic scripts of South and Southeast Asia
@@ -56,6 +57,26 @@ const scriptData: Array<Script> = [
         name: 'brahmic',
         blocks: [[0x0900, 0x109F]],
     },
+    {
+        name: 'georgian',
+        blocks: [[0x10A0, 0x10ff]],
+    },
+    {
+        // Chinese and Japanese.
+        // The "k" in cjk is for Korean, but we've separated Korean out
+        name: "cjk",
+        blocks: [
+            [0x3000, 0x30FF], // CJK symbols and punctuation, Hiragana, Katakana
+            [0x4E00, 0x9FAF], // CJK ideograms
+            [0xFF00, 0xFF60], // Fullwidth punctuation
+            // TODO: add halfwidth Katakana and Romanji glyphs
+        ],
+    },
+    {
+        // Korean
+        name: 'hangul',
+        blocks: [[0xAC00, 0xD7AF]],
+    },
 ];
 
 /**
@@ -63,8 +84,10 @@ const scriptData: Array<Script> = [
  * it is from, or null if it is not part of a known block
  */
 export function scriptFromCodepoint(codepoint: number): ?string {
-    for (const script of scriptData) {
-        for (const block of script.blocks) {
+    for (let i = 0; i < scriptData.length; i++) {
+        const script = scriptData[i];
+        for (let i = 0; i < script.blocks.length; i++) {
+            const block = script.blocks[i];
             if (codepoint >= block[0] && codepoint <= block[1]) {
                 return script.name;
             }

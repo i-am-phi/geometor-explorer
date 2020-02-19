@@ -1,65 +1,94 @@
+
+/** for the round function */
 const PRECISION = 8;
 
+/**
+ * shortcut for Algebrite.run see: {@link http://algebrite.org}
 
-// shortcut for Algebrite.run
-// check valid result
-// return nothing if error
-function alg( cmd ) {
-  var result
+ * checks for valid result
+ *
+ * @function
+ * @param {algCommand} cmd - Algebrite command string
+ * @returns {algExpression} algebraic expression - nothing on error
+ * @example
+ * cmd = `c = ((${pt1.x}) * (${pt2.y})) - ((${pt2.x}) * (${pt1.y}))`
+ * A.run(cmd)
+ * let c = A.run(`c`)
 
-  result = Algebrite.run( cmd.toString() )
+*/
+export function run( cmd ) {
+  var result = Algebrite.run( cmd.toString() )
   if ( checkValid(result) ) {
     return result
   } else {
     console.error(`ALG: "${cmd}"
-    returns:
-    ${result}`)
+        returns:
+        ${result}`)
     //return nothing
   }
 }
 
-function alglog(cmd) {
-  log(cmd)
-  return alg(cmd)
+/** run command with logging cmd string before */
+export function runLog( cmd ) {
+  console.log(cmd + "\n")
+  return run(cmd)
 }
 
-//return array of values
-function parseRoots(roots) {
+/** Algebrite may return a scalar (one result) or a tensor (a set of results) when solving.
+ * This function parses the result and always returns an array of one or more results
+ * @function
+ * @param {algValue} roots - Algebrite command string
+ * @returns {Array} of algValues
+ */
+export function parseRoots( roots ) {
   if (roots) {
     return roots.replace("[", "").replace("]", "").split(",")
   }
 }
 
-// check if algebraic value can be converted to a decimal float number
-function checkNumber( val ) {
-  var num = alg( `float(${val})` );
+/** check if algebraic value can be converted to a decimal float number
+ * returns false if not a number
+ *
+ * @function
+ * @param {algValue} val - Algebrite command string
+ * @returns {boolean}
+ */
+export function isNumber( val ) {
+  var num = run( `float(${val})` )
   if ( isNaN( num ) ) {
-    log( `*** checkNumber: "${val}" is not a Number.` );
-    stop;
+    log( `*** isNumber: "${val}" is not a Number.` )
     return false;
   }
   return true;
 }
 
-// check if algebraic value then return decimal float value
-function getNumber( val ) {
-  var num = parseFloat(alg( `float(${val})` ));
+/** convert the algebraic value to float and check if number<br>
+ * returns false if not a number
+ *
+ * @function
+ * @param {algValue} val - Algebrite command string
+ * @returns {float | false}
+ */
+export function parseFloat( val ) {
+  let num = run( `float(${val})` )
+  let re = /(.*)\.\.\./
+  num = num.replace(re, '$1')
   if ( isNaN( num ) ) {
-    log( `*** getNumber: "${val}" is not a Number.` );
-    stop;
-    return false;
+    console.log( `*** parseFloat: "${val}" is not a Number.` )
+    console.log( num )
+    return false
   }
-  return num;
+  return num
 }
 
-function round(number) {
-  var factor = Math.pow(10, PRECISION);
-  return Math.floor(number * factor) / factor;
-}
-
-
-// check if Alg string has has i or stop
-function checkValid(str) {
+/**
+ * check if algExpression string has `"Stop:"` or `"nil"`
+ *
+ * @function
+ * @param {algExpression} str - Algebrite command string
+ * @returns {boolean} true or false
+ */
+export function checkValid(str) {
   let valid = true;
 
   if ( str.indexOf("Stop:") !== -1 ) {
@@ -75,7 +104,14 @@ function checkValid(str) {
   return valid;
 }
 
-function checkComplex(str) {
+
+/** check if algebraic value has the value `i`
+ *
+ * @function
+ * @param {algExpression} str - Algebrite command string
+ * @returns {boolean} true or false
+ */
+export function isComplex(str) {
   let complex = false
 
   if ( str.indexOf("i") !== -1 ) {
@@ -85,34 +121,19 @@ function checkComplex(str) {
   return complex
 }
 
-
-///////////////////////////////////////////////////////////////////////////////
-
-function testAlgebrite() {
-
-
-  var cmd = `A = 1/2 y - 1/4 3^(1/2) - 1/2 3^(1/2) x
-B = 5/4 + x + x^2 + y^2
-C = A - B
-C
-  `;
-  var result = Algebrite.run( cmd );
-  result = Algebrite.run( 'C' );
-  log('C: ' + result);
-
-  result = Algebrite.run( 'simplify(C)' );
-  log('simplify(C): ' + result);
-  //
-  // result = Algebrite.run( 'expand(C)' );
-  // log('expand(C): ' + result);
-
-  result = Algebrite.run( "roots(C, x)" );
-  log('roots(C, x): ' + result);
-
-  var latex = Algebrite.run( 'printlatex(roots(C, x))' );
-  katex.render(latex, footerPanel);
-
-  result = Algebrite.run( "roots(C, y)" );
-  log('roots(C, y): ' + result);
-
+/** round for float comparison */
+export function round(number) {
+  let factor = Math.pow(10, PRECISION);
+  return Math.floor(number * factor) / factor;
 }
+
+export function kat(str) {
+  let latex = run(`printlatex(simplify(${str}))`);
+  let kStr = katex.renderToString(latex)
+
+  return kStr
+}
+
+/** @author 𝚽 <phi@geometor.com>
+ * @license MIT
+ */

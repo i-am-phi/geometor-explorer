@@ -19,7 +19,7 @@ $color-selected: #F33;
 }
 
 body.explorer {
-  color: white;
+  color: red;
   background-color: $bgcolor;
 
   display: grid;
@@ -31,6 +31,8 @@ body.explorer {
   width: 100vw;
   height: 100vh;
 
+  overflow: hidden;
+  
   main {
       grid-area: main;
       background-color: $bgcolor;
@@ -96,6 +98,26 @@ body.explorer {
   }
 
 }
+
+table {
+  text-align: center;
+
+}
+
+td, th {
+  padding: .5em 1em;
+
+}
+
+tr.circle {
+  color: $color-circle;
+}
+
+
+tr.line {
+  color: $color-line;
+}
+
 
 // SVG element
 #drawing {

@@ -1,39 +1,67 @@
-//
+import Explorer from './explorer/Explorer.js'
 
+// import * as Animate from './explorer/Animate.js'
+// import * as Diagnostics from './explorer/Diagnostics.js'
+// import * as Test from './explorer/Test.js'
+
+/**
+* Global instance of the {@link Explorer} object
+* @const
+*/
+const E = new Explorer();
+
+/**
+ * main.js - script to sequence the creating and display of the geometric model
+
+ * primary interface for {@link main}
+ * @author 𝚽 <phi@geometor.com>
+ * @license MIT
+ *
+ * @function
+ */
 function main() {
-  log('---------------------')
 
-  //initial points set by X Y
-  Point( "-1/2", "0" );
-  Point( "1/2", "0" );
+  console.time("* main *");
 
-  //baseline
-  Line( points[0], points[1] );
+  // let v = new Value("3^(1/2)")
+  // v.log()
+  // log(v.float)
 
-  // vesica pisces
-  Circle( points[0], points[1] );
-  Circle( points[1], points[0] );
+  // let v2 = new Value("1/2")
+  // let v3 = new Value("3^(1/2)")
 
-  // //bisector
-  Line( points[4], points[5] );
+  let P0 =  E.addPointByValue( "-1/2", "0" )
+  // P0.log()
 
-  // unit 2 circles from starting points
-  // Circle( points[0], points[3] );
-  // Circle( points[1], points[2] );
+  let P1 =  E.addPointByValue( "1/2", "0" )
+  // P1.log()
 
+  E.addLine(0, 1)
+  E.addCircle(0, 1)
+  E.addCircle(1, 0)
+  E.addLine(4, 5)
+  E.addCircle(4, 0)
+  E.addCircle(5, 0)
+  // E.addLine(4, 0)
+  // E.addLine(4, 1)
+  // E.addLine(5, 0)
+  // E.addLine(5, 1)
+  E.addCircle(2, 1)
+  E.addCircle(1, 2)
+  E.addCircle(3, 0)
+  E.addCircle(0, 3)
 
-  logSummary();
+  console.timeEnd("* main *");
 
-  DrawTL.play();
+  // console.time("* play *");
 
-  checkAllSegments();
+  // TL_DRAW.play();
+
+  // console.timeEnd("* play *");
+
+  // checkAllSegments();
 
   //animateGoldenSegments();
-
 }
 
-
-$( document ).ready(function() {
-    console.log( "ready!" );
-    main();
-});
+main();

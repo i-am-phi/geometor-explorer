@@ -1,50 +1,152 @@
 // @flow
 /**
- * This file provides support to domTree.js
+ * This file provides support to domTree.js and delimiter.js.
  * It's a storehouse of path geometry for SVG images.
  */
 
-const path: {[string]: string} = {
+// In all paths below, the viewBox-to-em scale is 1000:1.
+
+const hLinePad = 80;  // padding above a sqrt viniculum. Prevents image cropping.
+
+// The viniculum of a \sqrt can be made thicker by a KaTeX rendering option.
+// Think of variable extraViniculum as two detours in the SVG path.
+// The detour begins at the lower left of the area labeled extraViniculum below.
+// The detour proceeds one extraViniculum distance up and slightly to the right,
+// displacing the radiused corner between surd and viniculum. The radius is
+// traversed as usual, then the detour resumes. It goes right, to the end of
+// the very long viniculumn, then down one extraViniculum distance,
+// after which it resumes regular path geometry for the radical.
+/*                                                  viniculum
+                                                   /
+         /▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒←extraViniculum
+        / █████████████████████←0.04em (40 unit) std viniculum thickness
+       / /
+      / /
+     / /\
+    / / surd
+*/
+
+const sqrtMain = function(extraViniculum: number, hLinePad: number): string {
     // sqrtMain path geometry is from glyph U221A in the font KaTeX Main
-    sqrtMain: `M95 622c-2.667 0-7.167-2.667-13.5
--8S72 604 72 600c0-2 .333-3.333 1-4 1.333-2.667 23.833-20.667 67.5-54s
-65.833-50.333 66.5-51c1.333-1.333 3-2 5-2 4.667 0 8.667 3.333 12 10l173
-378c.667 0 35.333-71 104-213s137.5-285 206.5-429S812 17.333 812 14c5.333
--9.333 12-14 20-14h399166v40H845.272L620 507 385 993c-2.667 4.667-9 7-19
-7-6 0-10-1-12-3L160 575l-65 47zM834 0h399166v40H845z`,
+    return `M95,${622 + extraViniculum + hLinePad}
+c-2.7,0,-7.17,-2.7,-13.5,-8c-5.8,-5.3,-9.5,-10,-9.5,-14
+c0,-2,0.3,-3.3,1,-4c1.3,-2.7,23.83,-20.7,67.5,-54
+c44.2,-33.3,65.8,-50.3,66.5,-51c1.3,-1.3,3,-2,5,-2c4.7,0,8.7,3.3,12,10
+s173,378,173,378c0.7,0,35.3,-71,104,-213c68.7,-142,137.5,-285,206.5,-429
+c69,-144,104.5,-217.7,106.5,-221
+l${extraViniculum / 2.075} -${extraViniculum}
+c5.3,-9.3,12,-14,20,-14
+H400000v${40 + extraViniculum}H845.2724
+s-225.272,467,-225.272,467s-235,486,-235,486c-2.7,4.7,-9,7,-19,7
+c-6,0,-10,-1,-12,-3s-194,-422,-194,-422s-65,47,-65,47z
+M${834 + extraViniculum} ${hLinePad}h400000v${40 + extraViniculum}h-400000z`;
+};
 
+const sqrtSize1 = function(extraViniculum: number, hLinePad: number): string {
     // size1 is from glyph U221A in the font KaTeX_Size1-Regular
-    sqrtSize1: `M263 601c.667 0 18 39.667 52 119s68.167
- 158.667 102.5 238 51.833 119.333 52.5 120C810 373.333 980.667 17.667 982 11
-c4.667-7.333 11-11 19-11h398999v40H1012.333L741 607c-38.667 80.667-84 175-136
- 283s-89.167 185.333-111.5 232-33.833 70.333-34.5 71c-4.667 4.667-12.333 7-23
- 7l-12-1-109-253c-72.667-168-109.333-252-110-252-10.667 8-22 16.667-34 26-22
- 17.333-33.333 26-34 26l-26-26 76-59 76-60zM1001 0h398999v40H1012z`,
+    return `M263,${601 + extraViniculum + hLinePad}c0.7,0,18,39.7,52,119
+c34,79.3,68.167,158.7,102.5,238c34.3,79.3,51.8,119.3,52.5,120
+c340,-704.7,510.7,-1060.3,512,-1067
+l${extraViniculum / 2.084} -${extraViniculum}
+c4.7,-7.3,11,-11,19,-11
+H40000v${40 + extraViniculum}H1012.3
+s-271.3,567,-271.3,567c-38.7,80.7,-84,175,-136,283c-52,108,-89.167,185.3,-111.5,232
+c-22.3,46.7,-33.8,70.3,-34.5,71c-4.7,4.7,-12.3,7,-23,7s-12,-1,-12,-1
+s-109,-253,-109,-253c-72.7,-168,-109.3,-252,-110,-252c-10.7,8,-22,16.7,-34,26
+c-22,17.3,-33.3,26,-34,26s-26,-26,-26,-26s76,-59,76,-59s76,-60,76,-60z
+M${1001 + extraViniculum} ${hLinePad}h400000v${40 + extraViniculum}h-400000z`;
+};
 
+const sqrtSize2 = function(extraViniculum: number, hLinePad: number): string {
     // size2 is from glyph U221A in the font KaTeX_Size2-Regular
-    sqrtSize2: `M1001 0h398999v40H1013.084S929.667 308 749
- 880s-277 876.333-289 913c-4.667 4.667-12.667 7-24 7h-12c-1.333-3.333-3.667
--11.667-7-25-35.333-125.333-106.667-373.333-214-744-10 12-21 25-33 39l-32 39
-c-6-5.333-15-14-27-26l25-30c26.667-32.667 52-63 76-91l52-60 208 722c56-175.333
- 126.333-397.333 211-666s153.833-488.167 207.5-658.5C944.167 129.167 975 32.667
- 983 10c4-6.667 10-10 18-10zm0 0h398999v40H1013z`,
+    return `M983 ${10 + extraViniculum + hLinePad}
+l${extraViniculum / 3.13} -${extraViniculum}
+c4,-6.7,10,-10,18,-10 H400000v${40 + extraViniculum}
+H1013.1s-83.4,268,-264.1,840c-180.7,572,-277,876.3,-289,913c-4.7,4.7,-12.7,7,-24,7
+s-12,0,-12,0c-1.3,-3.3,-3.7,-11.7,-7,-25c-35.3,-125.3,-106.7,-373.3,-214,-744
+c-10,12,-21,25,-33,39s-32,39,-32,39c-6,-5.3,-15,-14,-27,-26s25,-30,25,-30
+c26.7,-32.7,52,-63,76,-91s52,-60,52,-60s208,722,208,722
+c56,-175.3,126.3,-397.3,211,-666c84.7,-268.7,153.8,-488.2,207.5,-658.5
+c53.7,-170.3,84.5,-266.8,92.5,-289.5z
+M${1001 + extraViniculum} ${hLinePad}h400000v${40 + extraViniculum}h-400000z`;
+};
 
+const sqrtSize3 = function(extraViniculum: number, hLinePad: number): string {
     // size3 is from glyph U221A in the font KaTeX_Size3-Regular
-    sqrtSize3: `M424 2398c-1.333-.667-38.5-172-111.5-514 S202.667 1370.667 202
- 1370c0-2-10.667 14.333-32 49-4.667 7.333-9.833 15.667-15.5 25s-9.833 16-12.5
- 20l-5 7c-4-3.333-8.333-7.667-13-13l-13-13 76-122 77-121 209 968c0-2 84.667
--361.667 254-1079C896.333 373.667 981.667 13.333 983 10c4-6.667 10-10 18-10
-h398999v40H1014.622S927.332 418.667 742 1206c-185.333 787.333-279.333 1182.333
--282 1185-2 6-10 9-24 9-8 0-12-.667-12-2zM1001 0h398999v40H1014z`,
+    return `M424,${2398 + extraViniculum + hLinePad}
+c-1.3,-0.7,-38.5,-172,-111.5,-514c-73,-342,-109.8,-513.3,-110.5,-514
+c0,-2,-10.7,14.3,-32,49c-4.7,7.3,-9.8,15.7,-15.5,25c-5.7,9.3,-9.8,16,-12.5,20
+s-5,7,-5,7c-4,-3.3,-8.3,-7.7,-13,-13s-13,-13,-13,-13s76,-122,76,-122s77,-121,77,-121
+s209,968,209,968c0,-2,84.7,-361.7,254,-1079c169.3,-717.3,254.7,-1077.7,256,-1081
+l${extraViniculum / 4.223} -${extraViniculum}c4,-6.7,10,-10,18,-10 H400000
+v${40 + extraViniculum}H1014.6
+s-87.3,378.7,-272.6,1166c-185.3,787.3,-279.3,1182.3,-282,1185
+c-2,6,-10,9,-24,9
+c-8,0,-12,-0.7,-12,-2z M${1001 + extraViniculum} ${hLinePad}
+h400000v${40 + extraViniculum}h-400000z`;
+};
 
+const sqrtSize4 = function(extraViniculum: number, hLinePad: number): string {
     // size4 is from glyph U221A in the font KaTeX_Size4-Regular
-    sqrtSize4: `M473 2713C812.333 913.667 982.333 13 983 11c3.333-7.333 9.333
--11 18-11h399110v40H1017.698S927.168 518 741.5 1506C555.833 2494 462 2989 460
- 2991c-2 6-10 9-24 9-8 0-12-.667-12-2s-5.333-32-16-92c-50.667-293.333-119.667
--693.333-207-1200 0-1.333-5.333 8.667-16 30l-32 64-16 33-26-26 76-153 77-151
-c.667.667 35.667 202 105 604 67.333 400.667 102 602.667 104 606z
-M1001 0h398999v40H1017z`,
+    return `M473,${2713 + extraViniculum + hLinePad}
+c339.3,-1799.3,509.3,-2700,510,-2702 l${extraViniculum / 5.298} -${extraViniculum}
+c3.3,-7.3,9.3,-11,18,-11 H400000v${40 + extraViniculum}H1017.7
+s-90.5,478,-276.2,1466c-185.7,988,-279.5,1483,-281.5,1485c-2,6,-10,9,-24,9
+c-8,0,-12,-0.7,-12,-2c0,-1.3,-5.3,-32,-16,-92c-50.7,-293.3,-119.7,-693.3,-207,-1200
+c0,-1.3,-5.3,8.7,-16,30c-10.7,21.3,-21.3,42.7,-32,64s-16,33,-16,33s-26,-26,-26,-26
+s76,-153,76,-153s77,-151,77,-151c0.7,0.7,35.7,202,105,604c67.3,400.7,102,602.7,104,
+606zM${1001 + extraViniculum} ${hLinePad}h400000v${40 + extraViniculum}H1017.7z`;
+};
 
+const sqrtTall = function(
+    extraViniculum: number,
+    hLinePad: number,
+    viewBoxHeight: number
+): string {
+    // sqrtTall is from glyph U23B7 in the font KaTeX_Size4-Regular
+    // One path edge has a variable length. It runs vertically from the viniculumn
+    // to a point near (14 units) the bottom of the surd. The viniculum
+    // is normally 40 units thick. So the length of the line in question is:
+    const vertSegment = viewBoxHeight - 54 - hLinePad - extraViniculum;
+
+    return `M702 ${extraViniculum + hLinePad}H400000${40 + extraViniculum}
+H742v${vertSegment}l-4 4-4 4c-.667.7 -2 1.5-4 2.5s-4.167 1.833-6.5 2.5-5.5 1-9.5 1
+h-12l-28-84c-16.667-52-96.667 -294.333-240-727l-212 -643 -85 170
+c-4-3.333-8.333-7.667-13 -13l-13-13l77-155 77-156c66 199.333 139 419.667
+219 661 l218 661zM702 ${hLinePad}H400000v${40 + extraViniculum}H742z`;
+};
+
+export const sqrtPath = function(
+    size: string,
+    extraViniculum: number,
+    viewBoxHeight: number
+): string {
+    extraViniculum = 1000 * extraViniculum; // Convert from document ems to viewBox.
+    let path = "";
+
+    switch (size) {
+        case "sqrtMain":
+            path = sqrtMain(extraViniculum, hLinePad);
+            break;
+        case "sqrtSize1":
+            path = sqrtSize1(extraViniculum, hLinePad);
+            break;
+        case "sqrtSize2":
+            path = sqrtSize2(extraViniculum, hLinePad);
+            break;
+        case "sqrtSize3":
+            path = sqrtSize3(extraViniculum, hLinePad);
+            break;
+        case "sqrtSize4":
+            path = sqrtSize4(extraViniculum, hLinePad);
+            break;
+        case "sqrtTall":
+            path = sqrtTall(extraViniculum, hLinePad, viewBoxHeight);
+    }
+    return path;
+};
+
+export const path: {[string]: string} = {
     // The doubleleftarrow geometry is from glyph U+21D0 in the font KaTeX Main
     doubleleftarrow: `M262 157
 l10-10c34-36 62.7-77 86-123 3.3-8 5-13.3 5-16 0-5.3-6.7-8-20-8-7.3
@@ -148,6 +250,26 @@ c100.7 8.3 195.3 44 280 108 55.3 42 101.7 93 139 153l9 14c2.7-4 5.7-8.7 9-14
  53.3-86.7 123.7-153 211-199 66.7-36 137.3-56.3 212-62h199568v120H200432c-178.3
  11.7-311.7 78.3-403 201-6 8-9.7 12-11 12-.7.7-6.7 1-18 1s-17.3-.3-18-1c-1.3 0
 -5-4-11-12-44.7-59.3-101.3-106.3-170-141s-145.3-54.3-229-60H0V214z`,
+
+    oiintSize1: `M512.6 71.6c272.6 0 320.3 106.8 320.3 178.2 0 70.8-47.7 177.6
+-320.3 177.6S193.1 320.6 193.1 249.8c0-71.4 46.9-178.2 319.5-178.2z
+m368.1 178.2c0-86.4-60.9-215.4-368.1-215.4-306.4 0-367.3 129-367.3 215.4 0 85.8
+60.9 214.8 367.3 214.8 307.2 0 368.1-129 368.1-214.8z`,
+
+    oiintSize2: `M757.8 100.1c384.7 0 451.1 137.6 451.1 230 0 91.3-66.4 228.8
+-451.1 228.8-386.3 0-452.7-137.5-452.7-228.8 0-92.4 66.4-230 452.7-230z
+m502.4 230c0-111.2-82.4-277.2-502.4-277.2s-504 166-504 277.2
+c0 110 84 276 504 276s502.4-166 502.4-276z`,
+
+    oiiintSize1: `M681.4 71.6c408.9 0 480.5 106.8 480.5 178.2 0 70.8-71.6 177.6
+-480.5 177.6S202.1 320.6 202.1 249.8c0-71.4 70.5-178.2 479.3-178.2z
+m525.8 178.2c0-86.4-86.8-215.4-525.7-215.4-437.9 0-524.7 129-524.7 215.4 0
+85.8 86.8 214.8 524.7 214.8 438.9 0 525.7-129 525.7-214.8z`,
+
+    oiiintSize2: `M1021.2 53c603.6 0 707.8 165.8 707.8 277.2 0 110-104.2 275.8
+-707.8 275.8-606 0-710.2-165.8-710.2-275.8C311 218.8 415.2 53 1021.2 53z
+m770.4 277.1c0-131.2-126.4-327.6-770.5-327.6S248.4 198.9 248.4 330.1
+c0 130 128.8 326.4 772.7 326.4s770.5-196.4 770.5-326.4z`,
 
     rightarrow: `M0 241v40h399891c-47.3 35.3-84 78-110 128
 -16.7 32-27.7 63.7-33 95 0 1.3-.2 2.7-.5 4-.3 1.3-.5 2.3-.5 3 0 7.3 6.7 11 20
@@ -269,6 +391,66 @@ c-1 5-5 9-11 9h-2L532 67 19 159h-2c-5 0-9-4-11-9l-5-22c-1-6 2-12 8-13z`,
 
     widehat4: `M1181 0h2l1171 296c6 0 10 5 10 11l-2 23c-1 6-5 10
 -11 10h-1L1182 67 15 340h-1c-6 0-10-4-11-10l-2-23c-1-6 4-11 10-11z`,
-};
 
-export default {path};
+    // widecheck paths are all inverted versions of widehat
+    widecheck1: `M529,159h5l519,-115c5,-1,9,-5,9,-10c0,-1,-1,-2,-1,-3l-4,-22c-1,
+-5,-5,-9,-11,-9h-2l-512,92l-513,-92h-2c-5,0,-9,4,-11,9l-5,22c-1,6,2,12,8,13z`,
+
+    widecheck2: `M1181,220h2l1171,-176c6,0,10,-5,10,-11l-2,-23c-1,-6,-5,-10,
+-11,-10h-1l-1168,153l-1167,-153h-1c-6,0,-10,4,-11,10l-2,23c-1,6,4,11,10,11z`,
+
+    widecheck3: `M1181,280h2l1171,-236c6,0,10,-5,10,-11l-2,-23c-1,-6,-5,-10,
+-11,-10h-1l-1168,213l-1167,-213h-1c-6,0,-10,4,-11,10l-2,23c-1,6,4,11,10,11z`,
+
+    widecheck4: `M1181,340h2l1171,-296c6,0,10,-5,10,-11l-2,-23c-1,-6,-5,-10,
+-11,-10h-1l-1168,273l-1167,-273h-1c-6,0,-10,4,-11,10l-2,23c-1,6,4,11,10,11z`,
+
+    // The next ten paths support reaction arrows from the mhchem package.
+
+    // Arrows for \ce{<-->} are offset from xAxis by 0.22ex, per mhchem in LaTeX
+    // baraboveleftarrow is mostly from from glyph U+2190 in font KaTeX Main
+    baraboveleftarrow: `M400000 620h-399890l3 -3c68.7 -52.7 113.7 -120 135 -202
+c4 -14.7 6 -23 6 -25c0 -7.3 -7 -11 -21 -11c-8 0 -13.2 0.8 -15.5 2.5
+c-2.3 1.7 -4.2 5.8 -5.5 12.5c-1.3 4.7 -2.7 10.3 -4 17c-12 48.7 -34.8 92 -68.5 130
+s-74.2 66.3 -121.5 85c-10 4 -16 7.7 -18 11c0 8.7 6 14.3 18 17c47.3 18.7 87.8 47
+121.5 85s56.5 81.3 68.5 130c0.7 2 1.3 5 2 9s1.2 6.7 1.5 8c0.3 1.3 1 3.3 2 6
+s2.2 4.5 3.5 5.5c1.3 1 3.3 1.8 6 2.5s6 1 10 1c14 0 21 -3.7 21 -11
+c0 -2 -2 -10.3 -6 -25c-20 -79.3 -65 -146.7 -135 -202l-3 -3h399890z
+M100 620v40h399900v-40z M0 241v40h399900v-40zM0 241v40h399900v-40z`,
+
+    // rightarrowabovebar is mostly from glyph U+2192, KaTeX Main
+    rightarrowabovebar: `M0 241v40h399891c-47.3 35.3-84 78-110 128-16.7 32
+-27.7 63.7-33 95 0 1.3-.2 2.7-.5 4-.3 1.3-.5 2.3-.5 3 0 7.3 6.7 11 20 11 8 0
+13.2-.8 15.5-2.5 2.3-1.7 4.2-5.5 5.5-11.5 2-13.3 5.7-27 11-41 14.7-44.7 39
+-84.5 73-119.5s73.7-60.2 119-75.5c6-2 9-5.7 9-11s-3-9-9-11c-45.3-15.3-85-40.5
+-119-75.5s-58.3-74.8-73-119.5c-4.7-14-8.3-27.3-11-40-1.3-6.7-3.2-10.8-5.5
+-12.5-2.3-1.7-7.5-2.5-15.5-2.5-14 0-21 3.7-21 11 0 2 2 10.3 6 25 20.7 83.3 67
+151.7 139 205zm96 379h399894v40H0zm0 0h399904v40H0z`,
+
+    // The short left harpoon has 0.5em (i.e. 500 units) kern on the left end.
+    // Ref from mhchem.sty: \rlap{\raisebox{-.22ex}{$\kern0.5em
+    baraboveshortleftharpoon: `M507,435c-4,4,-6.3,8.7,-7,14c0,5.3,0.7,9,2,11
+c1.3,2,5.3,5.3,12,10c90.7,54,156,130,196,228c3.3,10.7,6.3,16.3,9,17
+c2,0.7,5,1,9,1c0,0,5,0,5,0c10.7,0,16.7,-2,18,-6c2,-2.7,1,-9.7,-3,-21
+c-32,-87.3,-82.7,-157.7,-152,-211c0,0,-3,-3,-3,-3l399351,0l0,-40
+c-398570,0,-399437,0,-399437,0z M593 435 v40 H399500 v-40z
+M0 281 v-40 H399908 v40z M0 281 v-40 H399908 v40z`,
+
+    rightharpoonaboveshortbar: `M0,241 l0,40c399126,0,399993,0,399993,0
+c4.7,-4.7,7,-9.3,7,-14c0,-9.3,-3.7,-15.3,-11,-18c-92.7,-56.7,-159,-133.7,-199,
+-231c-3.3,-9.3,-6,-14.7,-8,-16c-2,-1.3,-7,-2,-15,-2c-10.7,0,-16.7,2,-18,6
+c-2,2.7,-1,9.7,3,21c15.3,42,36.7,81.8,64,119.5c27.3,37.7,58,69.2,92,94.5z
+M0 241 v40 H399908 v-40z M0 475 v-40 H399500 v40z M0 475 v-40 H399500 v40z`,
+
+    shortbaraboveleftharpoon: `M7,435c-4,4,-6.3,8.7,-7,14c0,5.3,0.7,9,2,11
+c1.3,2,5.3,5.3,12,10c90.7,54,156,130,196,228c3.3,10.7,6.3,16.3,9,17c2,0.7,5,1,9,
+1c0,0,5,0,5,0c10.7,0,16.7,-2,18,-6c2,-2.7,1,-9.7,-3,-21c-32,-87.3,-82.7,-157.7,
+-152,-211c0,0,-3,-3,-3,-3l399907,0l0,-40c-399126,0,-399993,0,-399993,0z
+M93 435 v40 H400000 v-40z M500 241 v40 H400000 v-40z M500 241 v40 H400000 v-40z`,
+
+    shortrightharpoonabovebar: `M53,241l0,40c398570,0,399437,0,399437,0
+c4.7,-4.7,7,-9.3,7,-14c0,-9.3,-3.7,-15.3,-11,-18c-92.7,-56.7,-159,-133.7,-199,
+-231c-3.3,-9.3,-6,-14.7,-8,-16c-2,-1.3,-7,-2,-15,-2c-10.7,0,-16.7,2,-18,6
+c-2,2.7,-1,9.7,3,21c15.3,42,36.7,81.8,64,119.5c27.3,37.7,58,69.2,92,94.5z
+M500 241 v40 H399408 v-40z M500 435 v40 H400000 v-40z`,
+};

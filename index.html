@@ -8,14 +8,11 @@
   <link href="./css/explorer.css" rel="stylesheet" type="text/css">
 
   <!-- katex -->
-  <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.9.0-alpha2/katex.min.css" integrity="sha384-exe4Ak6B0EoJI0ogGxjJ8rn+RN3ftPnEQrGwX59KTCl5ybGzvHGKjhPKk/KC3abb" crossorigin="anonymous"> -->
   <link href="node_modules/katex/dist/katex.min.css" rel="stylesheet" type="text/css" />
-  <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.9.0-alpha2/katex.min.js" integrity="sha384-OMvkZ24ANLwviZR2lVq8ujbE/bUO8IR1FdBrKLQBI14Gq5Xp/lksIccGkmKL8m+h" crossorigin="anonymous"></script> -->
   <script src="node_modules/katex/dist/katex.min.js" ></script>
 
   <!-- jquery -->
-  <script src="node_modules/jquery/dist/jquery.min.js"></script>
-
+  <!-- <script src="node_modules/jquery/dist/jquery.min.js"></script> -->
 
   <!-- svg.js -->
   <script src="node_modules/svg.js/dist/svg.min.js"></script>
@@ -25,15 +22,13 @@
   <script src="node_modules/algebrite/dist/algebrite.bundle-for-browser.js"></script>
 
   <!-- gsap -->
-  <!-- <script src='http://cdnjs.cloudflare.com/ajax/libs/gsap/1.20.3/TweenMax.min.js'></script> -->
-  <script src="node_modules/gsap/TweenMax.js"></script>
+  <script src="node_modules/gsap/dist/gsap.min.js"></script>
 
-
-
+  <script type="module" src="js/main.js" defer></script>
 </head>
 
 <body class="explorer">
-  <main >
+  <main>
     <svg id="drawing"
       xmlns:svg="http://www.w3.org/2000/svg"
       xmlns="http://www.w3.org/2000/svg"
@@ -41,42 +36,98 @@
       preserveAspectRatio="xMidYMid slice"></svg>
   </main>
   <aside>
-    <div>
-      <a href="#" onclick="D.zoom(100, {0, 0});">center</a> •
-      <a href="#" onclick="DrawTL.restart();">draw</a> •
+    <nav>
+      <a href="#" onclick="D.zoom(100, {0, 0});">center</a>
+      <a href="#" onclick="TL_DRAW.restart();">draw</a>
       <a href="#" onclick="animateGoldenSegments();">golden sections</a>
+    </nav>
+    <!-- points -->
+    <div>
+      <table>
+        <caption>points</caption>
+        <thead>
+        <tr>
+          <th>id</th>
+          <th>x</th>
+          <th>y</th>
+        </tr>
+        </thead>
+        <tbody id="pointList">
+        </tbody>
+      </table>
     </div>
-    <pre id="points">POINTS
-------
-</pre>
-    <pre id="lines">LINES
-------
-</pre>
-    <pre id="circles">CIRCLES
-------
-</pre>
-    <pre id="segments">SEGMENTS
-------
-</pre>
-    <pre id="info"></pre>
+    <!-- elements -->
+    <div>
+      <table >
+        <caption>structures</caption>
+        <thead>
+        <tr>
+          <th>id</th>
+          <th>+</th>
+          <th>d</th>
+          <th>e</th>
+          <th>f</th>
+          <th>a</th>
+          <th>b</th>
+          <th>c</th>
+        </tr>
+        </thead>
+        <tbody id="structList">
+        </tbody>
+      </table>
+    </div>
+    <!-- segments -->
+    <div>
+      <table >
+        <caption>sections</caption>
+        <thead>
+        <tr>
+          <th>id</th>
+          <th>p1</th>
+          <th>a</th>
+          <th>p2</th>
+          <th>b</th>
+          <th>p3</th>
+        </tr>
+        </thead>
+        <tbody id="sectionList">
+        </tbody>
+      </table>
+    </div>
+
+
   </aside>
   <footer id="footer"></footer>
 
   <!-- geometor -->
-  <script src="js/explorer/UI.js"></script>
-  <script src="js/explorer/SVG.js"></script>
-  <script src="js/explorer/Algebra.js"></script>
+  <!-- <script src="js/explorer/Algebra.js"></script> -->
+  <!-- <script src="js/explorer/Value.js"></script> -->
+  <!-- <script src="js/explorer/Equation.js"></script> -->
 
-  <script src="js/explorer/Point.js"></script>
-  <script src="js/explorer/Element.js"></script>
-  <script src="js/explorer/Line.js"></script>
-  <script src="js/explorer/Circle.js"></script>
-  <script src="js/explorer/Segment.js"></script>
+  <!-- <script src="js/explorer/Element.js"></script> -->
 
-  <script src="js/explorer/Animate.js"></script>
-  <script src="js/explorer/Diagnostics.js"></script>
+  <!-- <script src="js/explorer/Point.js"></script> -->
 
-  <script src="js/main.js"></script>
+  <!-- <script src="js/explorer/Struct.js"></script> -->
+
+  <!-- <script src="js/explorer/Line.js"></script> -->
+  <!-- <script src="js/explorer/Circle.js"></script> -->
+
+  <!-- <script src="js/explorer/System.js"></script> -->
+
+  <!-- <script src="js/explorer/Segment.js"></script> -->
+  <!-- <script src="js/explorer/Section.js"></script> -->
+
+  <!-- <script src="js/explorer/Animate.js"></script> -->
+  <!-- <script src="js/explorer/Diagnostics.js"></script> -->
+  <!-- <script src="js/explorer/Table.js"></script> -->
+
+  <!-- <script src="js/explorer/Model.js"></script> -->
+  <!-- <script src="js/explorer/View.js"></script> -->
+  <!-- <script src="js/explorer/Explorer.js"></script> -->
+
+  <!-- <script src="js/explorer/Test.js"></script> -->
+
 
 </body>
 

@@ -21,19 +21,25 @@ provided by this extension).  Without this CSS, partially selected equations
 will just get the usual HTML copy/paste behavior.
 
 ```html
-<link href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.9.0-beta/contrib/copy-tex.css" rel="stylesheet" type="text/css">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.9.0-beta/contrib/copy-tex.min.js" integrity="sha384-aSHW4V0LQ8/J0NPECS3O3IatT0GBp374k6fwk+ATnZCD0vVn03lTljdlntffaZyV" crossorigin="anonymous"></script>
+<link href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/copy-tex.css" rel="stylesheet" type="text/css">
+<script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/copy-tex.min.js" integrity="sha384-XhWAe6BtVcvEdS3FFKT7Mcft4HJjPqMQvi5V4YhzH9Qxw497jC13TupOEvjoIPy7" crossorigin="anonymous"></script>
 ```
 
 See [index.html](index.html) for an example.
-(To run this example from a clone of the repository, run `make serve`
+(To run this example from a clone of the repository, run `yarn start`
 in the root KaTeX directory, and then visit
-http://0.0.0.0:7936/contrib/copy-tex/index.html
+http://localhost:7936/contrib/copy-tex/index.html
 with your web browser.)
 
 If you want to build your own custom copy handler based on this one,
 copy the `copy-tex.js` into your codebase and replace the `require`
 statement with `require('katex/contrib/copy-tex/katex2tex.js')`.
+
+<!-- TODO: uncomment when releasing a new version
+ECMAScript module is also available:
+```html
+<script type="module" src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/copy-tex.mjs" integrity="sha384-kS7UtO844uqLwxPmaRwzg1nGbKiHsIteWh+DP2cvT2FtigL0v6w1yPXYKEDzct0C" crossorigin="anonymous"></script>
+```` -->
 
 ### Known Issues
 

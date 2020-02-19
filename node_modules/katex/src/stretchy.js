@@ -5,16 +5,18 @@
  * and other CSS trickery.
  */
 
-import domTree from "./domTree";
+import {LineNode, PathNode, SvgNode} from "./domTree";
 import buildCommon from "./buildCommon";
 import mathMLTree from "./mathMLTree";
 import utils from "./utils";
 
 import type Options from "./Options";
-import type ParseNode from "./ParseNode";
+import type {ParseNode, AnyParseNode} from "./parseNode";
+import type {DomSpan, HtmlDomNode, SvgSpan} from "./domTree";
 
 const stretchyCodePoint: {[string]: string} = {
     widehat: "^",
+    widecheck: "ˇ",
     widetilde: "~",
     utilde: "~",
     overleftarrow: "\u2190",
@@ -23,8 +25,10 @@ const stretchyCodePoint: {[string]: string} = {
     overrightarrow: "\u2192",
     underrightarrow: "\u2192",
     xrightarrow: "\u2192",
-    underbrace: "\u23b5",
+    underbrace: "\u23df",
     overbrace: "\u23de",
+    overgroup: "\u23e0",
+    undergroup: "\u23e1",
     overleftrightarrow: "\u2194",
     underleftrightarrow: "\u2194",
     xleftrightarrow: "\u2194",
@@ -47,6 +51,9 @@ const stretchyCodePoint: {[string]: string} = {
     xtwoheadrightarrow: "\u21a0",
     xlongequal: "=",
     xtofrom: "\u21c4",
+    xrightleftarrows: "\u21c4",
+    xrightequilibrium: "\u21cc",  // Not a perfect match.
+    xleftequilibrium: "\u21cb",   // None better available.
 };
 
 const mathMLnode = function(label: string): mathMLTree.MathNode {
@@ -103,7 +110,7 @@ const mathMLnode = function(label: string): mathMLTree.MathNode {
 // corresponds to 0.522 em inside the document.
 
 const katexImagesData: {
-    [string]: ([string[], number, number] | [string[], number, number, string])
+    [string]: ([string[], number, number] | [[string], number, number, string])
 } = {
                    //   path(s), minWidth, height, align
     overrightarrow: [["rightarrow"], 0.888, 522, "xMaxYMin"],
@@ -143,46 +150,71 @@ const katexImagesData: {
     undergroup: [["leftgroupunder", "rightgroupunder"], 0.888, 342],
     xmapsto: [["leftmapsto", "rightarrow"], 1.5, 522],
     xtofrom: [["leftToFrom", "rightToFrom"], 1.75, 528],
+
+    // The next three arrows are from the mhchem package.
+    // In mhchem.sty, min-length is 2.0em. But these arrows might appear in the
+    // document as \xrightarrow or \xrightleftharpoons. Those have
+    // min-length = 1.75em, so we set min-length on these next three to match.
+    xrightleftarrows: [["baraboveleftarrow", "rightarrowabovebar"], 1.75, 901],
+    xrightequilibrium: [["baraboveshortleftharpoon",
+        "rightharpoonaboveshortbar"], 1.75, 716],
+    xleftequilibrium: [["shortbaraboveleftharpoon",
+        "shortrightharpoonabovebar"], 1.75, 716],
 };
 
-const groupLength = function(arg: ParseNode): number {
+const groupLength = function(arg: AnyParseNode): number {
     if (arg.type === "ordgroup") {
-        return arg.value.length;
+        return arg.body.length;
     } else {
         return 1;
     }
 };
 
-const svgSpan = function(group: ParseNode, options: Options): domTree.span {
+const svgSpan = function(
+    group: ParseNode<"accent"> | ParseNode<"accentUnder"> | ParseNode<"xArrow">
+         | ParseNode<"horizBrace">,
+    options: Options,
+): DomSpan | SvgSpan {
     // Create a span with inline SVG for the element.
     function buildSvgSpan_(): {
-        span: domTree.span,
+        span: DomSpan | SvgSpan,
         minWidth: number,
         height: number,
     } {
         let viewBoxWidth = 400000;  // default
-        const label = group.value.label.substr(1);
-        if (utils.contains(["widehat", "widetilde", "utilde"], label)) {
+        const label = group.label.substr(1);
+        if (utils.contains(["widehat", "widecheck", "widetilde", "utilde"],
+            label)) {
+            // Each type in the `if` statement corresponds to one of the ParseNode
+            // types below. This narrowing is required to access `grp.base`.
+            // $FlowFixMe
+            const grp: ParseNode<"accent"> | ParseNode<"accentUnder"> = group;
             // There are four SVG images available for each function.
             // Choose a taller image when there are more characters.
-            const numChars = groupLength(group.value.base);
+            const numChars = groupLength(grp.base);
             let viewBoxHeight;
             let pathName;
             let height;
 
             if (numChars > 5) {
-                viewBoxHeight = (label === "widehat" ? 420 : 312);
-                viewBoxWidth = (label === "widehat" ? 2364 : 2340);
-                // Next get the span height, in 1000 ems
-                height = (label === "widehat" ? 0.42 : 0.34);
-                pathName = (label === "widehat" ? "widehat" : "tilde") + "4";
+                if (label === "widehat" || label === "widecheck") {
+                    viewBoxHeight = 420;
+                    viewBoxWidth = 2364;
+                    height = 0.42;
+                    pathName = label + "4";
+                } else {
+                    viewBoxHeight = 312;
+                    viewBoxWidth = 2340;
+                    height = 0.34;
+                    pathName = "tilde4";
+                }
             } else {
                 const imgIndex = [1, 1, 2, 2, 3, 3][numChars];
-                if (label === "widehat") {
+                if (label === "widehat" || label === "widecheck") {
                     viewBoxWidth = [0, 1062, 2364, 2364, 2364][imgIndex];
                     viewBoxHeight = [0, 239, 300, 360, 420][imgIndex];
                     height = [0, 0.24, 0.3, 0.3, 0.36, 0.42][imgIndex];
-                    pathName = "widehat" + imgIndex;
+                    pathName = label + imgIndex;
                 } else {
                     viewBoxWidth = [0, 600, 1033, 2339, 2340][imgIndex];
                     viewBoxHeight = [0, 260, 286, 306, 312][imgIndex];
@@ -190,28 +222,31 @@ const svgSpan = function(group: ParseNode, options: Options): domTree.span {
                     pathName = "tilde" + imgIndex;
                 }
             }
-            const path = new domTree.pathNode(pathName);
-            const svgNode = new domTree.svgNode([path], {
+            const path = new PathNode(pathName);
+            const svgNode = new SvgNode([path], {
                 "width": "100%",
                 "height": height + "em",
                 "viewBox": `0 0 ${viewBoxWidth} ${viewBoxHeight}`,
                 "preserveAspectRatio": "none",
             });
             return {
-                span: buildCommon.makeSpan([], [svgNode], options),
+                span: buildCommon.makeSvgSpan([], [svgNode], options),
                 minWidth: 0,
                 height,
             };
         } else {
             const spans = [];
 
-            const [paths, minWidth, viewBoxHeight, align1] = katexImagesData[label];
+            const data = katexImagesData[label];
+            const [paths, minWidth, viewBoxHeight] = data;
             const height = viewBoxHeight / 1000;
 
             const numSvgChildren = paths.length;
             let widthClasses;
             let aligns;
             if (numSvgChildren === 1) {
+                // $FlowFixMe: All these cases must be of the 4-tuple type.
+                const align1: string = data[3];
                 widthClasses = ["hide-tail"];
                 aligns = [align1];
             } else if (numSvgChildren === 2) {
@@ -227,17 +262,17 @@ const svgSpan = function(group: ParseNode, options: Options): domTree.span {
             }
 
             for (let i = 0; i < numSvgChildren; i++) {
-                const path = new domTree.pathNode(paths[i]);
+                const path = new PathNode(paths[i]);
 
-                const svgNode = new domTree.svgNode([path], {
+                const svgNode = new SvgNode([path], {
                     "width": "400em",
                     "height": height + "em",
                     "viewBox": `0 0 ${viewBoxWidth} ${viewBoxHeight}`,
                     "preserveAspectRatio": aligns[i] + " slice",
                 });
 
-                const span =
-                    buildCommon.makeSpan([widthClasses[i]], [svgNode], options);
+                const span = buildCommon.makeSvgSpan(
+                    [widthClasses[i]], [svgNode], options);
                 if (numSvgChildren === 1) {
                     return {span, minWidth, height};
                 } else {
@@ -267,11 +302,11 @@ const svgSpan = function(group: ParseNode, options: Options): domTree.span {
 };
 
 const encloseSpan = function(
-    inner: domTree.span,
+    inner: HtmlDomNode,
     label: string,
     pad: number,
     options: Options,
-): domTree.span {
+): DomSpan | SvgSpan {
     // Return an image span for \cancel, \bcancel, \xcancel, or \fbox
     let img;
     const totalHeight = inner.height + inner.depth + 2 * pad;
@@ -293,7 +328,7 @@ const encloseSpan = function(
 
         const lines = [];
         if (/^[bx]cancel$/.test(label)) {
-            lines.push(new domTree.lineNode({
+            lines.push(new LineNode({
                 "x1": "0",
                 "y1": "0",
                 "x2": "100%",
@@ -303,7 +338,7 @@ const encloseSpan = function(
         }
 
         if (/^x?cancel$/.test(label)) {
-            lines.push(new domTree.lineNode({
+            lines.push(new LineNode({
                 "x1": "0",
                 "y1": "100%",
                 "x2": "100%",
@@ -312,12 +347,12 @@ const encloseSpan = function(
             }));
         }
 
-        const svgNode = new domTree.svgNode(lines, {
+        const svgNode = new SvgNode(lines, {
             "width": "100%",
             "height": totalHeight + "em",
         });
 
-        img = buildCommon.makeSpan([], [svgNode], options);
+        img = buildCommon.makeSvgSpan([], [svgNode], options);
     }
 
     img.height = totalHeight;
@@ -326,58 +361,8 @@ const encloseSpan = function(
     return img;
 };
 
-const ruleSpan = function(className: string, lineThickness: number,
-    options: Options): domTree.span {
-
-    // Get a span with an SVG line that fills the middle fifth of the span.
-    // We're using an extra wide span so Chrome won't round it down to zero.
-
-    const lines = [];
-    let svgNode;
-    if (className === "vertical-separator") {
-        // Apply 2 brush strokes for sharper edges on low-res screens.
-        for (let i = 0; i < 2; i++) {
-            lines.push(new domTree.lineNode({
-                "x1": "5",
-                "y1": "0",
-                "x2": "5",
-                "y2": "10",
-                "stroke-width": "2",
-            }));
-        }
-
-        svgNode = new domTree.svgNode(lines, {
-            "width": "0.25em",
-            "height": "100%",
-            "viewBox": "0 0 10 10",
-            "preserveAspectRatio": "none",
-        });
-
-    } else {
-        for (let i = 0; i < 2; i++) {
-            lines.push(new domTree.lineNode({
-                "x1": "0",
-                "y1": "5",
-                "x2": "10",
-                "y2": "5",
-                "stroke-width": "2",
-            }));
-        }
-
-        svgNode = new domTree.svgNode(lines, {
-            "width": "100%",
-            "height": 5 * lineThickness + "em",
-            "viewBox": "0 0 10 10",
-            "preserveAspectRatio": "none",
-        });
-    }
-
-    return buildCommon.makeSpan([className], [svgNode], options);
-};
-
 export default {
     encloseSpan,
     mathMLnode,
-    ruleSpan,
     svgSpan,
 };

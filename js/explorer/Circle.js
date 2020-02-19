@@ -1,179 +1,141 @@
+import * as A from './Algebra.js'
+import Struct from './Struct.js'
+import Equation from './Equation.js'
+
+/**
+ * represents a circular proportion between two points
+ * - constructor calculates a generalized algebraic {@link Equation} to represent the circular proportions of the x, y values of the points recieved
+
+ * @constructor
+ * @param {Point} cpt - center point of the circle
+ * @param {Point} rpt - radius point of the circle.
+ * @param {string} type - optional: type of element - default: "Circle"
+ * @param {string} id - optional: unique id for the element - default: ""
+
+*/
+export default class Circle extends Struct {
+  constructor(cpt, rpt, type, id) {
+
+    type = type || "Circle"
+
+    // TODO: !!!! IS center point on the points array of the Struct
+    super(cpt, rpt, type, id)
+
+    // /**
+    //  * an Array of {@link Point} objects on this Circle
+    //  * - does not include center point (not on the Circle)
+    //
+    //  * @returns {Array} of {@link Point}
+    //  */
+    // this.points = [rpt]
+
+    /**
+     * center point - set by constructor
+     * @returns {Point}
+     */
+    this.center = cpt
+
+    //***************************************
+
+    var cmd
+    A.run(`clearall`)
+
+    cmd = `h = (${cpt.x})`
+    this.hlog(cmd)
+    A.run(cmd)
+
+    /**
+    * the x-offset in `(x - h)^2 + (y - k)^2 = r^2`
+    * - `h = cpt.x`
+    * @returns {string} algebraic value
+    */
+    this.h = A.run(`h`)
+
+    // a coefficient
+    cmd = `a = -2h`
+    this.hlog(cmd)
+    A.run(cmd)
+    let a = A.run(`a`)
+    this.hlog(`  = ${a}`)
 
 
-// TODO: Circle class should derive from Elelemnt
-/* ****************************************************************/
-function Circle(cpt, rpt) {
+    cmd = `k = (${cpt.y})`
+    this.hlog(cmd)
+    A.run(cmd)
+    /**
+     * the y-offset in `(x - h)^2 + (y - k)^2 = r^2`
+     * - `k = cpt.y`
+     * @returns {string} algebraic value
+     */
+    this.k = A.run(`k`)
 
-  if (!(this instanceof Circle)) {
-    return new Circle(cpt, rpt);
+    // b coefficient
+    cmd = `b = -2k`
+    this.hlog(cmd)
+    A.run(cmd)
+    let b = A.run(`b`)
+    this.hlog(`  = ${b}`)
+
+
+    cmd = `r = ( ((${cpt.x}) - (${rpt.x}))^2 + ((${rpt.y}) - (${cpt.y}))^2 )^(1/2)`
+    this.hlog(cmd)
+    A.run(cmd)
+    /**
+    * the radius length in `(x - h)^2 + (y - k)^2 = r^2`
+    * - `r = ( (cpt.x - rpt.x)^2 + (rpt.y - cpt.y)^2 )^(1/2) )`
+    * @returns {string} algebraic value
+    */
+    this.r = A.run(`r`)
+    this.hlog(`  = ${this.r}`)
+
+    // c coefficient
+    cmd = `c = h^2 + k^2 - r^2`
+    this.hlog(cmd)
+    A.run(cmd)
+    let c = A.run(`c`)
+    this.hlog(`  = ${c}`)
+
+    /**
+    * the {@link Equation} associated with this Circle
+
+    * **`d x^2 + e x y + f y^2 + a x + b y = c`**
+
+    * - `d = 1` // always for a circle <br>
+    * - `e = 0` // always for a circle <br>
+    * - `f = 1` // always for a circle <br>
+    * - `a = -2h` <br>
+    * - `b = -2k` <br>
+    * - `c = h^2 + k^2 - r^2` // but sign is changed to put it on the other side of the equals <br>
+
+    * @returns {Equation}
+    */
+    this.eq = new Equation("1", "0", "1", a, b, `-(${c})`)
+
   }
 
-  this.id = elements.length;
-  this.type = "circle";
-
-  console.group( `+ ${this.id} : ${this.type} ` );
-
-  //center point is not a point on the circle
-  this.points = [rpt];
-  this.addPoint = addPointToList;
-
-
-  this.center = cpt;
-
-  console.group("center pt: " + cpt.id)
-  log(`cpt.x = ${cpt.x}`);
-  log(`cpt.y = ${cpt.y}`);
-  console.groupEnd();
-  console.group("radius pt: " + rpt.id)
-  log(`rpt.x = ${rpt.x}`);
-  log(`rpt.y = ${rpt.y}`);
-  console.groupEnd();
-
-  console.group(`eq`)
+  // /**
+  //  * formatted string representing attribute of the circle
+  //  * @function
+  //  * @returns {string}
+  //  */
+  // toString() {
+  //   var str = `${this.type} - ${this.id}
+  //   c pt: ${this.center.id} : ${this.center.x}, ${this.center.y}
+  //      h: ${this.h}
+  //      k: ${this.k}
+  //      r: ${this.r}
+  //     eq: ${this.eq}
+  // points: ${this.points.length}\n`;
+  //   //TODO: list related points
+  //   this.points.forEach(function(point) {
+  //     str += "    " + point.type + " :\t" + point.id + "\n";
+  //   });
   //
-  // //calculate equation 1 coefficients
-  // // ax + by + c form
-  var cmd
-
-  alg(`clearall`)
-
-  // h = x offest
-  log(  `    h = cpt.x`)
-  cmd = `    h = (${cpt.x})`
-  alglog(cmd)
-  this.h = alg(`h`)
-  log(  `      = ${this.h}`)
+  //   return str;
+  // }
 
 
-  // y offset
-  log(  `    k = cpt.y`)
-  cmd = `    k = (${cpt.y})`
-  alglog(cmd)
-  this.k = alg(`k`)
-  log(  `      = ${this.k}`)
-
-  //get radius length
-  //TODO: show the work for radius length
-  this.r = cpt.distanceTo(rpt);
-  log(`  r: ${this.r}`)
-
-  // generate equation for circle
-  // (x - h)^2 + (y - k)^2 + r^2
-
-  log(  `   eq = (x - h)^2 + (y - k)^2 + r^2`)
-  cmd = `   eq = (x - (${this.h}))^2 + (y - (${this.k}))^2 - (${this.r})^2`
-  alglog(cmd)
-  this.eq = alg(`eq`)
-  log(  `      = ${this.eq}`)
-
-  cmd = ` degX = deg(eq, x)`
-  alglog(cmd)
-  this.degX = alg(`degX`)
-  log(  `      = ${this.degX}`)
-  if (this.degX != 0) {
-    // set eq equal to x
-    cmd = `  eqX = roots(eq, x)`
-    alglog(cmd)
-    this.eqX = parseRoots( alg(`eqX`) )
-    if (this.eqX) {
-      this.eqX.forEach( root => {
-        log(  `      = ${root}`)
-
-        if (checkComplex(root)) {
-          console.warn(`complex root`)
-        }
-      })
-    } else {
-      log(  `      = ${this.eqX}`)
-    }
-  }
-
-  cmd = ` degY = deg(eq, y)`
-  alglog(cmd)
-  this.degY = alg(`degY`)
-  log(  `      = ${this.degY}`)
-  if (this.degY != 0) {
-    // set eq equal to y
-    cmd = `  eqY = roots(eq, y)`
-    alglog(cmd)
-    this.eqY = parseRoots( alg(`eqY`) )
-    if (this.eqY) {
-      this.eqY.forEach( root => {
-        log(  `      = ${root}`)
-
-        if (checkComplex(root)) {
-          console.warn(`complex root`)
-        }
-      })
-    } else {
-      log(  `      = ${this.eqY}`)
-    }
-
-  }
-
-  this.dim = this.degX > this.degY ? this.degX : this.degY
-
-  console.groupEnd(`eq`)
-
-
-  ////////////////////////////////////////////////////////
-  //TODO: whay does the radius need to be multiplied by 2??
-  var cx = getNumber( cpt.x );
-  var cy = getNumber( cpt.y );
-  var r = getNumber( this.r );
-
-  this.element = groupCircles.circle( r * 2 )
-    .cx(cx)
-    .cy(cy)
-    .addClass("Circle")
-    .attr({
-      'id': `c${this.id}`,
-      'element-id': this.id
-      });
-
-  setCircle("#c" + this.id);
-
-  ////////////////////////////////////////////////////////
-  // find all intersections with other elements
-  elements.forEach(function(element) {
-    console.group(`> ${element.id} : ${element.type} `)
-    intersect(this, element) ;
-    console.groupEnd();
-  }, this); //pass this context in
-
-  // elements.forEach( function(element){
-  // });
-
-  // add this to elements array
-  elements.push(this);
-
-  //TODO: rotate circle to align start point with Radius
-
-  //UI interactvity
-  this.element.on('click', click);
-  this.element.on('mouseover', hover);
-  this.element.on('mouseout', hover);
-
-
-  this.toString = function() {
-    var str = `${this.type} - ${this.id}
-    c pt: ${this.center.id} : ${this.center.x}, ${this.center.y}
-       h: ${this.h}
-       k: ${this.k}
-       r: ${this.r}
-      eq: ${this.eq} = 0
-  points: ${this.points.length}\n`;
-  //TODO: list related points
-    this.points.forEach( function(point){
-      str += "    " +  point.type + " :\t" + point.id + "\n";
-    });
-
-    return str;
-  }
-
-  logCircle(this);
-  // log(this);
-
-  console.dir(this);
-  console.groupEnd();
-}
+  /** @author 𝚽 <phi@geometor.com>
+  * @license MIT
+  */
+} //class

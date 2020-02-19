@@ -1,5 +1,7 @@
 // @flow
-import { supportedCodepoint } from "./unicodeScripts";
+import {supportedCodepoint} from "./unicodeScripts";
+
+import type {Mode} from "./types";
 
 /**
  * This file contains metrics regarding fonts and individual symbols. The sigma
@@ -80,13 +82,21 @@ const sigmasAndXis = {
     // The space between adjacent `|` columns in an array definition. From
     // `\showthe\doublerulesep` in LaTeX. Equals 2.0 / ptPerEm.
     doubleRuleSep: [0.2, 0.2, 0.2],
+
+    // The width of separator lines in {array} environments. From
+    // `\showthe\arrayrulewidth` in LaTeX. Equals 0.4 / ptPerEm.
+    arrayRuleWidth: [0.04, 0.04, 0.04],
+
+    // Two values from LaTeX source2e:
+    fboxsep: [0.3, 0.3, 0.3], //        3 pt / ptPerEm
+    fboxrule: [0.04, 0.04, 0.04], // 0.4 pt / ptPerEm
 };
 
 // This map contains a mapping from font name and character code to character
 // metrics, including height, depth, italic correction, and skew (kern from the
 // character to the corresponding \skewchar)
 // This map is generated via `make metrics`. It should not be changed manually.
-import metricMap from "./fontMetricsData";
+import metricMap from "../submodules/katex-fonts/fontMetricsData";
 
 // These are very rough approximations.  We default to Times New Roman which
 // should have Latin-1 and Cyrillic characters, but may not depending on the
@@ -181,6 +191,18 @@ export type CharacterMetrics = {
     width: number;
 };
 
+export type MetricMap = {
+    [string]: number[]
+}
+
+/**
+ * This function adds new font metrics to default metricMap
+ * It can also override existing metrics
+ */
+export function setFontMetrics(fontName: string, metrics: MetricMap) {
+    metricMap[fontName] = metrics;
+}
+
 /**
  * This function is a convenience function for looking up information in the
  * metricMap table. It takes a character as a string, and a font.
@@ -188,23 +210,27 @@ export type CharacterMetrics = {
  * Note: the `width` property may be undefined if fontMetricsData.js wasn't
  * built using `Make extended_metrics`.
  */
-const getCharacterMetrics = function(
+export function getCharacterMetrics(
     character: string,
     font: string,
+    mode: Mode,
 ): ?CharacterMetrics {
     if (!metricMap[font]) {
         throw new Error(`Font metrics not found for font: ${font}.`);
     }
     let ch = character.charCodeAt(0);
-    if (character[0] in extraCharacterMap) {
-        ch = extraCharacterMap[character[0]].charCodeAt(0);
-    }
     let metrics = metricMap[font][ch];
+    if (!metrics && character[0] in extraCharacterMap) {
+        ch = extraCharacterMap[character[0]].charCodeAt(0);
+        metrics = metricMap[font][ch];
+    }
 
-    if (!metrics) {
+    if (!metrics && mode === 'text') {
         // We don't typically have font metrics for Asian scripts.
+        // But since we support them in text mode, we need to return
+        // some sort of metrics.
         // So if the character is in a script we support but we
-        // dont have metrics for it, just use the metrics for
+        // don't have metrics for it, just use the metrics for
         // the Latin capital letter M. This is close enough because
         // we (currently) only care about the height of the glpyh
         // not its width.
@@ -222,7 +248,7 @@ const getCharacterMetrics = function(
             width: metrics[4],
         };
     }
-};
+}
 
 type FontSizeIndex = 0 | 1 | 2;
 export type FontMetrics = {
@@ -235,7 +261,7 @@ const fontMetricsBySizeIndex: {[FontSizeIndex]: FontMetrics} = {};
 /**
  * Get the font metrics for a given size.
  */
-const getFontMetrics = function(size: number): FontMetrics {
+export function getGlobalMetrics(size: number): FontMetrics {
     let sizeIndex: FontSizeIndex;
     if (size >= 5) {
         sizeIndex = 0;
@@ -255,9 +281,4 @@ const getFontMetrics = function(size: number): FontMetrics {
         }
     }
     return fontMetricsBySizeIndex[sizeIndex];
-};
-
-export default {
-    getFontMetrics: getFontMetrics,
-    getCharacterMetrics: getCharacterMetrics,
-};
+}
